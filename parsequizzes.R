@@ -4,6 +4,8 @@
 
 library(stringr)
 library(xlsx)
+library(digest)
+library(random)
 
 # get input directory 
 quizdir = ("/home/melanie/Dropbox/Academy Project/Raw Data 2014/")
@@ -12,6 +14,10 @@ quizdir = ("/home/melanie/Dropbox/Academy Project/Raw Data 2014/")
 responses <- data.frame()
 correctnes <- data.frame()
 times <- data.frame()
+
+# create random sequence which will help anonymize student ids later
+randseq=randomSequence(1,8)
+
 
 # read in all files from input directory
 filenames <- list.files(quizdir, pattern="*.xlsx")
@@ -36,6 +42,18 @@ for (i in 1:2){
             
     # go through every student
     for (j in 1:nrow(quizdata)){
+        
+        # get student e-mail and encrypt to 8-bit string (sufficient for us)
+        mail = quizdata[j,1]
+        crc32 = digest(mail,algo='crc32')
+        id=""
+        ## shuffle encrypted string to get id that is harder to decode
+        for (k in randseq){
+            id = paste(id,substr(crc32,k,k),sep="")
+        }
+            
+        
+        
         # look up student identifier and see if it's alreaday in tables
         # if not, create new entry
         
