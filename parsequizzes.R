@@ -18,6 +18,9 @@ responses <- data.frame()
 correctness <- data.frame()
 times <- data.frame()
 
+# make table to hold student names and IDs (careful about who gets this)
+students <- data.frame()
+
 # create random sequence which will help anonymize student ids later
 randseq=randomSequence(1,8)
 
@@ -51,7 +54,9 @@ for (i in 4:32){
             
             responses[1,"id"] <- id            
             correctness[1,"id"] <- id
-            times[1,"id"] <- id        
+            times[1,"id"] <- id
+            students[1,"id"] <- id
+            students[1,"mail"] <- mail
             index = 1
         }
         else if (length(which(responses[,1]==id) > 0)){
@@ -62,7 +67,9 @@ for (i in 4:32){
              index = nrow(responses)+1 
              responses[index,1] <- id
              correctness[index,1] <- id
-             times[index,1] <- id             
+             times[index,1] <- id     
+             students[index,"id"] <- id
+             students[index,"mail"] <- mail
          }
                     
         # go through every column (after the name)
@@ -82,6 +89,8 @@ for (i in 4:32){
                     # strip response of \n and \t
                     qresponse = gsub("\n","",qresponse)
                     qresponse = gsub("\t","",qresponse)
+                    # get rid of double quotes 
+                    qresponse = gsub("\"","\'",qresponse)
                     responses[index, quizquestion] = qresponse                    
                 }
                 # add item correctness to item response table
@@ -101,22 +110,18 @@ for (i in 4:32){
                     }
                     times[index, quizquestion] = as.character(atime)  
                 }
-            }   
+             }   
         }       
     }
         
 }
 
 
-## save three tables to .xls files
-write.table(responses,file = "responses.csv", col.names = TRUE,sep = "\t",row.names = FALSE)
-write.table(correctness,file = "correctness.csv", col.names = TRUE,sep = "\t",row.names = FALSE)
-write.table(times,file = "times.csv", col.names = TRUE,sep = "\t",row.names = FALSE)
-
+### save three tables to .xlsx files
+write.table(responses,file = "responses.xlsx", col.names = TRUE,sep = "\t",row.names = FALSE)
+write.table(correctness,file = "correctness.xlsx", col.names = TRUE,sep = "\t",row.names = FALSE)
+write.table(times,file = "times.xlsx", col.names = TRUE,sep = "\t",row.names = FALSE)
+write.table(students,file = "CONFIDENTIAL_students.xlsx", col.names = TRUE,sep = "\t",row.names = FALSE)
 
  
-
-
-
-
 
