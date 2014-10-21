@@ -118,10 +118,10 @@ for (i in 4:32){
 
 
 ### save three tables to .xlsx files
-write.table(responses,file = "responses.xlsx", col.names = TRUE,sep = "\t",row.names = FALSE)
-write.table(correctness,file = "correctness.xlsx", col.names = TRUE,sep = "\t",row.names = FALSE)
-write.table(times,file = "times.xlsx", col.names = TRUE,sep = "\t",row.names = FALSE)
-write.table(students,file = "CONFIDENTIAL_students.xlsx", col.names = TRUE,sep = "\t",row.names = FALSE)
+write.xlsx(responses,file = "responses.xlsx", col.names = TRUE,row.names = FALSE,showNA = TRUE)
+write.xlsx(correctness,file = "correctness.xlsx", col.names = TRUE,row.names = FALSE,showNA=TRUE)
+write.xlsx(times,file = "times.xlsx", col.names = TRUE,row.names = FALSE,showNA=TRUE)
+write.xlsx(students,file = "CONFIDENTIAL_students.xlsx", col.names = TRUE,row.names = FALSE,showNA=TRUE)
 
- 
+
 
