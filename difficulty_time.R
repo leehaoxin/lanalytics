@@ -5,13 +5,26 @@
 ## creates scatterplot of item difficulty vs time
 ## Written by MI Stefan
 
-# read in correctness and time data
+# read in correctness and time data (inSeconds)
 correctness <- read.csv(file="correctness.csv",sep="\t")
-load(file="./timesToAnswerMin.Rda")
+load(file="./timesToAnswerSec.Rda")
 
 # get rate of correct answers
 rateCorrect = colMeans(correctness[,2:length(correctness)],na.rm = TRUE)
 
 # get median time it took to answer each question
-# timeCorrect = apply(X = times[,2:length(times),2,FUN = median, na.rm=TRUE])
-# TODO: Actually write function that computes times to answer first!
+medianTimes <- data.frame(matrix(NA,nrow=1))
+alltimes <- timesToAnswerSec[,2:length(timesToAnswerSec)]
+for (i in 1:ncol(alltimes)){
+    times <- as.matrix(alltimes[,i])
+    suppressWarnings(qMedian <- median(as.numeric(times), na.rm=TRUE))
+    medianTimes <- cbind(medianTimes,qMedian)
+}
+
+medianTimes <- as.matrix(medianTimes[2:length(medianTimes)])
+
+pdf("difficulty_time.pdf")
+plot(medianTimes,rateCorrect,xlab="time [s]",ylab="difficulty [%]",
+     col=rgb(0,100,0,50,maxColorValue=255), pch=16)
+dev.off()
+
