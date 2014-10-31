@@ -1,11 +1,13 @@
 ## difficulty_time.R
-## takes timing and item response data created with parsequizzes.R
+## takes item correctness data created with parsequizzes.R
+## takes time to answer each question created with order_time.R
+## computes item difficulty and median answer time per question
 ## creates scatterplot of item difficulty vs time
 ## Written by MI Stefan
 
 # read in correctness and time data
 correctness <- read.csv(file="correctness.csv",sep="\t")
-times <- read.csv(file="times.csv",sep="\t")
+load(file="./timesToAnswerMin.Rda")
 
 # get rate of correct answers
 rateCorrect = colMeans(correctness[,2:length(correctness)],na.rm = TRUE)
