@@ -69,7 +69,6 @@ for (i in lowestQuiz:highestQuiz){
 }
 
 # save data frames
-
 save(orders,file="orders.Rda")
-save(timesToAnswerMin,file="timesToAnswerMin.Rda")
 save(timesToAnswerSec,file="timesToAnswerSec.Rda")
+save(timesToAnswerMin,file="timesToAnswerMin.Rda")
