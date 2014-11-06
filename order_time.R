@@ -3,17 +3,19 @@
 ## computes order in which questions were answered and absolute time taken
 ## Written by MI Stefan
 
+library(RColorBrewer)
+
 # give number of quizzes we are interested in 
 lowestQuiz = 4
 highestQuiz = 32
 
 # read in time data
-times <- read.csv(file="times.csv",sep="\t",stringsAsFactors=FALSE)
+times <- read.csv(file="times.csv",sep=",",stringsAsFactors=FALSE)
 
 # data frames that will hold orders of questions and times to answer each
-timesToAnswerMin <- as.data.frame(times[,1])
-timesToAnswerSec <- as.data.frame(times[,1])
-orders <- as.data.frame(times[,1])
+timesToAnswerMin <- as.data.frame(times[,'id'])
+timesToAnswerSec <- as.data.frame(times[,'id'])
+orders <- as.data.frame(times[,'id'])
 
 # per quiz
 for (i in lowestQuiz:highestQuiz){
@@ -68,7 +70,22 @@ for (i in lowestQuiz:highestQuiz){
      
 }
 
+colnames(orders)[1] = "id"
+colnames(timesToAnswerMin)[1] = "id"
+colnames(timesToAnswerSec)[1] = "id"
+
+# plot order on a heatmap
+png("order.png")
+hmcol<-brewer.pal(11,"RdBu")
+image(t(orders[,2:431]),col=hmcol,xlab="quiz",ylab="student",main="Question Order",xaxt="n",yaxt="n")
+dev.off()
+
 # save data frames
 save(orders,file="orders.Rda")
 save(timesToAnswerSec,file="timesToAnswerSec.Rda")
 save(timesToAnswerMin,file="timesToAnswerMin.Rda")
+
+### save three tables to .xlsx files
+write.xlsx(orders,file = "orders.xlsx", col.names = TRUE,row.names = FALSE,showNA = TRUE)
+write.xlsx(timesToAnswerMin,file = "timesToAnswerMin.xlsx", col.names = TRUE,row.names = FALSE,showNA = TRUE)
+write.xlsx(timesToAnswerSec,file = "timesToAnswerSec.xlsx", col.names = TRUE,row.names = FALSE,showNA = TRUE)
