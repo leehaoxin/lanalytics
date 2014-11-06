@@ -114,5 +114,8 @@ write.xlsx(correctness,file = "correctness.xlsx", col.names = TRUE,row.names = F
 write.xlsx(times,file = "times.xlsx", col.names = TRUE,row.names = FALSE,showNA=TRUE)
 write.xlsx(students,file = "CONFIDENTIAL_students.xlsx", col.names = TRUE,row.names = FALSE,showNA=TRUE)
 
-
+### save responses, correctness and times as .csv as welll
+write.csv(responses,file = "responses.csv")
+write.csv(correctness,file = "correctness.csv")
+write.csv(times,file = "times.csv")
 
