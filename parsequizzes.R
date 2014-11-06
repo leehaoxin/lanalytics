@@ -28,6 +28,12 @@ randseq=randomSequence(1,8)
 # read in all files from input directory
 filenames <- list.files(quizdir, pattern="*.xlsx")
 
+# create random 4-number ids for students; 
+# need to know number of students for that
+studentNumber = 170;
+studentIDs <- sample(1000:9999, studentNumber, replace = F)
+
+
 # go through every quiz (need to know number of lowest and highest quiz)
 for (i in 4:32){
     
