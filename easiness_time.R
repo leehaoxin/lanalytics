@@ -1,8 +1,8 @@
-## difficulty_time.R
+## easiness_time.R
 ## takes item correctness data created with parsequizzes.R
 ## takes time to answer each question created with order_time.R
-## computes item difficulty and median answer time per question
-## creates scatterplot of item difficulty vs time
+## computes item easiness and median answer time per question
+## creates scatterplot of item easiness vs time
 ## Written by MI Stefan
 
 # read in correctness and time data (inSeconds)
@@ -23,8 +23,8 @@ for (i in 1:ncol(alltimes)){
 
 medianTimes <- as.matrix(medianTimes[2:length(medianTimes)])
 
-pdf("difficulty_time.pdf")
-plot(medianTimes,rateCorrect,xlab="time [s]",ylab="difficulty [%]",
+pdf("easiness_time.pdf")
+plot(medianTimes,rateCorrect,xlab="time [s]",ylab="easiness [%]",
      col=rgb(0,100,0,50,maxColorValue=255), pch=16)
 dev.off()
 
