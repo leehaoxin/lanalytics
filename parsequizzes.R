@@ -34,9 +34,7 @@ studentNumber = 170;
 studentIDs <- sample(1000:9999, studentNumber, replace = F)
 
 # go through every quiz (need to know number of lowest and highest quiz)
-#for (i in 4:32){
-for (i in 4:4){
-
+for (i in 4:32){
     # read in xlsx file
     fileindex <- grep(paste("2014Q",i,"_",sep=""),filenames[])
     thisquiz <- filenames[fileindex]
@@ -53,9 +51,9 @@ for (i in 4:4){
              id <- studentIDs[j]
              students[j,"id"] <- id
              students[j,"mail"] <- mail
-             responses[1,"id"] <- id            
-             correctness[1,"id"] <- id
-             times[1,"id"] <- id
+             responses[j,"id"] <- id            
+             correctness[j,"id"] <- id
+             times[j,"id"] <- id
              index = j
          }
          # for all other quizzes, look up student e-mail in table to get id
