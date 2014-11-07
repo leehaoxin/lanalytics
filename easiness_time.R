@@ -5,12 +5,17 @@
 ## creates scatterplot of item easiness vs time
 ## Written by MI Stefan
 
+## load necessary libraries
+library(Hmisc)
+library(xlsx)
+
+
 # read in correctness and time data (inSeconds)
-correctness <- read.csv(file="correctness.csv",sep="\t")
+correctness <- read.csv(file="correctness.csv",sep=",")
 load(file="./timesToAnswerSec.Rda")
 
 # get rate of correct answers
-rateCorrect = colMeans(correctness[,2:length(correctness)],na.rm = TRUE)
+rateCorrect = colMeans(correctness[,3:length(correctness)],na.rm = TRUE)
 
 # get median time it took to answer each question
 medianTimes <- data.frame(matrix(NA,nrow=1))
@@ -22,9 +27,28 @@ for (i in 1:ncol(alltimes)){
 }
 
 medianTimes <- as.matrix(medianTimes[2:length(medianTimes)])
+medianTimesMin <- medianTimes/60
 
+# will plot only questions with easiness > 0
+# (the others are questions where there is no right or wrong)
+rateCorrectPlot <- rateCorrect[rateCorrect>0]
+medianTimesPlot <- medianTimesMin[rateCorrect>0]
+
+
+# scatter plot of easiness v time, plus linear regression
 pdf("easiness_time.pdf")
-plot(medianTimes,rateCorrect,xlab="time [s]",ylab="easiness [%]",
-     col=rgb(0,100,0,50,maxColorValue=255), pch=16)
+plot(medianTimesPlot,rateCorrectPlot,xlab="median time [min]",ylab="easiness [%]",
+     col=rgb(0,100,0,50,maxColorValue=255), pch=16, ylim=c(0,1.02), 
+     main="Easiness and time per question")
+reg <- lm(rateCorrectPlot~medianTimesPlot)
+abline(reg)
 dev.off()
+
+# compute regression
+correlation <- rcorr(rateCorrectPlot,medianTimesPlot)
+write.xlsx(correlation$r, file="time_easiness_correlation_matrix.xlsx")
+write.xlsx(correlation$P, file="time_easiness_correlation_pvalues.xlsx")
+
+# write easiness data to .xlsx
+write.xlsx(t(rateCorrect),file = "easiness.xlsx", col.names = TRUE,row.names = FALSE,showNA=TRUE)
 
