@@ -9,8 +9,12 @@ output: html_document
 - [ ] complete cheater/guesser script
 - [ ] make existing scripts export xlsx files
 - [ ] correlate self-reported with calculated time
-- [ ] update time and easiness plot, as discussed
 
+
+
+2014/11/7
+- [x] update time and easiness plot, as discussed
 
 2014/11/6
 - [x] fix the way student identifiers are anonymised
+
