@@ -34,6 +34,16 @@ medianTimesMin <- medianTimes/60
 rateCorrectPlot <- rateCorrect[rateCorrect>0]
 medianTimesPlot <- medianTimesMin[rateCorrect>0]
 
+# compute regression
+correlation <- rcorr(rateCorrectPlot,medianTimesPlot)
+write.xlsx(correlation$r, file="time_easiness_correlation_matrix.xlsx")
+write.xlsx(correlation$P, file="time_easiness_correlation_pvalues.xlsx")
+
+r = format(correlation$r[2],digits=2)
+P = format(correlation$P[2],digits=2)
+    
+labeltext <- paste("r = ",r,"\nP = ", P,sep="")
+
 
 # scatter plot of easiness v time, plus linear regression
 pdf("easiness_time.pdf")
@@ -42,12 +52,8 @@ plot(medianTimesPlot,rateCorrectPlot,xlab="median time [min]",ylab="easiness [%]
      main="Easiness and time per question")
 reg <- lm(rateCorrectPlot~medianTimesPlot)
 abline(reg)
+legend('bottomright', legend=labeltext)
 dev.off()
-
-# compute regression
-correlation <- rcorr(rateCorrectPlot,medianTimesPlot)
-write.xlsx(correlation$r, file="time_easiness_correlation_matrix.xlsx")
-write.xlsx(correlation$P, file="time_easiness_correlation_pvalues.xlsx")
 
 # write easiness data to .xlsx
 write.xlsx(t(rateCorrect),file = "easiness.xlsx", col.names = TRUE,row.names = FALSE,showNA=TRUE)
