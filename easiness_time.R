@@ -29,6 +29,8 @@ for (i in 1:ncol(alltimes)){
 medianTimes <- as.matrix(medianTimes[2:length(medianTimes)])
 medianTimesMin <- medianTimes/60
 
+colnames(medianTimesMin) <- names(rateCorrect)
+
 # will plot only questions with easiness > 0
 # (the others are questions where there is no right or wrong)
 rateCorrectPlot <- rateCorrect[rateCorrect>0]
@@ -54,7 +56,11 @@ reg <- lm(rateCorrectPlot~medianTimesPlot)
 abline(reg)
 legend('bottomright', legend=labeltext)
 dev.off()
-
-# write easiness data to .xlsx
-write.xlsx(t(rateCorrect),file = "easiness.xlsx", col.names = TRUE,row.names = FALSE,showNA=TRUE)
-
+ 
+# write easiness and median time data to .xlsx
+ write.xlsx(t(rateCorrect),file = "easiness.xlsx", col.names = TRUE,row.names = FALSE,showNA=TRUE)
+ write.xlsx(medianTimesMin,file = "median_times_min.xlsx", col.names = TRUE,row.names = FALSE,showNA=TRUE)
+ 
+# save plotted easiness and median time data
+save(rateCorrectPlot,file="easinessPlot.Rda")
+save(medianTimesPlot,file="medianTimesPlot.Rda")
