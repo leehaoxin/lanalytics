@@ -9,8 +9,14 @@ output: html_document
 - [ ] complete cheater/guesser script
 - [ ] make existing scripts export xlsx files
 - [ ] correlate self-reported with calculated time
+- [ ] easiness/time with color code
+- [ ] easiness/time with color code per quiz 
+- [ ] cluster absolute time stamps
 
+---------
 
+2014/11/11
+- [x] easiness time chart with correlation stats in there
 
 2014/11/7
 - [x] update time and easiness plot, as discussed
