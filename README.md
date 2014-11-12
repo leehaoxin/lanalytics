@@ -54,7 +54,6 @@ Files:
 
 5. easiness_time_level.R
 
-- TODO: finish this
 - Depends on easiness_time.R
 - Also depends on a rating of cognitive level for each question (as provided by
     the instructor, 1=low, 3=high)
