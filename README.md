@@ -52,5 +52,14 @@ Files:
     - guessing, if the answer was wrong
 - Plots overall occurence of guessing and cheating across quizzes and students
 
+5. easiness_time_level.R
+
+- TODO: finish this
+- Depends on easiness_time.R
+- Also depends on a rating of cognitive level for each question (as provided by
+    the instructor, 1=low, 3=high)
+- Plots scatter plot of easiness vs time, colour-coded by cognitive level
+
+
 
 
