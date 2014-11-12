@@ -10,6 +10,8 @@
 library(Hmisc)
 library(xlsx)       # import and export xlsx files
 library(stringr)    # manipulate strings
+library(ggplot2)    # extra plotting capabilities
+library(RColorBrewer) # allows us to use Cynthia Brewer's color schemes
 
 # read in easiness and median time data 
 load(file="easinessPlot.Rda")
@@ -69,7 +71,24 @@ for (i in 1:length(names(medianTimesPlot))){
     }
 }
     
+
+allQuestions$level <- as.factor(allQuestions$level)
+
+
+# plot all
+png("easiness_time_level.png")
+plot <- qplot(allQuestions$time,allQuestions$easiness,color=allQuestions$level) +
+    scale_color_brewer(palette=rev("Dark2"), name="Cognitive Level")    +
+    ggtitle("Easiness, Time, Level (all quizzes)") +
+    xlab("Median time [min]") + 
+    ylab("Easiness [%]")  +
+    theme(plot.title = element_text(size=20, face="bold", vjust=2))
+print(plot)
+dev.off()
     
+
+
+
 
 
 
