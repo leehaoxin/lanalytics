@@ -63,4 +63,5 @@ dev.off()
  
 # save plotted easiness and median time data
 save(rateCorrectPlot,file="easinessPlot.Rda")
+names(medianTimesPlot) <- names(rateCorrectPlot)
 save(medianTimesPlot,file="medianTimesPlot.Rda")
