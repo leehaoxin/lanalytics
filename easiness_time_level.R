@@ -1,5 +1,4 @@
 ## easiness_time_level.R
-## takes easiness data created with easiness_time.R
 ## takes time to answer each question created with order_time.R
 ## takes instructor-rated level of each question (1=low, 3=high)
 ## computes item easiness and median answer time per question
@@ -32,6 +31,8 @@ ratingCol = 5
 # here, we are ignoring question 12 of Quiz 9 (duplicate question)
 ignore = "Q9_q12"
 
+lowestQuiz=4
+highestQuiz=32
 
 # go through all question for which we have a time and easiness rating
 for (i in 1:length(names(medianTimesPlot))){
@@ -74,11 +75,10 @@ for (i in 1:length(names(medianTimesPlot))){
 
 allQuestions$level <- as.factor(allQuestions$level)
 
-
 # plot all
 png("easiness_time_level.png")
 plot <- qplot(allQuestions$time,allQuestions$easiness,color=allQuestions$level) +
-    scale_color_brewer(palette=rev("Dark2"), name="Cognitive Level")    +
+    scale_color_brewer(palette="Dark2", name="Cognitive Level")    +
     ggtitle("Easiness, Time, Level (all quizzes)") +
     xlab("Median time [min]") + 
     ylab("Easiness [%]")  +
@@ -86,7 +86,26 @@ plot <- qplot(allQuestions$time,allQuestions$easiness,color=allQuestions$level) 
 print(plot)
 dev.off()
     
+# plot per quiz
+for (i in lowestQuiz:highestQuiz){
+    filename=paste("easiness_time_level_Q",i,".png",sep="")
+    title=paste("Easiness, Time, Level, Quiz ",i,sep="")
+    Questions <- allQuestions[allQuestions$quiz==i,]    
+    png(filename)
+    plot <- 
+        qplot(Questions$time,Questions$easiness,color=Questions$level,
+              label=Questions$question) +
+        geom_text(size=5,hjust=-0.5)  +
+        scale_color_brewer(palette="Dark2", name="Cognitive Level")    +
+        ggtitle(title) +
+        xlab("Median time [min]") + 
+        ylab("Easiness [%]")  +
+        theme(plot.title = element_text(size=20, face="bold", vjust=2))
 
+    print(plot)
+    dev.off()
+}
+    
 
 
 
