@@ -20,42 +20,44 @@ cognitiveLevel <- read.xlsx("./Quiz2013-14_cognitive level_HB.xlsx",1)
 
 # create empty data frame 
 # holds easiness, median Time, cognitive level, quiz number, question number
-allquestions <- data.frame()
-colnames(allquestions) <- c("easiness","time","level", "quiz","question")
+allQuestions <- data.frame(matrix(nrow=0,ncol=5))
 
 # provide question column and rating column
-qestionCol = 3
+questionCol = 3
 ratingCol = 5
 
 # provide questions to ignore (can be empty), as determined by instructor
 # here, we are ignoring question 12 of Quiz 9 (duplicate question)
 ignore = "Q9_q12"
 
-allIndex = 1
 
 # go through all question for which we have a time and easiness rating
 for (i in 1:length(names(medianTimesPlot))){
+    # make empty dataframe to hold all info for this question
+    thisQuestion <- data.frame(matrix(nrow=1,ncol=5))
+    colnames(thisQuestion) <- c("easiness","time", "level", "quiz","question")
+    
     # get easiness and time
-    allquestions$easiness[allIndex] = rateCorrectPlot[i]
-    allquestions$time[allIndex] = medianTimes[i]
+    thisQuestion$easiness <- rateCorrectPlot[i]
+    thisQuestion$time <- medianTimesPlot[i]
     
     # get quiz and question number 
     quizQuestion <- names(medianTimesPlot)[i]
     q <- str_locate(pattern="q",quizQuestion)
     quiz <- substr(quizQuestion,2,q-1)
-    allquestions$quiz[allIndex] <- quiz
+    thisQuestion$quiz <- quiz
     question <- substr(quizQuestion,q+1,str_length(quizQuestion))
-    allquestions$question[allIndex] <- question
-    
+    thisQuestion$question <- question
+     
     # find this quiz and question number (with underscore)
     questionString = paste("Q",quiz,"_q",question,sep="")
     if (ignore != questionString){        
         cogIndex <- which(cognitiveLevel[,questionCol]==questionString)
-        if length(cogIndex >0){
+        if (length(cogIndex >0)){
             level <- cognitiveLevel[cogIndex,ratingCol]
-            allquestions$level[allIndex] <- level
-            
-            allIndex <- allIndex+1 
+            thisQuestion$level <- level
+            rbind(allQuestions,thisQuestion)
+             
         }
     }
 }
