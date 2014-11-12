@@ -49,14 +49,21 @@ for (i in 1:length(names(medianTimesPlot))){
     question <- substr(quizQuestion,q+1,str_length(quizQuestion))
     thisQuestion$question <- question
      
+    
+    # correct for instructor mistake in question naming 
+    # consistently wrote "q1" instead of "q3" etc. 
+    # this should not have happened, but this is a quick fix for now
+    question <- as.numeric(question)-2
+    
     # find this quiz and question number (with underscore)
+    
     questionString = paste("Q",quiz,"_q",question,sep="")
     if (ignore != questionString){        
         cogIndex <- which(cognitiveLevel[,questionCol]==questionString)
         if (length(cogIndex >0)){
             level <- cognitiveLevel[cogIndex,ratingCol]
             thisQuestion$level <- level
-            rbind(allQuestions,thisQuestion)
+            allQuestions <- rbind(allQuestions,thisQuestion)
              
         }
     }
