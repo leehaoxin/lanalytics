@@ -9,6 +9,7 @@ output: html_document
 - [ ] complete cheater/guesser script
 - [ ] correlate self-reported with calculated time
 - [ ] cluster absolute time stamps
+- [ ] compare different offerings of the course
 
 ---------
 
