@@ -59,6 +59,13 @@ Files:
     the instructor, 1=low, 3=high)
 - Plots scatter plot of easiness vs time, colour-coded by cognitive level
 
+6. easiness_time_level_two_years.R
+
+- Depends on easiness_time.R
+- Also depends on a rating of cognitive level for each question (as provided by
+    the instructor, 1=low, 3=high)
+- Does the same as easiness_time_level.R, but for two successive years
+- Plots data from both years side-by-side
 
 
 
