@@ -67,5 +67,10 @@ Files:
 - Does the same as easiness_time_level.R, but for two successive years
 - Plots data from both years side-by-side
 
+7. import_time_easiness.R
+
+- Helper script to import data from excel for further processing
+- Written in order to be able to use earlier data we processed in MATLAB
+- Not part of the analysis workflow if everything is done in lanalytics 
 
 
