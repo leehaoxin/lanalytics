@@ -109,7 +109,7 @@ for (i in 1:length(names(year1time))){
                 thisQuestionYear1$level <- level
                 thisQuestionYear2$level <- level
                 allQuestionsYear1 <- rbind(allQuestionsYear1,thisQuestionYear1)
-                allQuestionsYear2 <- rbind(allQuestionsYear1,thisQuestionYear2)
+                allQuestionsYear2 <- rbind(allQuestionsYear2,thisQuestionYear2)
                 
             }
         }   
@@ -130,7 +130,9 @@ plot <- qplot(allQuestionsYear1$time,allQuestionsYear1$easiness,color=allQuestio
     ggtitle(title) +
     xlab("Median time [min]") + 
     ylab("Easiness [%]")  +
-    theme(plot.title = element_text(size=20, face="bold", vjust=2))
+    theme(plot.title = element_text(size=20, face="bold", vjust=2)) +
+    xlim(c(-0.2,6.2)) +
+    ylim(c(0,1))
 print(plot)
 dev.off()
     
@@ -142,7 +144,9 @@ plot <- qplot(allQuestionsYear2$time,allQuestionsYear2$easiness,color=allQuestio
     ggtitle(title) +
     xlab("Median time [min]") + 
     ylab("Easiness [%]")  +
-    theme(plot.title = element_text(size=20, face="bold", vjust=2))
+    theme(plot.title = element_text(size=20, face="bold", vjust=2)) +
+    xlim(c(-0.2,6.2)) +
+    ylim(c(0,1))
 print(plot)
 dev.off()
 
@@ -162,7 +166,9 @@ for (i in lowestQuiz:highestQuiz){
         ggtitle(title) +
         xlab("Median time [min]") + 
         ylab("Easiness [%]")  +
-        theme(plot.title = element_text(size=20, face="bold", vjust=2))
+        theme(plot.title = element_text(size=20, face="bold", vjust=2)) +
+        xlim(c(-0.2,6.2)) +
+        ylim(c(0,1))
     
     print(plot)
     dev.off()
@@ -179,7 +185,9 @@ for (i in lowestQuiz:highestQuiz){
         ggtitle(title) +
         xlab("Median time [min]") + 
         ylab("Easiness [%]")  +
-        theme(plot.title = element_text(size=20, face="bold", vjust=2))
+        theme(plot.title = element_text(size=20, face="bold", vjust=2)) +
+        xlim(c(-0.2,6.2)) +
+        ylim(c(0,1))
     
     print(plot)
     dev.off()
