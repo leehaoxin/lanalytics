@@ -32,11 +32,11 @@ year2time <- medianTimesPlot
 
 
 
-# read in xls with cognitive level rating
-cognitiveLevel <- read.xlsx("./Quiz2013-14_cognitive level_HB.xlsx",1)
+# read in xls with challenge level rating
+challengeLevel <- read.xlsx("./Quiz2013-14_cognitive level_HB.xlsx",1)
 
 # create empty data frame 
-# holds easiness, median Time, cognitive level, quiz number, question numrber
+# holds easiness, median Time, challenge level, quiz number, question numrber
 allQuestionsYear1 <- data.frame(matrix(nrow=0,ncol=5))
 allQuestionsYear2 <- data.frame(matrix(nrow=0,ncol=5))
 
@@ -103,9 +103,9 @@ for (i in 1:length(names(year1time))){
         
         questionString = paste("Q",quiz,"_q",question,sep="")
         if (ignore != questionString){        
-            cogIndex <- which(cognitiveLevel[,questionCol]==questionString)
+            cogIndex <- which(challengeLevel[,questionCol]==questionString)
             if (length(cogIndex >0)){
-                level <- cognitiveLevel[cogIndex,ratingCol]
+                level <- challengeLevel[cogIndex,ratingCol]
                 thisQuestionYear1$level <- level
                 thisQuestionYear2$level <- level
                 allQuestionsYear1 <- rbind(allQuestionsYear1,thisQuestionYear1)
@@ -126,7 +126,7 @@ filename=paste("easiness_time_level_",year1,".png",sep="")
 png(filename)
 title=paste("Easiness, Time, Level (all quizzes), ",year1,sep="")
 plot <- qplot(allQuestionsYear1$time,allQuestionsYear1$easiness,color=allQuestionsYear1$level) +
-    scale_color_brewer(palette="Dark2", name="Cognitive Level")    +
+    scale_color_brewer(palette="Dark2", name="challenge Level")    +
     ggtitle(title) +
     xlab("Median time [min]") + 
     ylab("Easiness [%]")  +
@@ -140,7 +140,7 @@ filename=paste("easiness_time_level_",year2,".png",sep="")
 png(filename)
 title=paste("Easiness, Time, Level (all quizzes), ",year2,sep="")
 plot <- qplot(allQuestionsYear2$time,allQuestionsYear2$easiness,color=allQuestionsYear2$level) +
-    scale_color_brewer(palette="Dark2", name="Cognitive Level")    +
+    scale_color_brewer(palette="Dark2", name="challenge Level")    +
     ggtitle(title) +
     xlab("Median time [min]") + 
     ylab("Easiness [%]")  +
@@ -162,7 +162,7 @@ for (i in lowestQuiz:highestQuiz){
         qplot(Questions$time,Questions$easiness,color=Questions$level,
               label=Questions$question) +
         geom_text(size=5,hjust=-0.5)  +
-        scale_color_brewer(palette="Dark2", name="Cognitive Level")    +
+        scale_color_brewer(palette="Dark2", name="challenge Level")    +
         ggtitle(title) +
         xlab("Median time [min]") + 
         ylab("Easiness [%]")  +
@@ -181,7 +181,7 @@ for (i in lowestQuiz:highestQuiz){
         qplot(Questions$time,Questions$easiness,color=Questions$level,
               label=Questions$question) +
         geom_text(size=5,hjust=-0.5)  +
-        scale_color_brewer(palette="Dark2", name="Cognitive Level")    +
+        scale_color_brewer(palette="Dark2", name="challenge Level")    +
         ggtitle(title) +
         xlab("Median time [min]") + 
         ylab("Easiness [%]")  +
