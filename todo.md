@@ -5,11 +5,10 @@ date: "11/06/2014"
 output: html_document
 ---
 
-
 - [ ] complete cheater/guesser script
 - [ ] correlate self-reported with calculated time
 - [ ] cluster absolute time stamps
-
+- [ ] export excel and/or csv files from time/easiness/level scripts
 
 ---------
 
