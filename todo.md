@@ -9,9 +9,12 @@ output: html_document
 - [ ] complete cheater/guesser script
 - [ ] correlate self-reported with calculated time
 - [ ] cluster absolute time stamps
-- [ ] compare different offerings of the course
+
 
 ---------
+
+2014/11/17
+- [x] compare different offerings of the course
 
 2014/11/11
 - [x] easiness time chart with correlation stats in there
