@@ -195,10 +195,16 @@ for (i in lowestQuiz:highestQuiz){
     
 
 }
-    
 
+## write xlsx
+write.xlsx(allQuestionsYear1, "time_level_easiness_2013.xlsx", 
+           col.names = TRUE,row.names = FALSE,showNA = TRUE)
+write.xlsx(allQuestionsYear2, "time_level_easiness_2014.xlsx", 
+           col.names = TRUE,row.names = FALSE,showNA = TRUE)
 
-
+## write csv
+write.csv(allQuestionsYear1, "time_level_easiness_2013.csv",row.names=FALSE)
+write.csv(allQuestionsYear2, "time_level_easiness_2014.csv",row.names=FALSE)
 
 
 
