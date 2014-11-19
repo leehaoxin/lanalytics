@@ -8,9 +8,12 @@ output: html_document
 - [ ] complete cheater/guesser script
 - [ ] correlate self-reported with calculated time
 - [ ] cluster absolute time stamps
-- [ ] export excel and/or csv files from time/easiness/level scripts
+
 
 ---------
+
+2014/11/19
+- [x] export excel and/or csv files from time/easiness/level scripts
 
 2014/11/17
 - [x] compare different offerings of the course
