@@ -50,9 +50,10 @@ for (i in 1:length(names(medianTimesPlot))){
     quiz <- substr(quizQuestion,2,q-1)
     thisQuestion$quiz <- quiz
     question <- substr(quizQuestion,q+1,str_length(quizQuestion))
-    thisQuestion$question <- question
-     
-    
+    ## correct for the file that the question apparing as "q3" in Learning Catalytics
+    ## is actually q1 in our internal files
+    thisQuestion$question <- as.numeric(question)
+         
     # correct for instructor mistake in question naming 
     # consistently wrote "q1" instead of "q3" etc. 
     # this should not have happened, but this is a quick fix for now
@@ -106,6 +107,12 @@ for (i in lowestQuiz:highestQuiz){
     dev.off()
 }
     
+## write xlsx
+write.xlsx(allQuestions, "time_level_easiness_2014_only.xlsx", 
+           col.names = TRUE,row.names = FALSE,showNA = TRUE)
+
+## write csv
+write.csv(allQuestions, "time_level_easiness_2014_only.csv",row.names=FALSE)
 
 
 
