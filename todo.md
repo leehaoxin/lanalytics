@@ -5,12 +5,18 @@ date: "11/06/2014"
 output: html_document
 ---
 
-- [ ] complete cheater/guesser script
 - [ ] correlate self-reported with calculated time
-- [ ] cluster absolute time stamps
-
+- [ ] complete cheater/guesser script
+- [ ] distribution of response times for each question (histograms)
+- [ ] # of students who took longer than 20 minutes (histogram or table)
+- [ ] "trajectories"  between 2013 and 2014 - quantify changes along x and y axis
+        relate to code of what changed 
+- [ ] cluster absolute time stamps         
 
 ---------
+
+2014/11/20
+- [x] make easiness_time_level export excel and csv
 
 2014/11/19
 - [x] export excel and/or csv files from time/easiness/level scripts
