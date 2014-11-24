@@ -11,7 +11,7 @@ load(file="./timesToAnswerSec.Rda")
 
 # again, want to go from quiz 4 to quiz 32
 lowestQuiz = 4
-highestQuiz = 4
+highestQuiz = 4  # debug mode
 # highestQuiz = 32
 
 # make table that will hold cheating/guessing info
@@ -38,7 +38,7 @@ for (i in lowestQuiz:highestQuiz){
     # go through all students
     # for (j in 1:nrow(currentQuiz)){
     for(j in 24:24){
-        learningQuestions <- currentQuiz[j,c(2,3,lastQuestion-1,lastQuestion)]    
+        learningQuestions <- currentQuiz[j,c(1,2,lastQuestion-1,lastQuestion)]    
         suppressWarnings(learningQuestions <- as.numeric(as.matrix(learningQuestions)))
         threshold <- median(learningQuestions,na.rm=TRUE) 
         
