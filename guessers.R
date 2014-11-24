@@ -6,7 +6,7 @@
 ## Written by MI Stefan
 
 # read in correctness and time data (inSeconds)
-correctness <- read.csv(file="correctness.csv",sep="\t")
+correctness <- read.csv(file="correctness.csv",sep=",")
 load(file="./timesToAnswerSec.Rda")
 
 # again, want to go from quiz 4 to quiz 32
