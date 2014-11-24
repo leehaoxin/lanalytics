@@ -47,7 +47,7 @@ for (i in lowestQuiz:highestQuiz){
         }
         
         for (k in 3:lastQuestion-2){
-            suppressWarnings(qTime <- as.numeric(currentQuiz[k,j]))
+            suppressWarnings(qTime <- as.numeric(currentQuiz[j,k]))
             if ( !is.na(qTime) && (qTime < threshold)){
                 if (is.null(correctness[j,masterIndex+k])){
                     next
