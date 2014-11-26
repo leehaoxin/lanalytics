@@ -11,7 +11,8 @@ output: html_document
 - [ ] # of students who took longer than 20 minutes (histogram or table)
 - [ ] "trajectories"  between 2013 and 2014 - quantify changes along x and y axis
         relate to code of what changed 
-- [ ] cluster absolute time stamps         
+- [ ] cluster absolute time stamps    
+- [ ] look at distribution of threshold times
 
 ---------
 
