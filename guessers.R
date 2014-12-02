@@ -5,6 +5,8 @@
 
 ## Written by MI Stefan
 
+library(RColorBrewer) # allows us to use Cynthia Brewer's color schemes
+
 # read in correctness and time data (inSeconds)
 correctness <- read.csv(file="correctness.csv",sep=",")
 # ignore first column (row indices)
@@ -45,16 +47,17 @@ for (i in lowestQuiz:highestQuiz){
         suppressWarnings(learningQuestions <- as.numeric(as.matrix(learningQuestions)))
         # threshold <- median(learningQuestions,na.rm=TRUE)
         suppressWarnings(threshold <- min(learningQuestions,na.rm=TRUE))
+        
         # deal with special case of all learningQuestions being NA
         # (happens if they are not completed)
         if (threshold == Inf){
             threshold <- NA   
         }        
         
-        # just to be on the safe side, cap threshold at 2 minutes
-        if (is.na(threshold) || (threshold > 60)){
-            threshold <- 60
-        }
+         # just to be on the safe side, cap threshold at 2 minutes
+         if (is.na(threshold) || (threshold > 20)){
+             threshold <- 20
+         }
         
         thresholdList <- c(thresholdList,threshold)
         
@@ -88,4 +91,8 @@ for (i in lowestQuiz:highestQuiz){
 png("thresholds_hist.png")
 hist(thresholdList,100,xlab="threshold [s]",main="Guessing thresholds")
 dev.off()
+
+cheating_guessing_numbers <- as.matrix(cheating_guessing[,2:ncol(cheating_guessing)])
+hmcol<-brewer.pal(3,"RdBu")
+image(t(cheating_guessing_numbers), col=rev(hmcol))
 
