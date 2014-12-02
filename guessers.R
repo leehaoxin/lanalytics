@@ -43,7 +43,19 @@ for (i in lowestQuiz:highestQuiz){
     for (j in 1:nrow(currentQuiz)){
         learningQuestions <- currentQuiz[j,c(1,2,lastQuestion-1,lastQuestion)]    
         suppressWarnings(learningQuestions <- as.numeric(as.matrix(learningQuestions)))
-        threshold <- median(learningQuestions,na.rm=TRUE) 
+        # threshold <- median(learningQuestions,na.rm=TRUE)
+        suppressWarnings(threshold <- min(learningQuestions,na.rm=TRUE))
+        # deal with special case of all learningQuestions being NA
+        # (happens if they are not completed)
+        if (threshold == Inf){
+            threshold <- NA   
+        }        
+        
+        # just to be on the safe side, cap threshold at 2 minutes
+        if (is.na(threshold) || (threshold > 60)){
+            threshold <- 60
+        }
+        
         thresholdList <- c(thresholdList,threshold)
         
         if(is.na(threshold)){
@@ -72,3 +84,8 @@ for (i in lowestQuiz:highestQuiz){
 
     masterIndex <- masterIndex + ncol(currentQuiz)
 }
+
+png("thresholds_hist.png")
+hist(thresholdList,100,xlab="threshold [s]",main="Guessing thresholds")
+dev.off()
+
