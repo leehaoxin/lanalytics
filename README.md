@@ -59,6 +59,18 @@ Files:
     the instructor, 1=low, 3=high)
 - Plots scatter plot of easiness vs time, colour-coded by cognitive level
 
+6. easiness_time_level_two_years.R
 
+- Depends on easiness_time.R
+- Also depends on a rating of cognitive level for each question (as provided by
+    the instructor, 1=low, 3=high)
+- Does the same as easiness_time_level.R, but for two successive years
+- Plots data from both years side-by-side
+
+7. import_time_easiness.R
+
+- Helper script to import data from excel for further processing
+- Written in order to be able to use earlier data we processed in MATLAB
+- Not part of the analysis workflow if everything is done in lanalytics 
 
 

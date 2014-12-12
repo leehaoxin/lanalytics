@@ -16,11 +16,11 @@ library(RColorBrewer) # allows us to use Cynthia Brewer's color schemes
 load(file="easinessPlot.Rda")
 load(file="medianTimesPlot.Rda")
 
-# read in xls with cognitive level rating
-cognitiveLevel <- read.xlsx("./Quiz2013-14_cognitive level_HB.xlsx",1)
+# read in xls with challenge level rating
+challengeLevel <- read.xlsx("./Quiz2013-14_cognitive level_HB.xlsx",1)
 
 # create empty data frame 
-# holds easiness, median Time, cognitive level, quiz number, question number
+# holds easiness, median Time, challenge level, quiz number, question number
 allQuestions <- data.frame(matrix(nrow=0,ncol=5))
 
 # provide question column and rating column
@@ -50,9 +50,10 @@ for (i in 1:length(names(medianTimesPlot))){
     quiz <- substr(quizQuestion,2,q-1)
     thisQuestion$quiz <- quiz
     question <- substr(quizQuestion,q+1,str_length(quizQuestion))
-    thisQuestion$question <- question
-     
-    
+    ## correct for the file that the question apparing as "q3" in Learning Catalytics
+    ## is actually q1 in our internal files
+    thisQuestion$question <- as.numeric(question)
+         
     # correct for instructor mistake in question naming 
     # consistently wrote "q1" instead of "q3" etc. 
     # this should not have happened, but this is a quick fix for now
@@ -62,9 +63,9 @@ for (i in 1:length(names(medianTimesPlot))){
     
     questionString = paste("Q",quiz,"_q",question,sep="")
     if (ignore != questionString){        
-        cogIndex <- which(cognitiveLevel[,questionCol]==questionString)
+        cogIndex <- which(challengeLevel[,questionCol]==questionString)
         if (length(cogIndex >0)){
-            level <- cognitiveLevel[cogIndex,ratingCol]
+            level <- challengeLevel[cogIndex,ratingCol]
             thisQuestion$level <- level
             allQuestions <- rbind(allQuestions,thisQuestion)
              
@@ -78,7 +79,7 @@ allQuestions$level <- as.factor(allQuestions$level)
 # plot all
 png("easiness_time_level.png")
 plot <- qplot(allQuestions$time,allQuestions$easiness,color=allQuestions$level) +
-    scale_color_brewer(palette="Dark2", name="Cognitive Level")    +
+    scale_color_brewer(palette="Dark2", name="challenge Level")    +
     ggtitle("Easiness, Time, Level (all quizzes)") +
     xlab("Median time [min]") + 
     ylab("Easiness [%]")  +
@@ -96,7 +97,7 @@ for (i in lowestQuiz:highestQuiz){
         qplot(Questions$time,Questions$easiness,color=Questions$level,
               label=Questions$question) +
         geom_text(size=5,hjust=-0.5)  +
-        scale_color_brewer(palette="Dark2", name="Cognitive Level")    +
+        scale_color_brewer(palette="Dark2", name="challenge Level")    +
         ggtitle(title) +
         xlab("Median time [min]") + 
         ylab("Easiness [%]")  +
@@ -106,6 +107,12 @@ for (i in lowestQuiz:highestQuiz){
     dev.off()
 }
     
+## write xlsx
+write.xlsx(allQuestions, "time_level_easiness_2014_only.xlsx", 
+           col.names = TRUE,row.names = FALSE,showNA = TRUE)
+
+## write csv
+write.csv(allQuestions, "time_level_easiness_2014_only.csv",row.names=FALSE)
 
 
 
