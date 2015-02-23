@@ -54,7 +54,7 @@ for (i in lowestQuiz:highestQuiz){
             threshold <- NA   
         }        
         
-         # just to be on the safe side, cap threshold at 2 minutes
+         # just to be on the safe side, cap threshold at 20 seconds
          if (is.na(threshold) || (threshold > 20)){
              threshold <- 20
          }
