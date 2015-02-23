@@ -12,9 +12,14 @@ output: html_document
 - [ ] "trajectories"  between 2013 and 2014 - quantify changes along x and y axis
         relate to code of what changed 
 - [ ] cluster absolute time stamps    
-- [ ] look at distribution of threshold times
+
 
 ---------
+
+2015/02/23
+
+- [x] look at distribution of threshold times
+
 
 2014/11/20
 - [x] make easiness_time_level export excel and csv
