@@ -27,6 +27,12 @@ highestQuiz = 32
 cheating_guessing <- timesToAnswerSec
 cheating_guessing[,2:ncol(cheating_guessing)] = 0
 
+
+# make data frame to hold number of questions per quiz
+questions_per_quiz <- data.frame(matrix(NA, nrow=highestQuiz-lowestQuiz+1,ncol=2))
+colnames(questions_per_quiz) <- c('quiz','numberOfQuestions')
+
+
 # make table that will hold all threshold times computed
 # (in order to see their distribution, to sanity-check our approach)
 thresholdList <- vector()
@@ -94,5 +100,14 @@ dev.off()
 
 cheating_guessing_numbers <- as.matrix(cheating_guessing[,2:ncol(cheating_guessing)])
 hmcol<-brewer.pal(3,"RdBu")
-image(t(cheating_guessing_numbers), col=rev(hmcol))
+image(t(cheating_guessing_numbers), col=rev(hmcol), axes=FALSE, xlab="quiz", ylab="student")
 
+
+# axis(3,at = 1:10, labels=1:10)
+
+# xlab('question')
+# 
+# firstquiz <- cheating_guessing[,2:19]
+# firstquiz_numbers <- as.matrix(firstquiz)
+# hmcol<-brewer.pal(3,"RdBu")
+# image(t(firstquiz_numbers), col=rev(hmcol))
