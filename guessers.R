@@ -6,6 +6,7 @@
 ## Written by MI Stefan
 
 library(RColorBrewer) # allows us to use Cynthia Brewer's color schemes
+library(fields) # extended plotting capabilities
 
 # read in correctness and time data (inSeconds)
 correctness <- read.csv(file="correctness.csv",sep=",")
@@ -111,11 +112,6 @@ hmcol<-brewer.pal(3,"RdBu")
 image(t(cheating_guessing_numbers), col=rev(hmcol), axes=FALSE, xlab="quiz", ylab="student")
 tickmarks = (questions_per_quiz[,"cumulative"]-questions_per_quiz[1,"cumulative"])/cumulativeQuestions
 axis(1, labels=lowestQuiz:highestQuiz,  at=tickmarks,cex.axis=1)
+mtext(3,text="Instances of guessing (blue) and cheating (red) per student and question.")
 dev.off()
 
-
-
-# firstquiz <- cheating_guessing[,2:19]
-# firstquiz_numbers <- as.matrix(firstquiz)
-# hmcol<-brewer.pal(3,"RdBu")
-# image(t(firstquiz_numbers), col=rev(hmcol))
