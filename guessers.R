@@ -115,3 +115,18 @@ axis(1, labels=lowestQuiz:highestQuiz,  at=tickmarks,cex.axis=1)
 mtext(3,text="Instances of guessing (blue) and cheating (red) per student and question.")
 dev.off()
 
+# compute total instances of cheating or guessing
+instances=(cheating_guessing==1 | cheating_guessing==-1)
+totalInstances <- sum(isntances)
+totalPercentage <- 100*totalInstances/(ncol(cheating_guessing)*nrow(cheating_guessing))
+
+# compute number of instanes per student
+instancesPerStudent = rowMeans(instances)*ncol(cheating_guessing)
+
+png("guessing_per_student.png")
+hist(instancesPerStudent,max(instancesPerStudent+1),xlab="Instances of cheating/guessing",
+ylab="number of students",main="cheating/guessing per student")
+dev.off()
+
+# compute cheating/guessing frequency of the worst offender
+worstOffender = max(instancesPerStudent)/ncol(cheating_guessing)*100
