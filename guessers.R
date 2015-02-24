@@ -117,7 +117,7 @@ dev.off()
 
 # compute total instances of cheating or guessing
 instances=(cheating_guessing==1 | cheating_guessing==-1)
-totalInstances <- sum(isntances)
+totalInstances <- sum(instances)
 totalPercentage <- 100*totalInstances/(ncol(cheating_guessing)*nrow(cheating_guessing))
 
 # compute number of instanes per student
