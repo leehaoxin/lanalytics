@@ -9,8 +9,9 @@ output: html_document
 - [ ] distribution of response times for each question (histograms)
 - [ ] # of students who took longer than 20 minutes (histogram or table)
 - [ ] "trajectories"  between 2013 and 2014 - quantify changes along x and y axis
-        relate to code of what changed 
+        relate to code of what changed
 - [ ] cluster absolute time stamps    
+- [ ] create sample "data files" to provide along with software 
 
 ---------
 
