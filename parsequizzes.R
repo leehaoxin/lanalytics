@@ -7,11 +7,15 @@ library(xlsx)
 library(digest)
 library(random)
 
-# get input directory 
-quizdir = ("/home/melanie/Dropbox/Academy Project/Raw Data 2014/")
-
+## Variables (to be specified according to project)
+# input directory
+quizdir = ("/home/melanie/Work/MCM/academy_project/Raw data 2013/Quizzes 4-32 2013 copy")
 # year quiz was administered (important for date format conversions later on)
-quizyear = 2014
+quizyear = 2013
+# number of students
+studentNumber = 176;
+
+
 
 # make 3 master tables: responses, item correctness (1 or 0), time
 responses <- data.frame()
@@ -21,22 +25,19 @@ times <- data.frame()
 # make table to hold student names and IDs (careful about who gets this)
 students <- data.frame()
 
-# create random sequence which will help anonymize student ids later
-randseq=randomSequence(1,8)
-
 
 # read in all files from input directory
 filenames <- list.files(quizdir, pattern="*.xlsx")
 
 # create random 4-number ids for students; 
 # need to know number of students for that
-studentNumber = 170;
+
 studentIDs <- sample(1000:9999, studentNumber, replace = F)
 
 # go through every quiz (need to know number of lowest and highest quiz)
 for (i in 4:32){
     # read in xlsx file
-    fileindex <- grep(paste("2014Q",i,"_",sep=""),filenames[])
+    fileindex <- grep(paste(quizyear,"Q",i,"_",sep=""),filenames[])
     thisquiz <- filenames[fileindex]
     file = paste(quizdir,thisquiz,sep="")
     quizdata = read.xlsx(file,1, as.data.frame=TRUE) 
