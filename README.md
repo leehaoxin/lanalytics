@@ -1,4 +1,3 @@
-Hi, Melanie
 lanalytics
 ==========
 
@@ -8,7 +7,7 @@ Files:
 
 1. parsequizzes.R
 
-- First data parsing step - this script is designed to be run exaclty once at 
+- First data parsing step - this script is designed to be run exactly once at 
     the beginning of the data analysis process
 - Takes xlsx file for each quiz as downloaded from Learning Catalytics
 - Assigns each student a unique random identifier
