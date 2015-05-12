@@ -12,6 +12,7 @@ output: html_document
         relate to code of what changed
 - [ ] cluster absolute time stamps    
 - [ ] create sample "data files" to provide along with software 
+- [ ] modify parsequizzes.R to make it non-specific to a specific dataset
 
 ---------
 
