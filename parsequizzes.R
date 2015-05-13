@@ -14,8 +14,9 @@ quizdir = ("/home/melanie/Work/MCM/academy_project/Raw data 2013/Quizzes 4-32 20
 quizyear = 2013
 # number of students
 studentNumber = 176;
-
-
+# number of first and last quiz (in case it does not start with 1)
+firstquiz=4;
+lastquiz=32;
 
 # make 3 master tables: responses, item correctness (1 or 0), time
 responses <- data.frame()
@@ -35,9 +36,9 @@ filenames <- list.files(quizdir, pattern="*.xlsx")
 studentIDs <- sample(1000:9999, studentNumber, replace = F)
 
 # go through every quiz (need to know number of lowest and highest quiz)
-for (i in 4:32){
-    # read in xlsx file
-    fileindex <- grep(paste(quizyear,"Q",i,"_",sep=""),filenames[])
+for (i in firstquiz:lastquiz){
+    # read in xlsx file - this assumes file names are of the form Quiz3_something.xlsx
+    fileindex <- grep(paste("Quiz",i,"_",sep=""),filenames[])
     thisquiz <- filenames[fileindex]
     file = paste(quizdir,thisquiz,sep="")
     quizdata = read.xlsx(file,1, as.data.frame=TRUE) 
@@ -48,7 +49,7 @@ for (i in 4:32){
          # get student e-mail
          mail = as.character(quizdata[j,1])
          # use first quiz to make table of students and id
-         if (i == 4){
+         if (i == firstquiz){
              id <- studentIDs[j]
              students[j,"id"] <- id
              students[j,"mail"] <- mail
