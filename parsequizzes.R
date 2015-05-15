@@ -48,10 +48,11 @@ for (i in firstQuiz:lastQuiz){
              
      # go through every student
      for (j in 1:nrow(quizDirata)){
-         # get student e-mail
+         # get student e-mail; only proceed if this cell contains something
          mail = as.character(quizDirata[j,1])
-         # use first quiz to make table of students and id
-         if (i == firstQuiz){
+         if (grepl('@',mail)==TRUE){
+           # use first quiz to make table of students and id
+           if (i == firstQuiz){
              id <- studentIDs[j]
              students[j,"id"] <- id
              students[j,"mail"] <- mail
@@ -59,56 +60,56 @@ for (i in firstQuiz:lastQuiz){
              correctness[j,"id"] <- id
              times[j,"id"] <- id
              index = j
-         }
-         # for all other quizzes, look up student e-mail in table to get id
-         else{ 
+           }
+           # for all other quizzes, look up student e-mail in table to get id
+           else{ 
              # look up id in students list
              id <- students[(students[,2]==mail),1]
              index = which(responses[,1]==id)         
-         }
-                              
-        # go through every column (after the name)
-        for (m in 2:ncol(quizDirata)){
-            column = colnames(quizDirata)[m]
-            if (length(grep("Question.*", column))>0){
-                # make question name according to schema
-                question = substring(column, 10,11)
-                question = (sub("[^0-9]","",question))
-                quizquestion = paste("Q",i,"q",question,sep="")
-                
-                # add entry to appropriate table:
-                                
-                # add response given to response table
-                if(length(grep(".*response.*",column))>0){
-                    qresponse  = quizDirata[j,m]
-                    # strip response of \n and \t
-                    qresponse = gsub("\n","",qresponse)
-                    qresponse = gsub("\t","",qresponse)
-                    # get rid of double quotes 
-                    qresponse = gsub("\"","\'",qresponse)
-                    responses[index, quizquestion] = qresponse                    
-                }
-                # add item correctness to item response table
-                else if(length(grep(".*score.*",column))>0){
-                    correctness[index, quizquestion] = quizDirata[j,m]                              
-                }                
-                # add absolute time to times table                                
-                else if(length(grep(".*responded.*",column))>0){
-                    atime <- strptime(quizDirata[j,m],"%Y-%m-%d %H:%M:%S")
-                    if(!is.na(atime)){
-                        if (atime$year == quizYear-1904){
-                            # this means .xlsx file used 1900 format
-                            # add one day because Excel thinks 1900 was a leap year
-                            atime$mday <- atime$mday+1
-                            atime$year <- atime$year+4
-                        }
-                    }
-                    times[index, quizquestion] = as.character(atime)  
-                }
+           }
+           
+           # go through every column (after the name)
+           for (m in 2:ncol(quizDirata)){
+             column = colnames(quizDirata)[m]
+             if (length(grep("Question.*", column))>0){
+               # make question name according to schema
+               question = substring(column, 10,11)
+               question = (sub("[^0-9]","",question))
+               quizquestion = paste("Q",i,"q",question,sep="")
+               
+               # add entry to appropriate table:
+               
+               # add response given to response table
+               if(length(grep(".*response.*",column))>0){
+                 qresponse  = quizDirata[j,m]
+                 # strip response of \n and \t
+                 qresponse = gsub("\n","",qresponse)
+                 qresponse = gsub("\t","",qresponse)
+                 # get rid of double quotes 
+                 qresponse = gsub("\"","\'",qresponse)
+                 responses[index, quizquestion] = qresponse                    
+               }
+               # add item correctness to item response table
+               else if(length(grep(".*score.*",column))>0){
+                 correctness[index, quizquestion] = quizDirata[j,m]                              
+               }                
+               # add absolute time to times table                                
+               else if(length(grep(".*responded.*",column))>0){
+                 atime <- strptime(quizDirata[j,m],"%Y-%m-%d %H:%M:%S")
+                 if(!is.na(atime)){
+                   if (atime$year == quizYear-1904){
+                     # this means .xlsx file used 1900 format
+                     # add one day because Excel thinks 1900 was a leap year
+                     atime$mday <- atime$mday+1
+                     atime$year <- atime$year+4
+                   }
+                 }
+                 times[index, quizquestion] = as.character(atime)  
+               }
              }   
-        }       
-     }
-        
+           }       
+         }           
+     } 
 }
 
 
