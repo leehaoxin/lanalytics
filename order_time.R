@@ -4,24 +4,37 @@
 ## Written by MI Stefan
 
 library(RColorBrewer)
+library(xlsx)
 
+## Variables
 # give number of quizzes we are interested in 
 lowestQuiz = 4
 highestQuiz = 32
+# path to file that contains time stamps
+timesfile = "2013_output/times.csv"
+# Quiz questions to ignore (e.g. because of a fault at data collection)
+ignoreQuestions = c('Q5q6', 'Q6q2','Q6q11','Q8q3','Q8q4','Q10q5')
+
 
 # read in time data
-times <- read.csv(file="times.csv",sep=",",stringsAsFactors=FALSE)
+times <- read.csv(file=timesfile,sep=",",stringsAsFactors=FALSE)
 
 # data frames that will hold orders of questions and times to answer each
 timesToAnswerMin <- as.data.frame(times[,'id'])
 timesToAnswerSec <- as.data.frame(times[,'id'])
 orders <- as.data.frame(times[,'id'])
 
+# list question numbers to consider 
+questionNumbers <- colnames(times)
+
 # per quiz
 for (i in lowestQuiz:highestQuiz){
      # get indices of relevant columns by finding pattern Q<quiz number>q
-     indices = grep(paste("Q",i,"q",sep=""),colnames(times))
+     indices = grep(paste("Q",i,"q",sep=""),questionNumbers)
      currentQuiz = times[ ,indices]
+     
+     # replace time stamp with NA for questions defined in the "to ignore" list earlier
+     currentQuiz[,intersect(names(currentQuiz),ignoreQuestions)] <- NA
      
      # will store times for this quiz
      quizTimeTakenMin <- currentQuiz
@@ -75,17 +88,17 @@ colnames(timesToAnswerMin)[1] = "id"
 colnames(timesToAnswerSec)[1] = "id"
 
 # plot order on a heatmap
-png("order.png")
+png("2013_output/order.png")
 hmcol<-brewer.pal(11,"RdBu")
-image(t(orders[,2:431]),col=hmcol,xlab="quiz",ylab="student",main="Question Order",xaxt="n",yaxt="n")
+image(t(orders[,2:ncol(orders)]),col=hmcol,xlab="quiz",ylab="student",main="Question Order",xaxt="n",yaxt="n")
 dev.off()
 
 # save data frames
-save(orders,file="orders.Rda")
-save(timesToAnswerSec,file="timesToAnswerSec.Rda")
-save(timesToAnswerMin,file="timesToAnswerMin.Rda")
+save(orders,file="2013_output/orders.Rda")
+save(timesToAnswerSec,file="2013_output/timesToAnswerSec.Rda")
+save(timesToAnswerMin,file="2013_output/timesToAnswerMin.Rda")
 
 ### save three tables to .xlsx files
-write.xlsx(orders,file = "orders.xlsx", col.names = TRUE,row.names = FALSE,showNA = TRUE)
-write.xlsx(timesToAnswerMin,file = "timesToAnswerMin.xlsx", col.names = TRUE,row.names = FALSE,showNA = TRUE)
-write.xlsx(timesToAnswerSec,file = "timesToAnswerSec.xlsx", col.names = TRUE,row.names = FALSE,showNA = TRUE)
+write.xlsx(orders,file = "2013_output/orders.xlsx", col.names = TRUE,row.names = FALSE,showNA = TRUE)
+write.xlsx(timesToAnswerMin,file = "2013_output/timesToAnswerMin.xlsx", col.names = TRUE,row.names = FALSE,showNA = TRUE)
+write.xlsx(timesToAnswerSec,file = "2013_output/timesToAnswerSec.xlsx", col.names = TRUE,row.names = FALSE,showNA = TRUE)
