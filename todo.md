@@ -13,13 +13,13 @@ output: html_document
 - [ ] cluster absolute time stamps    
 - [ ] create sample "data files" to provide along with software 
 - [ ] change order_time.R so it can work with 2013 data as well
-- [ ] include list of questions to ignore in order_time.R
+- [ ] check output of order_time.R
 
 ---------
 
 2015/15/18
 - [x] modify parsequizzes.R to make it non-specific to a specific dataset
-
+- [x] include list of questions to ignore in order_time.R
 
 2015/05/15
 - [x] exclude lines that are not actually students when parsing quizzes
