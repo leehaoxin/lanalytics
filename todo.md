@@ -12,6 +12,8 @@ output: html_document
         relate to code of what changed
 - [ ] cluster absolute time stamps    
 - [ ] create sample "data files" to provide along with software 
+- [ ] change order_time.R so it can work with 2013 data as well
+- [ ] include list of questions to ignore in order_time.R
 
 ---------
 
@@ -21,7 +23,6 @@ output: html_document
 
 2015/05/15
 - [x] exclude lines that are not actually students when parsing quizzes
-
 
 
 2015/02/24
