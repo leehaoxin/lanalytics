@@ -12,9 +12,17 @@ output: html_document
         relate to code of what changed
 - [ ] cluster absolute time stamps    
 - [ ] create sample "data files" to provide along with software 
-- [ ] modify parsequizzes.R to make it non-specific to a specific dataset
 
 ---------
+
+2015/15/18
+- [x] modify parsequizzes.R to make it non-specific to a specific dataset
+
+
+2015/05/15
+- [x] exclude lines that are not actually students when parsing quizzes
+
+
 
 2015/02/24
 - [x] add legends and labels to cheater/guesser graph
