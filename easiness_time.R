@@ -9,10 +9,14 @@
 library(Hmisc)
 library(xlsx)
 
+# specify output directory
+output_dir="2013_output/"
 
 # read in correctness and time data (inSeconds)
-correctness <- read.csv(file="correctness.csv",sep=",")
-load(file="./timesToAnswerSec.Rda")
+correctness_file <- paste(output_dir,"correctness.csv",sep="")
+correctness <- read.csv(file=correctness_file,sep=",")
+timesToAnswerSec_file <- paste(output_dir,"timesToAnswerSec.Rda",sep="")
+load(file=timesToAnswerSec_file)
 
 # get rate of correct answers
 rateCorrect = colMeans(correctness[,3:length(correctness)],na.rm = TRUE)
@@ -38,8 +42,10 @@ medianTimesPlot <- medianTimesMin[rateCorrect>0]
 
 # compute regression
 correlation <- rcorr(rateCorrectPlot,medianTimesPlot)
-write.xlsx(correlation$r, file="time_easiness_correlation_matrix.xlsx")
-write.xlsx(correlation$P, file="time_easiness_correlation_pvalues.xlsx")
+time_easiness_correlatoin_matrix_file <- paste(output_dir,"time_easiness_correlation_matrix.xlsx",sep="")
+write.xlsx(correlation$r, file=time_easiness_correlatoin_matrix_file)
+time_easiness_correlation_pvalues_file <- paste(output_dir,"time_easiness_correlation_pvalues.xlsx",sep="")
+write.xlsx(correlation$P, file=time_easiness_correlation_pvalues_file)
 
 r = format(correlation$r[2],digits=2)
 P = format(correlation$P[2],digits=2)
@@ -48,7 +54,8 @@ labeltext <- paste("r = ",r,"\nP = ", P,sep="")
 
 
 # scatter plot of easiness v time, plus linear regression
-pdf("easiness_time.pdf")
+easiness_time_file <- paste(output_dir,"easiness_time.pdf",sep="")
+pdf(easiness_time_file)
 plot(medianTimesPlot,rateCorrectPlot,xlab="median time [min]",ylab="easiness [%]",
      col=rgb(0,100,0,50,maxColorValue=255), pch=16, ylim=c(0,1.02), 
      main="Easiness and time per question")
@@ -58,10 +65,14 @@ legend('bottomright', legend=labeltext)
 dev.off()
  
 # write easiness and median time data to .xlsx
- write.xlsx(t(rateCorrect),file = "easiness.xlsx", col.names = TRUE,row.names = FALSE,showNA=TRUE)
- write.xlsx(medianTimesMin,file = "median_times_min.xlsx", col.names = TRUE,row.names = FALSE,showNA=TRUE)
+easiness_file <- paste(output_dir,"easiness.xlsx",sep="")
+write.xlsx(t(rateCorrect),file = easiness_file, col.names = TRUE,row.names = FALSE,showNA=TRUE)
+median_times_min_file <- paste(output_dir,"median_times_min.xlsx",sep="")
+write.xlsx(medianTimesMin,file = median_times_min_file, col.names = TRUE,row.names = FALSE,showNA=TRUE)
  
 # save plotted easiness and median time data
-save(rateCorrectPlot,file="easinessPlot.Rda")
+easinessPlot_file <- paste(output_dir,"easinessPlot.Rda",sep="")
+save(rateCorrectPlot,file=easinessPlot_file)
 names(medianTimesPlot) <- names(rateCorrectPlot)
-save(medianTimesPlot,file="medianTimesPlot.Rda")
+medianTimesPlot_file <- paste(output_dir,"medianTimesPlot.Rda",sep="")
+save(medianTimesPlot,file=medianTimesPlot_file)
