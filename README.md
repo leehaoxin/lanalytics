@@ -42,7 +42,6 @@ Files:
 
 4. guessers.R
 
-- TODO: This function is still buggy and incomplete
 - Depends on order_time.R, parsequizzes.R
 - Assumes that the first two and last two questions of each quiz are easy 
     (in our case, because they are about study style and preparaation)
@@ -69,6 +68,7 @@ Files:
 
 7. import_time_easiness.R
 
+- Now obsolete! 
 - Helper script to import data from excel for further processing
 - Written in order to be able to use earlier data we processed in MATLAB
 - Not part of the analysis workflow if everything is done in lanalytics 
