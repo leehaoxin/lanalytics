@@ -14,16 +14,19 @@ library(stringr)    # manipulate strings
 library(ggplot2)    # extra plotting capabilities
 library(RColorBrewer) # allows us to use Cynthia Brewer's color schemes
 
+# specify output directory
+output_dir="2013_2014_compare/"
+
 # specify both years
 year1 = "2013"
 year2 = "2014"
 
 # read in easiness and median time data for both years
 # in our case, I have 2014 data in easinessPlot.Rda and medianTimesPlot.Rda
-load(file="easiness_2013.Rda")
-load(file="median_Times_2013.Rda")
-year1easiness <- easiness
-year1time <- medianTimes
+load(file="2013_output/easinessPlot.Rda")
+load(file="2013_output/medianTimesPlot.Rda")
+year1easiness <- rateCorrectPlot
+year1time <- medianTimesPlot
 
 load(file="easinessPlot.Rda")
 load(file="medianTimesPlot.Rda")
@@ -121,8 +124,9 @@ for (i in 1:length(names(year1time))){
 allQuestionsYear1$level <- as.factor(allQuestionsYear1$level)
 allQuestionsYear2$level <- as.factor(allQuestionsYear2$level)
 
+
 # plot all
-filename=paste("easiness_time_level_",year1,".png",sep="")
+filename=paste(output_dir,"easiness_time_level_",year1,".png",sep="")
 png(filename)
 title=paste("Easiness, Time, Level (all quizzes), ",year1,sep="")
 plot <- qplot(allQuestionsYear1$time,allQuestionsYear1$easiness,color=allQuestionsYear1$level) +
@@ -136,7 +140,7 @@ plot <- qplot(allQuestionsYear1$time,allQuestionsYear1$easiness,color=allQuestio
 print(plot)
 dev.off()
     
-filename=paste("easiness_time_level_",year2,".png",sep="")
+filename=paste(output_dir,"easiness_time_level_",year2,".png",sep="")
 png(filename)
 title=paste("Easiness, Time, Level (all quizzes), ",year2,sep="")
 plot <- qplot(allQuestionsYear2$time,allQuestionsYear2$easiness,color=allQuestionsYear2$level) +
@@ -154,7 +158,7 @@ dev.off()
 
 # plot per quiz
 for (i in lowestQuiz:highestQuiz){
-    filename=paste("easiness_time_level_Q",i,"_",year1,".png",sep="")
+    filename=paste(output_dir,"easiness_time_level_Q",i,"_",year1,".png",sep="")
     title=paste("Easiness, Time, Level, Quiz ",i,", ", year1, sep="")
     Questions <- allQuestionsYear1[allQuestionsYear1$quiz==i,]    
     png(filename)
@@ -173,7 +177,7 @@ for (i in lowestQuiz:highestQuiz){
     print(plot)
     dev.off()
     
-    filename=paste("easiness_time_level_Q",i,"_",year2,".png",sep="")
+    filename=paste(output_dir,"easiness_time_level_Q",i,"_",year2,".png",sep="")
     title=paste("Easiness, Time, Level, Quiz ",i,", ", year2, sep="")
     Questions <- allQuestionsYear2[allQuestionsYear2$quiz==i,]    
     png(filename)
@@ -197,16 +201,11 @@ for (i in lowestQuiz:highestQuiz){
 }
 
 ## write xlsx
-write.xlsx(allQuestionsYear1, "time_level_easiness_2013.xlsx", 
+write.xlsx(allQuestionsYear1, paste(output_dir,"time_level_easiness_2013.xlsx",sep=""), 
            col.names = TRUE,row.names = FALSE,showNA = TRUE)
-write.xlsx(allQuestionsYear2, "time_level_easiness_2014.xlsx", 
+write.xlsx(allQuestionsYear2, paste(output_dir,"time_level_easiness_2014.xlsx",sep=""), 
            col.names = TRUE,row.names = FALSE,showNA = TRUE)
 
 ## write csv
-write.csv(allQuestionsYear1, "time_level_easiness_2013.csv",row.names=FALSE)
-write.csv(allQuestionsYear2, "time_level_easiness_2014.csv",row.names=FALSE)
-
-
-
-
-
+write.csv(allQuestionsYear1, paste(output_dir,"time_level_easiness_2013.csv",sep=""),row.names=FALSE)
+write.csv(allQuestionsYear2, paste(output_dir,"time_level_easiness_2014.csv",sep=""),row.names=FALSE)
