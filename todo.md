@@ -12,15 +12,18 @@ output: html_document
         relate to code of what changed
 - [ ] cluster absolute time stamps    
 - [ ] create sample "data files" to provide along with software 
-- [ ] change order_time.R so it can work with 2013 data as well
-- [ ] check output of order_time.R
-
+- [ ] modify files to work with 2013 (or any) data
+ 
 ---------
+2015/05/21
+- [x] change order_time.R so it can work with 2013 data as well
+- [x] check output of order_time.R
 
-2015/15/18
+
+2015/05/18
 - [x] modify parsequizzes.R to make it non-specific to a specific dataset
 - [x] include list of questions to ignore in order_time.R
-
+  
 2015/05/15
 - [x] exclude lines that are not actually students when parsing quizzes
 
