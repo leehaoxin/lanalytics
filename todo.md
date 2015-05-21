@@ -12,12 +12,12 @@ output: html_document
         relate to code of what changed
 - [ ] cluster absolute time stamps    
 - [ ] create sample "data files" to provide along with software 
-- [ ] modify files to work with 2013 (or any) data
  
 ---------
 2015/05/21
 - [x] change order_time.R so it can work with 2013 data as well
 - [x] check output of order_time.R
+- [x] modify files to work with 2013 (or any) data
 
 
 2015/05/18
