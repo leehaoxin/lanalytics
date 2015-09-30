@@ -17,6 +17,8 @@ output: html_document
 - [ ] linear vs non-linear behaviours
 - [ ] do students gather "enough points" and then stop?
 - [ ] item difficulty, item discrimination
+- [ ] adapt for use with other learning software (not just Learning Catalytics)
+- [ ] individual student characteristics (correctness, time spent, linearity, questions completed, ...)
 
 ---------
 2015/05/21
