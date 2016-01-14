@@ -112,7 +112,7 @@ hmcol<-brewer.pal(3,"RdBu")
 image(t(cheating_guessing_numbers), col=rev(hmcol), axes=FALSE, xlab="quiz", ylab="student")
 tickmarks = (questions_per_quiz[,"cumulative"]-questions_per_quiz[1,"cumulative"])/cumulativeQuestions
 axis(1, labels=lowestQuiz:highestQuiz,  at=tickmarks,cex.axis=1)
-mtext(3,text="Instances of guessing (blue) and cheating (red) per student and question.")
+mtext(3,text="Instances of 'guessing' (blue) and 'cheating' (red) per student and question.")
 dev.off()
 
 # compute total instances of cheating or guessing
@@ -123,10 +123,11 @@ totalPercentage <- 100*totalInstances/(ncol(cheating_guessing)*nrow(cheating_gue
 # compute number of instanes per student
 instancesPerStudent = rowMeans(instances)*ncol(cheating_guessing)
 
-png("guessing_per_student.png")
-hist(instancesPerStudent,max(instancesPerStudent+1),xlab="Instances of cheating/guessing",
-ylab="number of students",main="cheating/guessing per student")
+# change labels so as not to prejudge every fast response as cheating/guessing
+png("fast responses_per_student.png")
+hist(instancesPerStudent,max(instancesPerStudent+1),xlab="Number of very fast item responses",
+ylab="Number of students",main="Incidence of fast responses per student")
 dev.off()
 
-# compute cheating/guessing frequency of the worst offender
+# compute cheating/guessing frequency of the worst offender 
 worstOffender = max(instancesPerStudent)/ncol(cheating_guessing)*100
