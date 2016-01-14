@@ -123,11 +123,19 @@ totalPercentage <- 100*totalInstances/(ncol(cheating_guessing)*nrow(cheating_gue
 # compute number of instanes per student
 instancesPerStudent = rowMeans(instances)*ncol(cheating_guessing)
 
-# change labels so as not to prejudge every fast response as cheating/guessing
+# histogram of cheating/guessing in total
 png("fast responses_per_student.png")
 hist(instancesPerStudent,max(instancesPerStudent+1),xlab="Number of very fast item responses",
 ylab="Number of students",main="Incidence of fast responses per student")
 dev.off()
+
+# colour-coded histogram showing cheating and guessing in red and blue
+# cheating=(cheating_guessing==1)
+# guessing=(cheating_guessing==-1)
+# png("fast responses_per_student_colour.png")
+# 
+# dev.off()
+
 
 # compute cheating/guessing frequency of the worst offender 
 worstOffender = max(instancesPerStudent)/ncol(cheating_guessing)*100
