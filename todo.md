@@ -10,9 +10,16 @@ output: html_document
 - [ ] # of students who took longer than 20 minutes (histogram or table)
 - [ ] "trajectories"  between 2013 and 2014 - quantify changes along x and y axis
         relate to code of what changed
-- [ ] cluster absolute time stamps    
+- [ ] cluster absolute time stamps/find study groups
 - [ ] create sample "data files" to provide along with software 
- 
+- [ ] time of day chart 
+- [ ] distance to deadline chart
+- [ ] linear vs non-linear behaviours
+- [ ] do students gather "enough points" and then stop?
+- [ ] item difficulty, item discrimination
+- [ ] adapt for use with other learning software (not just Learning Catalytics)
+- [ ] individual student characteristics (correctness, time spent, linearity, questions completed, ...)
+
 ---------
 2015/05/21
 - [x] change order_time.R so it can work with 2013 data as well
