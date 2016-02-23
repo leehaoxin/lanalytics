@@ -43,7 +43,6 @@ for (i in (1:nrow(correctness2013))){
   }
 }
 
-
 # 2014
 for (i in (1:nrow(correctness2014))){
   
@@ -67,12 +66,13 @@ for (i in (1:nrow(correctness2014))){
   }
 }
 
-
-
-
-
-
-
+# scores2013 <- as.matrix(resultsPerStudent2013[,2:ncol(resultsPerStudent2013)])
+# png('histogram_scores_2013.png')
+# hist(scores2013)
+# dev.off()
+# 
+# 
+# 
 
 
 
