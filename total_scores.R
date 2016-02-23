@@ -21,14 +21,15 @@ highestQuiz=32
 correctness2013 <- read.csv('2013_output/correctness.csv')
 correctness2014 <- read.csv('correctness.csv')
 
-resultsPerStudent <- data.frame()
+resultsPerStudent2013 <- data.frame()
+resultsPerStudent2014 <- data.frame()
 
 # go through every student and every quiz
 
 # 2013
 for (i in (1:nrow(correctness2013))){
   student_id <- paste(correctness2013[i,"id"],'_13',sep='')
-  resultsPerStudent[i,'id'] <- student_id
+  resultsPerStudent2013[i,'id'] <- student_id
   # go through all quizzes
   for (j in lowestQuiz:highestQuiz){
     # find all the questions belonging to this quiz
@@ -38,10 +39,33 @@ for (i in (1:nrow(correctness2013))){
     trueSum <- sum(correctness2013[i,thisQuizIndex],na.rm=TRUE)
     quizScore <- 100*trueSum/length(correctness2013[i,thisQuizIndex])
     quizString <- paste('Q',j,'_13',sep='')
-    resultsPerStudent[i,quizString] <- quizScore
+    resultsPerStudent2013[i,quizString] <- quizScore
   }
 }
 
+
+# 2014
+for (i in (1:nrow(correctness2014))){
+  
+  # Ignore questions that have zero in every row 
+  # (questions that were not auto-graded or had no specific correct response, e.g. about learning habits)
+  
+  correctness2014 <- correctness2014[, colSums(correctness2014,na.rm=TRUE)!=0]
+  
+  student_id <- paste(correctness2014[i,"id"],'_14',sep='')
+  resultsPerStudent2014[i,'id'] <- student_id
+  # go through all quizzes
+  for (j in lowestQuiz:highestQuiz){
+    # find all the questions belonging to this quiz
+    thisQuizString <- paste('Q',j,'q', sep='')
+    thisQuizIndex <- grep(thisQuizString,names(correctness2014))
+    # compute sum of true answers (ignoring NA responses)
+    trueSum <- sum(correctness2014[i,thisQuizIndex],na.rm=TRUE)
+    quizScore <- 100*trueSum/length(correctness2014[i,thisQuizIndex])
+    quizString <- paste('Q',j,'_14',sep='')
+    resultsPerStudent2014[i,quizString] <- quizScore
+  }
+}
 
 
 
