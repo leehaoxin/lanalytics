@@ -28,6 +28,7 @@ resultsPerStudent2014 <- data.frame()
 
 # 2013
 for (i in (1:nrow(correctness2013))){
+  
   student_id <- paste(correctness2013[i,"id"],'_13',sep='')
   resultsPerStudent2013[i,'id'] <- student_id
   # go through all quizzes
@@ -47,7 +48,7 @@ for (i in (1:nrow(correctness2013))){
 for (i in (1:nrow(correctness2014))){
   
   # Ignore questions that have zero in every row 
-  # (questions that were not auto-graded or had no specific correct response, e.g. about learning habits)
+  # (questions that were not auto-graded or had no specific correct response)
   
   correctness2014 <- correctness2014[, colSums(correctness2014,na.rm=TRUE)!=0]
   
@@ -66,13 +67,21 @@ for (i in (1:nrow(correctness2014))){
   }
 }
 
-# scores2013 <- as.matrix(resultsPerStudent2013[,2:ncol(resultsPerStudent2013)])
-# png('histogram_scores_2013.png')
-# hist(scores2013)
-# dev.off()
-# 
-# 
-# 
+scores2013 <- as.matrix(resultsPerStudent2013[,2:ncol(resultsPerStudent2013)])
+scores2014 <- as.matrix(resultsPerStudent2014[,2:ncol(resultsPerStudent2014)])
+allscores <- c(scores2013,scores2014)
+
+png('histogram_all_scores.png')
+hist(allscores, breaks=10,xlab="Quiz score",main="Quiz scores 2013-2014")
+dev.off()
+
+mean_score <- mean(allscores)
+mean_score_2013 <- mean(scores2013)
+mean_score_2014 <- mean(scores2013)
+mean_nonzero_score <- mean(allscores[allscores>0])
+
+
+
 
 
 
