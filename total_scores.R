@@ -81,7 +81,7 @@ dev.off()
 
 mean_score <- mean(allscores)
 mean_score_2013 <- mean(scores2013)
-mean_score_2014 <- mean(scores2013)
+mean_score_2014 <- mean(scores2014)
 mean_nonzero_score <- mean(allscores[allscores>0])
 
 
