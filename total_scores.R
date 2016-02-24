@@ -28,6 +28,10 @@ resultsPerStudent2014 <- data.frame()
 
 # 2013
 for (i in (1:nrow(correctness2013))){
+
+  # Ignore questions that have zero in every row 
+  # (questions that were not auto-graded or had no specific correct response)  
+  correctness2013 <- correctness2013[, colSums(correctness2013,na.rm=TRUE)!=0]
   
   student_id <- paste(correctness2013[i,"id"],'_13',sep='')
   resultsPerStudent2013[i,'id'] <- student_id
