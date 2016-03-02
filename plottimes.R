@@ -26,7 +26,7 @@ for(i in lowestQuiz:highestQuiz){
 allTotalQuizTimesMin <- as.matrix(allTotalQuizTimes[,2:ncol(allTotalQuizTimes)]/60)
 
 
-png('totalQuizTimesHist.png')
+png('totalQuizTimesBoxPlot.png')
 boxplot(allTotalQuizTimesMin,outline=FALSE,main="time to answer quizzes",xlab="Quiz",ylab="min")
 dev.off()
 
