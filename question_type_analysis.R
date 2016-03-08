@@ -11,6 +11,6 @@ library(xlsx)       # import and export xlsx files
 setwd("~/Work/MCM/academy_project/lanalytics")
 
 ## read input file
-read.xlsx("Comparison of cognitive level 2013-2014 Melanie.xlsx",1)
+cogLevelData <- read.xlsx("Comparison_of_cognitive_level_2013-2014.xlsx",1)
 
 
