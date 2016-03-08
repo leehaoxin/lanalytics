@@ -39,8 +39,9 @@ lastQuiz <- as.numeric(substr(lastString,lastQuizStartPos,lastQuizEndPos))
 # total number of quizzes
 totalNumberQuizzes <- lastQuiz-firstQuiz+1
   
-  
-
+# average number of items per quiz
+averageQuestionsPerQuiz2013 <- totalQuestions2013/totalNumberQuizzes
+averageQuestionsPerQuiz2014 <- totalQuestions2014/totalNumberQuizzes
 
 
 
