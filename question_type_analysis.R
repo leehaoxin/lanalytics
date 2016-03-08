@@ -6,6 +6,7 @@
 
 # load uesful libraries
 library(xlsx)       # import and export xlsx files
+library(stringr)    # easy manipulation of strings
 
 # set working directory
 setwd("~/Work/MCM/academy_project/lanalytics")
@@ -21,6 +22,29 @@ names(cogLevelData)
 totalQuestions2013 <- sum(!is.na(cogLevelData[,"Question.ID.2013"]))
 totalQuestions2014 <- sum(!is.na(cogLevelData[,"MCM.2014.item"]))
 
-# compute total number of quizzes for 2013 and 2014 (using quiz number in question ids)
+# compute total number of quizzes (same for 2013 and 2014)
+
+# find number of first and last quiz by parsing quiz ids from first and last rows 
+# (Works only if they are non-empty, and if rows are in order)
+firstString <- cogLevelData[1,"Question.ID.2013"]
+firstQuizStartPos <- regexpr('z', firstString)[1] + 1
+firstQuizEndPos <- regexpr('q', firstString)[1] -2
+firstQuiz <- as.numeric(substr(firstString,firstQuizStartPos,firstQuizEndPos))
+
+lastString <- cogLevelData[nrow(cogLevelData),"Question.ID.2013"]
+lastQuizStartPos <- regexpr('z', lastString)[1] + 1
+lastQuizEndPos <- regexpr('q', lastString)[1] -2
+lastQuiz <- as.numeric(substr(lastString,lastQuizStartPos,lastQuizEndPos))
+
+# total number of quizzes
+totalNumberQuizzes <- lastQuiz-firstQuiz+1
+  
+  
+
+
+
+
+
+
 
 
