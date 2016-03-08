@@ -43,9 +43,13 @@ totalNumberQuizzes <- lastQuiz-firstQuiz+1
 averageQuestionsPerQuiz2013 <- totalQuestions2013/totalNumberQuizzes
 averageQuestionsPerQuiz2014 <- totalQuestions2014/totalNumberQuizzes
 
+# types of questions
 
+# see what levels there are for 2013:
+levels(cogLevelData[,"Type.1"])
 
-
+# compute how many questions were MC or ManyC in 2013:
+MCItems2013 <- sum(cogLevelData[,"Type.1"]=="MC",na.rm=TRUE)
 
 
 
