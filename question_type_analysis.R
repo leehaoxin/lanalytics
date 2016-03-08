@@ -45,11 +45,37 @@ averageQuestionsPerQuiz2014 <- totalQuestions2014/totalNumberQuizzes
 
 # types of questions
 
+# 2013 analysis
+
 # see what levels there are for 2013:
-levels(cogLevelData[,"Type.1"])
+levels(cogLevelData[,"Type"])
 
 # compute how many questions were MC or ManyC in 2013:
-MCItems2013 <- sum(cogLevelData[,"Type.1"]=="MC",na.rm=TRUE)
+MCItems2013 <- sum(cogLevelData[,"Type"]=="MC",na.rm=TRUE)
+ManyCItems2013 <- sum(cogLevelData[,"Type"]=="ManyC",na.rm=TRUE)
+PercentMCOrManyC2013 <- (MCItems2013+ManyCItems2013)*100/totalQuestions2013
 
+# compute number of short answer questions in 2013:
+SAItems2013 <- sum(cogLevelData[,"Type"]=="SA",na.rm=TRUE)
+PercentSA2013 <- SAItems2013*100/totalQuestions2013
 
+# compute number of other answer formats in 2013
+PercentOther2013 <- (100-PercentMCOrManyC2013-PercentSA2013)
+
+# 2014 analysis
+
+# see what levels there are for 2014:
+levels(cogLevelData[,"Type.1"])
+
+# compute how many questions were MC or ManyC in 2014:
+MCItems2014 <- sum(cogLevelData[,"Type.1"]=="MC",na.rm=TRUE)
+ManyCItems2014 <- sum(cogLevelData[,"Type.1"]=="ManyC",na.rm=TRUE)
+PercentMCOrManyC2014 <- (MCItems2014+ManyCItems2014)*100/totalQuestions2014
+
+# compute number of short answer questions in 2014:
+SAItems2014 <- sum(cogLevelData[,"Type.1"]=="SA",na.rm=TRUE)
+PercentSA2014 <- SAItems2014*100/totalQuestions2014
+
+# compute number of other answer formats in 2014
+PercentOther2014 <- (100-PercentMCOrManyC2014-PercentSA2014)
 
