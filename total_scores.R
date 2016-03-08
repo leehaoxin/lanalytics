@@ -84,8 +84,8 @@ mean_score_2013 <- mean(scores2013)
 mean_score_2014 <- mean(scores2014)
 
 stdev_score <- sd(allscores)
-stdev_score_2013 <- sd(allscores)
-stdev_score_2014 <- sd(allscores)
+stdev_score_2013 <- sd(scores2013)
+stdev_score_2014 <- sd(scores2014)
 
 mean_nonzero_score <- mean(allscores[allscores>0])
 mean_nonzero_score_2013 <- mean(scores2013[scores2013>0])
