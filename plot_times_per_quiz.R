@@ -1,5 +1,5 @@
+# plot_times_per_quiz.R
 # plot median total time it took to answer each quiz; compute median across all quizzes
-# to do: compute this for both 2013 and 2014
 
 # load necessary libraries
 library(xlsx)       # import and export xlsx files
