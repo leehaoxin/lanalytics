@@ -41,6 +41,7 @@ for(i in lowestQuiz:highestQuiz){
 
 allTotalQuizTimesMin2013 <- as.matrix(allTotalQuizTimes2013[,2:ncol(allTotalQuizTimes2013)]/60)
 allTotalQuizTimesMin2014 <- as.matrix(allTotalQuizTimes2014[,2:ncol(allTotalQuizTimes2014)]/60)
+allTotalQuizTimesMin <- rbind(allTotalQuizTimesMin2013,allTotalQuizTimesMin2014)
 
 
 png('totalQuizTimesBoxPlot2013.png')
@@ -51,6 +52,12 @@ png('totalQuizTimesBoxPlot2014.png')
 boxplot(allTotalQuizTimesMin2014,outline=FALSE,main="time to answer quizzes (2014)",xlab="Quiz",ylab="min")
 dev.off()
 
+png('totalQuizTimesBoxPlot.png')
+boxplot(allTotalQuizTimesMin,outline=FALSE,main="time to answer quizzes (2013-2014)",xlab="Quiz",ylab="min")
+dev.off()
 
-# medianQuizTime <- median(allTotalQuizTimesMin)
+
+medianQuizTime2013 <- median(allTotalQuizTimesMin2013)
+medianQuizTime2014 <- median(allTotalQuizTimesMin2014)
+medianQuizTime <- median(allTotalQuizTimesMin)
 
