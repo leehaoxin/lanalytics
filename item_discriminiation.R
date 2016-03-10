@@ -13,8 +13,10 @@ library(xlsx) # read xlsx files
 library(plyr) # allows for sorting of data frames
 
 # read in data 
-correctness <- read.csv("2013_output/correctness.csv")
-
+# 2013
+# correctness <- read.csv("2013_output/correctness.csv")
+# 2014
+correctness <- read.csv("correctness.csv")
   
 # remove first columns (holding row numbers)
 correctness[,1] <- NULL
@@ -54,11 +56,11 @@ itemDiscriminationTable <- as.numeric(itemDiscriminationTable)
 
 # make a histogram of item discrimination values
 
-png("item_discrimination_2013.png")
-hist(itemDiscriminationTable,xlab="Item discrimination",main="Item discrimination (2013)")
+png("item_discrimination_2014.png")
+hist(itemDiscriminationTable,xlab="Item discrimination",main="Item discrimination (2014)")
 dev.off()
 
 # compute mean item discrimination and standard deviation
 
-meanItemDiscrimination <- mean(itemDiscriminationTable)
-stdItemDiscrimination <- sd(itemDiscriminationTable)
+meanItemDiscrimination <- mean(itemDiscriminationTable,na.rm=TRUE)
+stdItemDiscrimination <- sd(itemDiscriminationTable,na.rm=TRUE)
