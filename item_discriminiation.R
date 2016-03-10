@@ -49,7 +49,16 @@ for (i in 2:(ncol(correctness)-2)){
   itemDiscriminationTable[1,i-1] <- itemDiscrimination
 }
 
+# turn item discrimination table to numeric
+itemDiscriminationTable <- as.numeric(itemDiscriminationTable)
+
 # make a histogram of item discrimination values
 
+png("item_discrimination_2013.png")
+hist(itemDiscriminationTable,xlab="Item discrimination",main="Item discrimination (2013)")
+dev.off()
 
+# compute mean item discrimination and standard deviation
 
+meanItemDiscrimination <- mean(itemDiscriminationTable)
+stdItemDiscrimination <- sd(itemDiscriminationTable)
