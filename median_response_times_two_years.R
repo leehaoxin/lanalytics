@@ -11,7 +11,7 @@ timesToAnswerSec2013 <- unlist(timesToAnswerSec2013)
 
 # load 2014 data; convert to matrix
 load("timesToAnswerSec.Rda")
-timesToAnswerSec2014 <- as.matrix(timesToAnswerSec[2:nrow(timesToAnswerSec),])
+
 # ignore first column; make into numeric; linearize
 timesToAnswerSec2014 <- timesToAnswerSec[,2:ncol(timesToAnswerSec)]
 timesToAnswerSec2014 <- lapply(timesToAnswerSec2014,as.numeric)
@@ -19,7 +19,20 @@ timesToAnswerSec2014 <- unlist(timesToAnswerSec2014)
 
 allTimesToAnswerSec <- c(timesToAnswerSec2013,timesToAnswerSec2014)
  
-# medianTimeToAnswerSec2013 <- median(timesToAnswerSec2013,na.rm=TRUE)
-# medianTimeToAnswerSec2014 <- median(timesToAnswerSec2014,na.rm=TRUE)
-# medianTimeToAnswerSecAll <- median(allTimesToAnswerSec,na.rm=TRUE)
-# 
+# compute medians
+medianTimeToAnswerSec2013 <- median(timesToAnswerSec2013,na.rm=TRUE)
+medianTimeToAnswerSec2014 <- median(timesToAnswerSec2014,na.rm=TRUE)
+medianTimeToAnswerSecAll <- median(allTimesToAnswerSec,na.rm=TRUE)
+
+# compute IQR
+IQRTimeToAnswerSec2013 <- IQR(timesToAnswerSec2013,na.rm=TRUE)
+IQRTimeToAnswerSec2014 <- IQR(timesToAnswerSec2014,na.rm=TRUE)
+IQRTimeToAnswerSecAll <- IQR(allTimesToAnswerSec,na.rm=TRUE)
+
+
+# compute means (just curious to see how big the difference is)
+meanTimeToAnswerSec2013 <- mean(timesToAnswerSec2013,na.rm=TRUE)
+meanTimeToAnswerSec2014 <- mean(timesToAnswerSec2014,na.rm=TRUE)
+meanTimeToAnswerSecAll <- mean(allTimesToAnswerSec,na.rm=TRUE)
+
+
