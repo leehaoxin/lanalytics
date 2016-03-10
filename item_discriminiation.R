@@ -15,13 +15,7 @@ library(plyr) # allows for sorting of data frames
 # read in data 
 correctness <- read.csv("2013_output/correctness.csv")
 
-# # read in data from both years
-# correctness2014 <- read.xlsx("correctness.xlsx",1,as.data.frame=TRUE)
-
-
-
-
-#  
+  
 # remove first columns (holding row numbers)
 correctness[,1] <- NULL
 
@@ -41,20 +35,21 @@ bottomGroup <- sortedCorrectness[1:groupSize,]
 topGroup <- sortedCorrectness[(numberOfStudents-groupSize+1):numberOfStudents,]
 
 # make new data frame to hold item discrimination for each item
-itemDiscrimination <- as.data.frame(matrix(nrow = 0, ncol = ncol(correctness)))
-names(itemDiscrimination)=names(correctness)
-itemDiscrimination[,1]<-NULL
+itemDiscriminationTable <- as.data.frame(matrix(nrow = 0, ncol = ncol(correctness)))
+names(itemDiscriminationTable)=names(correctness)
+itemDiscriminationTable[,1]<-NULL
+itemDiscriminationTable[,"total"]<-NULL
 
 # now comes the actual item discrimination computing
-
  
-for (i in 2:ncol(correctness)){
-  topScore <- sum(topGroup[,i])
-  bottomScore <- sum(bottomGroup[,i])
+for (i in 2:(ncol(correctness)-2)){
+  topScore <- sum(topGroup[,i],na.rm=TRUE)
+  bottomScore <- sum(bottomGroup[,i],na.rm=TRUE)
   itemDiscrimination <- (topScore-bottomScore)/groupSize
-  # itemDiscrimination[1,i] <- itemDiscrimination
+  itemDiscriminationTable[1,i-1] <- itemDiscrimination
 }
 
+# make a histogram of item discrimination values
 
 
 
