@@ -33,10 +33,12 @@ load(file="medianTimesPlot.Rda")
 year2easiness <- rateCorrectPlot
 year2time <- medianTimesPlot
 
-
-
 # read in xls with challenge level rating
-challengeLevel <- read.xlsx("./Comparison of cognitive level 2013-2014 Melanie.xlsx",1) 
+challengeLevel <- read.xlsx("Comparison_of_cognitive_level_2013-2014.xlsx",1)
+
+# check data set
+head(challengeLevel)
+names(challengeLevel)
                             
 
 # create empty data frame 
@@ -45,7 +47,6 @@ allQuestionsYear1 <- data.frame(matrix(nrow=0,ncol=5))
 allQuestionsYear2 <- data.frame(matrix(nrow=0,ncol=5))
 
 # provide question column and rating column both for 2013 and 2014
-
 
 # questionCol = 3
 # ratingCol = 5
