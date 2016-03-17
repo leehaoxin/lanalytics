@@ -35,6 +35,10 @@ year2time <- medianTimesPlot
 
 # read in xls with challenge level rating
 challengeLevel <- read.xlsx("Comparison_of_cognitive_level_2013-2014.xlsx",1)
+before = nrow(challengeLevel)
+
+# remove rows that are all nan
+challengeLevel <- challengeLevel[rowSums(is.na(challengeLevel))!=ncol(challengeLevel), ]
 
 # check data set
 head(challengeLevel)
@@ -42,32 +46,47 @@ names(challengeLevel)
                             
 
 # create empty data frame 
-# holds easiness, median Time, challenge level, quiz number, question numrber
+# holds easiness, median Time, challenge level, quiz number, question number
 allQuestionsYear1 <- data.frame(matrix(nrow=0,ncol=5))
 allQuestionsYear2 <- data.frame(matrix(nrow=0,ncol=5))
+allQuestionsBothYears <- data.frame(matrix(nrow=0,ncol=9))
 
 # provide question column and rating column both for 2013 and 2014
 
-# questionCol = 3
-# ratingCol = 5
-# 
-# 
-# ######### deal with exceptions/special cases
-# 
-# # provide questions to ignore (can be empty), as determined by instructor
-# # here, we are ignoring question 12 of Quiz 9 (duplicate question)
-# ignore = "Q9_q12"
-# 
-# ## question 1 and 4 were swapped in Quiz 4 from 2013 to 2014. 
-# ## Add star in plot
-# star = c("Q4_q1","Q4_q4")
-# 
-# ######### start analysis
-# 
-# lowestQuiz=4
-# highestQuiz=32
-# 
-# # go through all question for which we have a time and easiness rating
+itemIDCol2013 <- "Question.ID.2013"
+itemIDCol2014 <- "MCM.2014.item"
+ratingCol2013 <- "Rating.HB"
+ratingCol2014 <- "Rating.HB."
+typeCol2013 <- "Type"
+typeCol2014 <- "Type.1"
+
+######### start analysis
+
+# find number of first and last quiz by parsing quiz ids from first and last rows 
+# (Works only if they are non-empty, and if rows are in order)
+firstString <- challengeLevel[1,"Question.ID.2013"]
+firstQuizStartPos <- regexpr('z', firstString)[1] + 1
+firstQuizEndPos <- regexpr('q', firstString)[1] -2
+firstQuiz <- as.numeric(substr(firstString,firstQuizStartPos,firstQuizEndPos))
+
+lastString <- challengeLevel[nrow(challengeLevel),"Question.ID.2013"]
+lastQuizStartPos <- regexpr('z', lastString)[1] + 1
+lastQuizEndPos <- regexpr('q', lastString)[1] -2
+lastQuiz <- as.numeric(substr(lastString,lastQuizStartPos,lastQuizEndPos))
+
+
+## go through all lines of challengeLevel
+for (row in 1:nrow(challengeLevel)){
+  exists2013 <- 0
+  exists2014 <- 0
+  # check that entry for 2013 exists and is Multiple Choice
+  
+  
+  existsBoth <- exists2013*exists2014
+}
+
+ 
+# # go through all MC questions for which we have a time and easiness rating
 # for (i in 1:length(names(year1time))){
 #     
 #     name = names(year1time)[i]
