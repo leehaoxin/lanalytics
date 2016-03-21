@@ -47,8 +47,8 @@ names(challengeLevel)
 
 # create empty data frame 
 # holds easiness, median Time, challenge level, quiz number, question number
-allQuestionsYear1 <- data.frame(matrix(nrow=0,ncol=5))
-allQuestionsYear2 <- data.frame(matrix(nrow=0,ncol=5))
+allQuestions2013 <- data.frame(matrix(nrow=0,ncol=5))
+allQuestions2014 <- data.frame(matrix(nrow=0,ncol=5))
 allQuestionsBothYears <- data.frame(matrix(nrow=0,ncol=9))
 
 # provide question column and rating column both for 2013 and 2014
@@ -84,7 +84,7 @@ for (row in 1:nrow(challengeLevel)){
   
   # check that entry for 2013 exists and is Multiple Choice.
   # if so, record data for 2013
-  if (challengeLevel[row,typeCol2013]=="MC"){
+  if (!is.na(challengeLevel[row,typeCol2013]) & challengeLevel[row,typeCol2013]=="MC"){
     exists2013 <- 1
     # make empty dataframe to hold all info for this question
     thisQuestion2013 <- data.frame(matrix(nrow=1,ncol=5))
@@ -108,7 +108,10 @@ for (row in 1:nrow(challengeLevel)){
     
     # get challenge level
     thisQuestion2013$level <- challengeLevel[row,ratingCol2013]
-  }
+    
+    # add to 2013 dataframe
+    allQuestions2013 <- rbind(allQuestions2013,thisQuestion2013)
+    }
   
   
   existsBoth <- exists2013*exists2014
@@ -138,8 +141,6 @@ for (row in 1:nrow(challengeLevel)){
 #         thisQuestionYear2$question <- question
 #         
 #         # get easiness and time
-#         thisQuestionYear1$easiness <- year1easiness[name]
-#         thisQuestionYear1$time <- year1time[name]
 #         thisQuestionYear2$easiness <- year2easiness[year2name]
 #         thisQuestionYear2$time <- year2time[year2name]
 #                 
