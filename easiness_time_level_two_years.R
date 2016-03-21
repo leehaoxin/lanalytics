@@ -49,7 +49,7 @@ names(challengeLevel)
 # holds easiness, median Time, challenge level, quiz number, question number
 allQuestions2013 <- data.frame(matrix(nrow=0,ncol=5))
 allQuestions2014 <- data.frame(matrix(nrow=0,ncol=5))
-allQuestionsBothYears <- data.frame(matrix(nrow=0,ncol=9))
+allQuestionsBothYears <- data.frame(matrix(nrow=0,ncol=10))
 
 # provide question column and rating column both for 2013 and 2014
 
@@ -88,7 +88,7 @@ for (row in 1:nrow(challengeLevel)){
     exists2013 <- 1
     # make empty dataframe to hold all info for this question
     thisQuestion2013 <- data.frame(matrix(nrow=1,ncol=5))
-    colnames(thisQuestion2013) <- c("quiz","question","easiness","time", "level")
+    colnames(thisQuestion2013) <- c("quiz_13","question_13","easiness_13","time_13", "level_13")
     
     # get quiz and question number 
     quizQuestion <- challengeLevel[row,itemIDCol2013]
@@ -98,16 +98,16 @@ for (row in 1:nrow(challengeLevel)){
     question <- substr(quizQuestion,q+1,str_length(quizQuestion))
     
     # add quiz and question info to data frame
-    thisQuestion2013$quiz <- quiz
-    thisQuestion2013$question <- question
+    thisQuestion2013$quiz_13 <- quiz
+    thisQuestion2013$question_13 <- question
     
     # get easiness and time
     questionCol <- paste("Q",quiz,"q",question,sep="")
-    thisQuestion2013$easiness <- year1easiness[questionCol]
-    thisQuestion2013$time <- year1time[questionCol]
+    thisQuestion2013$easiness_13 <- year1easiness[questionCol]
+    thisQuestion2013$time_13 <- year1time[questionCol]
     
     # get challenge level
-    thisQuestion2013$level <- challengeLevel[row,ratingCol2013]
+    thisQuestion2013$level_13 <- challengeLevel[row,ratingCol2013]
     
     # add to 2013 dataframe
     allQuestions2013 <- rbind(allQuestions2013,thisQuestion2013)
@@ -120,7 +120,7 @@ for (row in 1:nrow(challengeLevel)){
     exists2014 <- 1
     # make empty dataframe to hold all info for this question
     thisQuestion2014 <- data.frame(matrix(nrow=1,ncol=5))
-    colnames(thisQuestion2014) <- c("quiz","question","easiness","time", "level")
+    colnames(thisQuestion2014) <- c("quiz_14","question_14","easiness_14","time_14", "level_14")
     
     # get quiz and question number - as in instructor's notes
     quizQuestion <- challengeLevel[row,itemIDCol2014]
@@ -130,8 +130,8 @@ for (row in 1:nrow(challengeLevel)){
     question <- substr(quizQuestion,q+1,str_length(quizQuestion))
     
     # add quiz and question info to data frame
-    thisQuestion2014$quiz <- quiz
-    thisQuestion2014$question <- question
+    thisQuestion2014$quiz_14 <- quiz
+    thisQuestion2014$question_14 <- question
     
     
     # Extra step here: 
@@ -143,17 +143,24 @@ for (row in 1:nrow(challengeLevel)){
     
     # get easiness and time
     questionCol <- paste("Q",quiz,"q",question,sep="")
-    thisQuestion2014$easiness <- year2easiness[questionCol]
-    thisQuestion2014$time <- year2time[questionCol]
+    thisQuestion2014$easiness_14 <- year2easiness[questionCol]
+    thisQuestion2014$time_14 <- year2time[questionCol]
     
     # get challenge level
-    thisQuestion2014$level <- challengeLevel[row,ratingCol2014]
+    thisQuestion2014$level_14 <- challengeLevel[row,ratingCol2014]
     
     # add to 2013 dataframe
     allQuestions2014 <- rbind(allQuestions2014,thisQuestion2014)
   }
   
-  existsBoth <- exists2013*exists2014
+#   existsBoth <- exists2013*exists2014
+#   # finally, if both exist and are MC, add them to the combined data frame
+#   if(existsBoth == 1){
+#     
+#     thisQuestion <- c(thisQuestion2013,thisQuestion2014)
+#     allQuestionsBothYears <- rbind(allQuestionsBothYears,thisQuestion)
+#   }
+#   
 }
 
  
