@@ -75,11 +75,40 @@ lastQuizEndPos <- regexpr('q', lastString)[1] -2
 lastQuiz <- as.numeric(substr(lastString,lastQuizStartPos,lastQuizEndPos))
 
 
+############ all the below needs to be tested
+
 ## go through all lines of challengeLevel
 for (row in 1:nrow(challengeLevel)){
   exists2013 <- 0
   exists2014 <- 0
-  # check that entry for 2013 exists and is Multiple Choice
+  
+  # check that entry for 2013 exists and is Multiple Choice.
+  # if so, record data for 2013
+  if (challengeLevel[row,typeCol2013]=="MC"){
+    exists2013 <- 1
+    # make empty dataframe to hold all info for this question
+    thisQuestion2013 <- data.frame(matrix(nrow=1,ncol=5))
+    colnames(thisQuestion2013) <- c("quiz","question","easiness","time", "level")
+    
+    # get quiz and question number 
+    quizQuestion <- challengeLevel[row,itemIDCol2013]
+    q <- str_locate(pattern="q",quizQuestion)
+    quizString <- str_locate(pattern="Quiz",quizQuestion)
+    quiz <- substr(quizQuestion,quizString+4,q-2)
+    question <- substr(quizQuestion,q+1,str_length(quizQuestion))
+    
+    # add quiz and question info to data frame
+    thisQuestion2013$quiz <- quiz
+    thisQuestion2013$question <- question
+    
+    # get easiness and time
+    questionCol <- paste("Q",quiz,"q",question,sep="")
+    thisQuestion2013$easiness <- year1easiness[questionCol]
+    thisQuestion2013$time <- year1time[questionCol]
+    
+    # get challenge level
+    thisQuestion2013$level <- challengeLevel[row,ratingCol2013]
+  }
   
   
   existsBoth <- exists2013*exists2014
@@ -91,18 +120,9 @@ for (row in 1:nrow(challengeLevel)){
 #     
 #     name = names(year1time)[i]
 #             
-#     # make empty dataframe to hold all info for this question
-#     thisQuestionYear1 <- data.frame(matrix(nrow=1,ncol=5))
-#     thisQuestionYear2 <- data.frame(matrix(nrow=1,ncol=5))
 #     
-#     colnames(thisQuestionYear1) <- c("easiness","time", "level", "quiz","question")
 #     colnames(thisQuestionYear2) <- c("easiness","time", "level", "quiz","question")
 #     
-#     # get quiz and question number 
-#     quizQuestion <- names(year1time)[i]
-#     q <- str_locate(pattern="q",quizQuestion)
-#     quiz <- substr(quizQuestion,2,q-1)
-#     question <- substr(quizQuestion,q+1,str_length(quizQuestion))
 #     
 #     # correct for adding two non-content question at the beginning in year 2
 #     # which means "q1" has become "q3" etc. 
@@ -113,8 +133,7 @@ for (row in 1:nrow(challengeLevel)){
 #     # check that this quiz question exists in year 2
 #     if (!is.na(year2easiness[year2name])){
 #         ## fill in data
-#         thisQuestionYear1$quiz <- quiz
-#         thisQuestionYear1$question <- question
+#   
 #         thisQuestionYear2$quiz <- quiz
 #         thisQuestionYear2$question <- question
 #         
