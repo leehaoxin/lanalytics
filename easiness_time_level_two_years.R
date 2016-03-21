@@ -114,6 +114,45 @@ for (row in 1:nrow(challengeLevel)){
     }
   
   
+  # check that entry for 2014 exists and is Multiple Choice.
+  # if so, record data for 2014  
+  if (!is.na(challengeLevel[row,typeCol2014]) & challengeLevel[row,typeCol2014]=="MC"){
+    exists2014 <- 1
+    # make empty dataframe to hold all info for this question
+    thisQuestion2014 <- data.frame(matrix(nrow=1,ncol=5))
+    colnames(thisQuestion2014) <- c("quiz","question","easiness","time", "level")
+    
+    # get quiz and question number - as in instructor's notes
+    quizQuestion <- challengeLevel[row,itemIDCol2014]
+    q <- str_locate(pattern="q",quizQuestion)
+    quizString <- str_locate(pattern="Quiz",quizQuestion)
+    quiz <- substr(quizQuestion,quizString+4,q-2)
+    question <- substr(quizQuestion,q+1,str_length(quizQuestion))
+    
+    # add quiz and question info to data frame
+    thisQuestion2014$quiz <- quiz
+    thisQuestion2014$question <- question
+    
+    
+    # Extra step here: 
+    # correct for adding two non-content question at the beginning in year 2
+    # which means "q1" has become "q3" etc. 
+    # not elegant, but this is a quick fix for now
+    question <- as.numeric(question)+2  
+    
+    
+    # get easiness and time
+    questionCol <- paste("Q",quiz,"q",question,sep="")
+    thisQuestion2014$easiness <- year2easiness[questionCol]
+    thisQuestion2014$time <- year2time[questionCol]
+    
+    # get challenge level
+    thisQuestion2014$level <- challengeLevel[row,ratingCol2014]
+    
+    # add to 2013 dataframe
+    allQuestions2014 <- rbind(allQuestions2014,thisQuestion2014)
+  }
+  
   existsBoth <- exists2013*exists2014
 }
 
