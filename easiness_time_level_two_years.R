@@ -75,8 +75,6 @@ lastQuizEndPos <- regexpr('q', lastString)[1] -2
 lastQuiz <- as.numeric(substr(lastString,lastQuizStartPos,lastQuizEndPos))
 
 
-############ all the below needs to be tested
-
 ## go through all lines of challengeLevel
 for (row in 1:nrow(challengeLevel)){
   exists2013 <- 0
