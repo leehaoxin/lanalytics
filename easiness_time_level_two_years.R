@@ -151,14 +151,16 @@ for (row in 1:nrow(challengeLevel)){
     allQuestions2014 <- rbind(allQuestions2014,thisQuestion2014)
   }
   
-#   existsBoth <- exists2013*exists2014
-#   # finally, if both exist and are MC, add them to the combined data frame
-#   if(existsBoth == 1){
-#     
-#     thisQuestion <- c(thisQuestion2013,thisQuestion2014)
+  ######### test this
+  
+  existsBoth <- exists2013*exists2014
+  # finally, if both exist and are MC, add them to the combined data frame
+  if(existsBoth == 1){
+    
+#     thisQuestion <- cbind(thisQuestion2013,thisQuestion2014)
 #     allQuestionsBothYears <- rbind(allQuestionsBothYears,thisQuestion)
-#   }
-#   
+  }
+  
 }
 
  
