@@ -160,76 +160,26 @@ for (row in 1:nrow(challengeLevel)){
   }
   
 }
-
  
-# # go through all MC questions for which we have a time and easiness rating
-# for (i in 1:length(names(year1time))){
-#     
-#     name = names(year1time)[i]
-#             
-#     
-#     colnames(thisQuestionYear2) <- c("easiness","time", "level", "quiz","question")
-#     
-#     
-#     # correct for adding two non-content question at the beginning in year 2
-#     # which means "q1" has become "q3" etc. 
-#     # not elegant, but this is a quick fix for now
-#     year2question <- as.numeric(question)+2
-#     year2name <- paste("Q",quiz,"q",year2question,sep="")
-#     
-#     # check that this quiz question exists in year 2
-#     if (!is.na(year2easiness[year2name])){
-#         ## fill in data
-#   
-#         thisQuestionYear2$quiz <- quiz
-#         thisQuestionYear2$question <- question
-#         
-#         # get easiness and time
-#         thisQuestionYear2$easiness <- year2easiness[year2name]
-#         thisQuestionYear2$time <- year2time[year2name]
-#                 
-#         # find this quiz and question number (with underscore)
-#         
-#         questionString = paste("Q",quiz,"_q",question,sep="")
-#         if (ignore != questionString){        
-#             cogIndex <- which(challengeLevel[,questionCol]==questionString)
-#             if (length(cogIndex >0)){
-#                 level <- challengeLevel[cogIndex,ratingCol]
-#                 thisQuestionYear1$level <- level
-#                 thisQuestionYear2$level <- level
-#                 allQuestionsYear1 <- rbind(allQuestionsYear1,thisQuestionYear1)
-#                 allQuestionsYear2 <- rbind(allQuestionsYear2,thisQuestionYear2)
-#                 
-#             }
-#         }   
-#         
-#     }    
-# }
-#     
-# 
-# allQuestionsYear1$level <- as.factor(allQuestionsYear1$level)
-# allQuestionsYear2$level <- as.factor(allQuestionsYear2$level)
-# 
-# 
-# # plot all
-# filename=paste(output_dir,"easiness_time_level_",year1,".png",sep="")
-# png(filename)
-# title=paste("Easiness, Time, Level (all quizzes), ",year1,sep="")
-# plot <- qplot(allQuestionsYear1$time,allQuestionsYear1$easiness,color=allQuestionsYear1$level) +
-#     scale_color_brewer(palette="Dark2", name="challenge Level")    +
-#     ggtitle(title) +
-#     xlab("Median time [min]") + 
-#     ylab("Easiness [%]")  +
-#     theme(plot.title = element_text(size=20, face="bold", vjust=2)) +
-#     xlim(c(-0.2,6.2)) +
-#     ylim(c(0,1))
-# print(plot)
-# dev.off()
-#     
+# plot all
+filename=paste(output_dir,"easiness_time_level_",year1,".png",sep="")
+png(filename)
+title=paste("Easiness, Time, Level (all quizzes), ",year1,sep="")
+plot <- qplot(allQuestions2013$time_13,allQuestions2013$easiness_13,color=allQuestions2013$level_13) +
+     scale_color_brewer(palette="Dark2", name="challenge Level")    +
+     ggtitle(title) +
+     xlab("Median time [min]") + 
+     ylab("Easiness [%]")  +
+     theme(plot.title = element_text(size=20, face="bold", vjust=2)) +
+     xlim(c(-0.2,6.2)) +
+     ylim(c(0,1))
+print(plot)
+dev.off()
+
 # filename=paste(output_dir,"easiness_time_level_",year2,".png",sep="")
 # png(filename)
 # title=paste("Easiness, Time, Level (all quizzes), ",year2,sep="")
-# plot <- qplot(allQuestionsYear2$time,allQuestionsYear2$easiness,color=allQuestionsYear2$level) +
+# plot <- qplot(allQuestions2014$time_14,allQuestions2014$easiness_14,color=allQuestions2014$level_14) +
 #     scale_color_brewer(palette="Dark2", name="challenge Level")    +
 #     ggtitle(title) +
 #     xlab("Median time [min]") + 
