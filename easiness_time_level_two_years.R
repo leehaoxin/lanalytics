@@ -176,27 +176,27 @@ plot <- qplot(allQuestions2013$time_13,allQuestions2013$easiness_13,color=allQue
 print(plot)
 dev.off()
 
-# filename=paste(output_dir,"easiness_time_level_",year2,".png",sep="")
-# png(filename)
-# title=paste("Easiness, Time, Level (all quizzes), ",year2,sep="")
-# plot <- qplot(allQuestions2014$time_14,allQuestions2014$easiness_14,color=allQuestions2014$level_14) +
-#     scale_color_brewer(palette="Dark2", name="challenge Level")    +
-#     ggtitle(title) +
-#     xlab("Median time [min]") + 
-#     ylab("Easiness [%]")  +
-#     theme(plot.title = element_text(size=20, face="bold", vjust=2)) +
-#     xlim(c(-0.2,6.2)) +
-#     ylim(c(0,1))
-# print(plot)
-# dev.off()
-# 
-# 
-# 
-# # plot per quiz
-# for (i in lowestQuiz:highestQuiz){
-#     filename=paste(output_dir,"easiness_time_level_Q",i,"_",year1,".png",sep="")
-#     title=paste("Easiness, Time, Level, Quiz ",i,", ", year1, sep="")
-#     Questions <- allQuestionsYear1[allQuestionsYear1$quiz==i,]    
+filename=paste(output_dir,"easiness_time_level_",year2,".png",sep="")
+png(filename)
+title=paste("Easiness, Time, Level (all quizzes), ",year2,sep="")
+plot <- qplot(allQuestions2014$time_14,allQuestions2014$easiness_14,color=allQuestions2014$level_14) +
+    scale_color_brewer(palette="Dark2", name="challenge Level")    +
+    ggtitle(title) +
+    xlab("Median time [min]") + 
+    ylab("Easiness [%]")  +
+    theme(plot.title = element_text(size=20, face="bold", vjust=2)) +
+    xlim(c(-0.2,6.2)) +
+    ylim(c(0,1))
+print(plot)
+dev.off()
+
+#### change and check all below
+
+# plot per quiz
+for (i in firstQuiz:lastQuiz){
+    filename=paste(output_dir,"easiness_time_level_Q",i,"_",year1,".png",sep="")
+    title=paste("Easiness, Time, Level, Quiz ",i,", ", year1, sep="")
+    Questions <- allQuestions2013[allQuestions2013$quiz13==i,]    
 #     png(filename)
 #     plot <- 
 #         qplot(Questions$time,Questions$easiness,color=Questions$level,
@@ -232,10 +232,10 @@ dev.off()
 #     print(plot)
 #     dev.off()
 #     
-#     
-# 
-# }
-# 
+    
+
+}
+
 # ## write xlsx
 # write.xlsx(allQuestionsYear1, paste(output_dir,"time_level_easiness_2013.xlsx",sep=""), 
 #            col.names = TRUE,row.names = FALSE,showNA = TRUE)
