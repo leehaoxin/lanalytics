@@ -166,13 +166,15 @@ filename=paste(output_dir,"easiness_time_level_",year1,".png",sep="")
 png(filename)
 title=paste("Easiness, Time, Level (all quizzes), ",year1,sep="")
 plot <- qplot(allQuestions2013$time_13,allQuestions2013$easiness_13,color=allQuestions2013$level_13) +
-     scale_color_brewer(palette="Dark2", name="challenge Level")    +
-     ggtitle(title) +
-     xlab("Median time [min]") + 
-     ylab("Easiness [%]")  +
-     theme(plot.title = element_text(size=20, face="bold", vjust=2)) +
-     xlim(c(-0.2,6.2)) +
-     ylim(c(0,1))
+  scale_color_brewer(palette="Dark2", name="category")    +
+  ggtitle(title) +
+  xlab("Median time [min]") + 
+  ylab("Easiness")  +
+  theme(plot.title = element_text(size=20, face="bold", vjust=2)) +
+  xlim(c(-0.2,6.2)) +
+  ylim(c(0,1)) +
+  geom_hline(yintercept=0.75) +
+  geom_vline(xintercept=1) 
 print(plot)
 dev.off()
 
@@ -180,13 +182,15 @@ filename=paste(output_dir,"easiness_time_level_",year2,".png",sep="")
 png(filename)
 title=paste("Easiness, Time, Level (all quizzes), ",year2,sep="")
 plot <- qplot(allQuestions2014$time_14,allQuestions2014$easiness_14,color=allQuestions2014$level_14) +
-    scale_color_brewer(palette="Dark2", name="challenge Level")    +
-    ggtitle(title) +
-    xlab("Median time [min]") + 
-    ylab("Easiness [%]")  +
-    theme(plot.title = element_text(size=20, face="bold", vjust=2)) +
-    xlim(c(-0.2,6.2)) +
-    ylim(c(0,1))
+  scale_color_brewer(palette="Dark2", name="category")    +
+  ggtitle(title) +
+  xlab("Median time [min]") + 
+  ylab("Easiness")  +
+  theme(plot.title = element_text(size=20, face="bold", vjust=2)) +
+  xlim(c(-0.2,6.2)) +
+  ylim(c(0,1)) +
+  geom_hline(yintercept=0.75) +
+  geom_vline(xintercept=1) 
 print(plot)
 dev.off()
 
@@ -196,44 +200,46 @@ dev.off()
 for (i in firstQuiz:lastQuiz){
     filename=paste(output_dir,"easiness_time_level_Q",i,"_",year1,".png",sep="")
     title=paste("Easiness, Time, Level, Quiz ",i,", ", year1, sep="")
-    Questions <- allQuestions2013[allQuestions2013$quiz13==i,]    
-#     png(filename)
-#     plot <- 
-#         qplot(Questions$time,Questions$easiness,color=Questions$level,
-#               label=Questions$question) +
-#         geom_text(size=5,hjust=-0.5)  +
-#         scale_color_brewer(palette="Dark2", name="challenge Level")    +
-#         ggtitle(title) +
-#         xlab("Median time [min]") + 
-#         ylab("Easiness [%]")  +
-#         theme(plot.title = element_text(size=20, face="bold", vjust=2)) +
-#         xlim(c(-0.2,6.2)) +
-#         ylim(c(0,1))
-#     
-#     print(plot)
-#     dev.off()
-#     
-#     filename=paste(output_dir,"easiness_time_level_Q",i,"_",year2,".png",sep="")
-#     title=paste("Easiness, Time, Level, Quiz ",i,", ", year2, sep="")
-#     Questions <- allQuestionsYear2[allQuestionsYear2$quiz==i,]    
-#     png(filename)
-#     plot <- 
-#         qplot(Questions$time,Questions$easiness,color=Questions$level,
-#               label=Questions$question) +
-#         geom_text(size=5,hjust=-0.5)  +
-#         scale_color_brewer(palette="Dark2", name="challenge Level")    +
-#         ggtitle(title) +
-#         xlab("Median time [min]") + 
-#         ylab("Easiness [%]")  +
-#         theme(plot.title = element_text(size=20, face="bold", vjust=2)) +
-#         xlim(c(-0.2,6.2)) +
-#         ylim(c(0,1))
-#     
-#     print(plot)
-#     dev.off()
-#     
+    Questions <- allQuestions2013[allQuestions2013$quiz_13==i,]    
+    png(filename)
+    plot <- 
+        qplot(Questions$time_13,Questions$easiness_13,color=Questions$level_13,
+              label=Questions$question_13) +
+        geom_text(size=5,hjust=-0.5)  +
+        scale_color_brewer(palette="Dark2", name="category")    +
+        ggtitle(title) +
+        xlab("Median time [min]") + 
+        ylab("Easiness")  +
+        theme(plot.title = element_text(size=20, face="bold", vjust=2)) +
+        xlim(c(-0.2,6.2)) +
+        ylim(c(0,1)) +
+        geom_hline(yintercept=0.75) +
+        geom_vline(xintercept=1) 
     
-
+    print(plot)
+    dev.off()
+    
+    filename=paste(output_dir,"easiness_time_level_Q",i,"_",year2,".png",sep="")
+    title=paste("Easiness, Time, Level, Quiz ",i,", ", year2, sep="")
+    Questions <- allQuestions2014[allQuestions2014$quiz_14==i,]    
+    png(filename)
+    plot <- 
+        qplot(Questions$time_14,Questions$easiness_14,color=Questions$level_14,
+              label=Questions$question_14) +
+        geom_text(size=5,hjust=-0.5)  +
+        scale_color_brewer(palette="Dark2", name="category")    +
+        ggtitle(title) +
+        xlab("Median time [min]") + 
+        ylab("Easiness")  +
+        theme(plot.title = element_text(size=20, face="bold", vjust=2)) +
+        xlim(c(-0.2,6.2)) +
+        ylim(c(0,1)) +
+        geom_hline(yintercept=0.75) +
+        geom_vline(xintercept=1) 
+    
+    
+    print(plot)
+    dev.off()
 }
 
 # ## write xlsx
