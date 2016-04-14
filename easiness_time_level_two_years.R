@@ -242,12 +242,17 @@ for (i in firstQuiz:lastQuiz){
     dev.off()
 }
 
-# ## write xlsx
-# write.xlsx(allQuestionsYear1, paste(output_dir,"time_level_easiness_2013.xlsx",sep=""), 
-#            col.names = TRUE,row.names = FALSE,showNA = TRUE)
-# write.xlsx(allQuestionsYear2, paste(output_dir,"time_level_easiness_2014.xlsx",sep=""), 
-#            col.names = TRUE,row.names = FALSE,showNA = TRUE)
-# 
+## write xlsx
+write.xlsx(allQuestions2013, paste(output_dir,"time_level_easiness_2013.xlsx",sep=""), 
+           col.names = TRUE,row.names = FALSE,showNA = TRUE)
+write.xlsx(allQuestions2014, paste(output_dir,"time_level_easiness_2014.xlsx",sep=""), 
+           col.names = TRUE,row.names = FALSE,showNA = TRUE)
+write.xlsx(allQuestionsBothYears, paste(output_dir,"time_level_easiness_2013_2014.xlsx",sep=""), 
+           col.names = TRUE,row.names = FALSE,showNA = TRUE)
+
+
 # ## write csv
-# write.csv(allQuestionsYear1, paste(output_dir,"time_level_easiness_2013.csv",sep=""),row.names=FALSE)
-# write.csv(allQuestionsYear2, paste(output_dir,"time_level_easiness_2014.csv",sep=""),row.names=FALSE)
+write.csv(allQuestions2013, paste(output_dir,"time_level_easiness_2013.csv",sep=""),row.names=FALSE)
+write.csv(allQuestions2014, paste(output_dir,"time_level_easiness_2014.csv",sep=""),row.names=FALSE)
+write.csv(allQuestionsBothYears, paste(output_dir,"time_level_easiness_2013_2014.csv",sep=""),row.names=FALSE)
+
