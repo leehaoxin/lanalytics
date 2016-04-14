@@ -194,10 +194,10 @@ plot <- qplot(allQuestions2014$time_14,allQuestions2014$easiness_14,color=allQue
 print(plot)
 dev.off()
 
-#### change and check all below
-
 # plot per quiz
 for (i in firstQuiz:lastQuiz){
+  
+    # full picture
     filename=paste(output_dir,"easiness_time_level_Q",i,"_",year1,".png",sep="")
     title=paste("Easiness, Time, Level, Quiz ",i,", ", year1, sep="")
     Questions <- allQuestions2013[allQuestions2013$quiz_13==i,]    
@@ -214,11 +214,34 @@ for (i in firstQuiz:lastQuiz){
         xlim(c(-0.2,6.2)) +
         ylim(c(0,1)) +
         geom_hline(yintercept=0.75) +
-        geom_vline(xintercept=1) 
-    
+        geom_vline(xintercept=1)
     print(plot)
     dev.off()
     
+    
+    # same, but y goes from 0.5 to 1 
+    filename=paste(output_dir,"ylim50/","easiness_time_level_Q",i,"_",year1,".png",sep="")
+    title=paste("Easiness, Time, Level, Quiz ",i,", ", year1, sep="")
+    Questions <- allQuestions2013[allQuestions2013$quiz_13==i,]    
+    png(filename)
+    plot <- 
+      qplot(Questions$time_13,Questions$easiness_13,color=Questions$level_13,
+            label=Questions$question_13) +
+      geom_text(size=5,hjust=-0.5)  +
+      scale_color_brewer(palette="Dark2", name="category")    +
+      ggtitle(title) +
+      xlab("Median time [min]") + 
+      ylab("Easiness")  +
+      theme(plot.title = element_text(size=20, face="bold", vjust=2)) +
+      xlim(c(-0.2,6.2)) +
+      ylim(c(0.5,1)) +
+      geom_hline(yintercept=0.75) +
+      geom_vline(xintercept=1)
+    print(plot)
+    dev.off()
+    
+    
+    # full picture for year 2 
     filename=paste(output_dir,"easiness_time_level_Q",i,"_",year2,".png",sep="")
     title=paste("Easiness, Time, Level, Quiz ",i,", ", year2, sep="")
     Questions <- allQuestions2014[allQuestions2014$quiz_14==i,]    
@@ -236,6 +259,29 @@ for (i in firstQuiz:lastQuiz){
         ylim(c(0,1)) +
         geom_hline(yintercept=0.75) +
         geom_vline(xintercept=1) 
+    
+    
+    print(plot)
+    dev.off()
+    
+    # 50% cutoff for year 2 
+    filename=paste(output_dir, "ylim50/","easiness_time_level_Q",i,"_",year2,".png",sep="")
+    title=paste("Easiness, Time, Level, Quiz ",i,", ", year2, sep="")
+    Questions <- allQuestions2014[allQuestions2014$quiz_14==i,]    
+    png(filename)
+    plot <- 
+      qplot(Questions$time_14,Questions$easiness_14,color=Questions$level_14,
+            label=Questions$question_14) +
+      geom_text(size=5,hjust=-0.5)  +
+      scale_color_brewer(palette="Dark2", name="category")    +
+      ggtitle(title) +
+      xlab("Median time [min]") + 
+      ylab("Easiness")  +
+      theme(plot.title = element_text(size=20, face="bold", vjust=2)) +
+      xlim(c(-0.2,6.2)) +
+      ylim(c(0.5,1)) +
+      geom_hline(yintercept=0.75) +
+      geom_vline(xintercept=1) 
     
     
     print(plot)
