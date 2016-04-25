@@ -31,6 +31,27 @@ plot(NA, xlim=c(-5,5), ylim=c(-0.5,0.5),xlab="time change", ylab="easiness chang
 with(compare_2013_2014, mapply("segments", 0, 0, time_change, easiness_change))
 dev.off()
 
+
+cols <-  brewer.pal(3,"Dark2") 
+title="Item changes 2013-2014"
+plot <- qplot() +
+  geom_segment(mapping=aes(x=0, y=0, xend=time_change, yend=easiness_change), 
+              data=compare_2013_2014["level_14"=="A",],color=cols[1] )+ 
+#   geom_segment(mapping=aes(x=0, y=0, xend=time_change, yend=easiness_change), 
+#                data=compare_2013_2014[$level_14=="F"],color=cols[2] )+ 
+#   geom_segment(mapping=aes(x=0, y=0, xend=time_change, yend=easiness_change), 
+#                data=compare_2013_2014[$level_14=="C"],color=cols[3] )+   
+  ggtitle(title) +
+  # scale_color_brewer(palette="Dark2", name="category") +
+  xlab("time change [min]") + 
+  ylab("easiness change")  +
+  theme(plot.title = element_text(size=20, face="bold", vjust=2)) +
+  xlim(c(-5,5)) +
+  ylim(c(-0.5,0.5)) 
+  
+print(plot)
+
+
 plot(NA, xlim=c(-5,5), ylim=c(-0.5,0.5),xlab="time change", ylab="easiness change", 
      main="Item changes 2013-2014")
 with(compare_2013_2014, mapply("segments", 0, 0, time_change, easiness_change, col=level_13))
