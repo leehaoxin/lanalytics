@@ -3,6 +3,9 @@
 ## plots and quantifies how items have changed from one year to the next
 ## Written by MI Stefan
 
+library(RColorBrewer) # allows us to use Cynthia Brewer's color schemes
+library(ggplot2)    # extra plotting capabilities
+
 compare_2013_2014_raw <- read.csv("2013_2014_compare/time_level_easiness_2013_2014.csv")
 
 ## get rid of all first questions in 2013 (time readout not trustworthy)
@@ -21,15 +24,17 @@ for (i in 1:nrow(compare_2013_2014)){
   segments(0, 0, time_change, easiness_change)
 }
 
-# plot(NA, xlim=c(-4,4), ylim=c(-0.5,0.5),xlab="time change", ylab="easiness change", 
-#      main="Item changes 2013-2014")
-# 
-# for (i in 1:nrow(compare_2013_2014)){
-#   easiness_change = compare_2013_2014[i,"easiness_14"]-compare_2013_2014[i,"easiness_13"]
-#   time_change = compare_2013_2014[i,"time_14"]-compare_2013_2014[i,"time_13"]
-#   compare_2013_2014[i,"easiness_change"] <- easiness_change
-#   compare_2013_2014[i,"time_change"] <- time_change
-#   segments(0, 0, time_change, easiness_change)
-# }
-# 
+# plot all
+png("change_all_items.png")
+plot(NA, xlim=c(-5,5), ylim=c(-0.5,0.5),xlab="time change", ylab="easiness change", 
+     main="Item changes 2013-2014")
+with(compare_2013_2014, mapply("segments", 0, 0, time_change, easiness_change))
+dev.off()
+
+plot(NA, xlim=c(-5,5), ylim=c(-0.5,0.5),xlab="time change", ylab="easiness change", 
+     main="Item changes 2013-2014")
+with(compare_2013_2014, mapply("segments", 0, 0, time_change, easiness_change, col=level_13))
+
+
+
 
