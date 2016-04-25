@@ -3,7 +3,10 @@
 ## plots and quantifies how items have changed from one year to the next
 ## Written by MI Stefan
 
-compare_2013_2014 <- read.csv("2013_2014_compare/time_level_easiness_2013_2014.csv")
+compare_2013_2014_raw <- read.csv("2013_2014_compare/time_level_easiness_2013_2014.csv")
+
+## get rid of all first questions in 2013 (time readout not trustworthy)
+compare_2013_2014 <- compare_2013_2014_raw[compare_2013_2014_raw[,'question_13']!=1,]
 
 ## plot the "star of change" for all questions
 ## prediction: if nothing happens, star should be the same in all directions
@@ -15,7 +18,6 @@ min_easiness_change = 0
 
 for (i in 1:nrow(compare_2013_2014)){
   easiness_change = compare_2013_2014[i,"easiness_14"]-compare_2013_2014[i,"easiness_13"]
-  print (easiness_change)
   time_change = compare_2013_2014[i,"time_14"]-compare_2013_2014[i,"time_13"]
     
   segments(0, 0, time_change, easiness_change)
