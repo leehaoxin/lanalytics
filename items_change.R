@@ -21,7 +21,7 @@ for (i in 1:nrow(compare_2013_2014)){
   time_change = compare_2013_2014[i,"time_14"]-compare_2013_2014[i,"time_13"]
   compare_2013_2014[i,"easiness_change"] <- easiness_change
   compare_2013_2014[i,"time_change"] <- time_change
-  segments(0, 0, time_change, easiness_change)
+#  segments(0, 0, time_change, easiness_change)
 }
 
 # plot all
@@ -31,18 +31,19 @@ plot(NA, xlim=c(-5,5), ylim=c(-0.5,0.5),xlab="time change", ylab="easiness chang
 with(compare_2013_2014, mapply("segments", 0, 0, time_change, easiness_change))
 dev.off()
 
+# plot by question category
+
+
+png("change_by_level.png")
 
 cols <-  brewer.pal(3,"Dark2") 
 title="Item changes 2013-2014"
-plot <- qplot() +
-  geom_segment(mapping=aes(x=0, y=0, xend=time_change, yend=easiness_change), 
-              data=compare_2013_2014["level_14"=="A",],color=cols[1] )+ 
-#   geom_segment(mapping=aes(x=0, y=0, xend=time_change, yend=easiness_change), 
-#                data=compare_2013_2014[$level_14=="F"],color=cols[2] )+ 
-#   geom_segment(mapping=aes(x=0, y=0, xend=time_change, yend=easiness_change), 
-#                data=compare_2013_2014[$level_14=="C"],color=cols[3] )+   
+plot <- ggplot() +
+  facet_wrap(~level_14) +
+  geom_segment(data=compare_2013_2014[complete.cases(compare_2013_2014[,"level_14"]),], 
+               mapping=aes(x=0, y=0, xend=time_change, yend=easiness_change,col=level_14))+
   ggtitle(title) +
-  # scale_color_brewer(palette="Dark2", name="category") +
+  scale_color_brewer(palette="Dark2", name="category") +  
   xlab("time change [min]") + 
   ylab("easiness change")  +
   theme(plot.title = element_text(size=20, face="bold", vjust=2)) +
@@ -50,11 +51,11 @@ plot <- qplot() +
   ylim(c(-0.5,0.5)) 
   
 print(plot)
+dev.off()
 
-
-plot(NA, xlim=c(-5,5), ylim=c(-0.5,0.5),xlab="time change", ylab="easiness change", 
-     main="Item changes 2013-2014")
-with(compare_2013_2014, mapply("segments", 0, 0, time_change, easiness_change, col=level_13))
+# plot(NA, xlim=c(-5,5), ylim=c(-0.5,0.5),xlab="time change", ylab="easiness change", 
+#      main="Item changes 2013-2014")
+# with(compare_2013_2014, mapply("segments", 0, 0, time_change, easiness_change, col=level_13))
 
 
 
