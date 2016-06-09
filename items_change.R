@@ -65,17 +65,33 @@ itemsChange <- read.xlsx("Comparison_of_cognitive_level_2013-2014.xlsx",1)
 # for all entries in our compare dataframe, read corresponding entry from itemsChange,
 # add columns related to change
 
+for (i in 1:nrow(compare_2013_2014)) {
+  quiz = compare_2013_2014[i,"quiz_13"]
+  question = compare_2013_2014[i,"question_13"]
+  q_String = paste("2013_Quiz",quiz,"_q",question,sep="")  
+  changes = itemsChange[grep(q_String,itemsChange$Question.ID.2013),11:23]
+
+  changed_index = which(!is.na(changes))
+  print(changed_index)
+}
+  
+  # The following defines the nature of changes made to quiz questions as defined in 
+  # information provided by the course instructor. 
+  # Edit as needed
+  
+#   format_change = c(1,5)
+#   text_edits = 6
+#   distractor_edits = c(7,8)
+#   format_change = c(1:5)
+#   major_edits = c(9:11)
+#   unchanged = 12
+#   deleted = 13
+  
+  
+  
+  
 
 
-# for (i in 1:nrow(compare_2013_2014)) {
-#   quiz = compare_2013_2014[i,"quiz_13"]
-#   question = compare_2013_2014[i,"question_13"]
-#   q_String = paste("2013_Quiz",quiz,"_q",question,sep="")  
-#   changes = itemsChange[grep(q_String,itemsChange$Question.ID.2013),11:23]
-# #  compare_2013_2014
-# }
-# 
-# 
 
 
 
