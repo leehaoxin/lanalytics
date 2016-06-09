@@ -7,6 +7,8 @@ library(RColorBrewer) # allows us to use Cynthia Brewer's color schemes
 library(ggplot2)    # extra plotting capabilities
 library(xlsx)
 
+dir.create("./items_change")
+
 compare_2013_2014_raw <- read.csv("2013_2014_compare/time_level_easiness_2013_2014.csv")
 
 ## get rid of all first questions in 2013 (time readout not trustworthy)
