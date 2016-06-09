@@ -27,7 +27,7 @@ for (i in 1:nrow(compare_2013_2014)){
 }
 
 # plot all
-png("change_all_items.png")
+png("items_change/change_all_items.png")
 plot(NA, xlim=c(-5,5), ylim=c(-0.5,0.5),xlab="time change", ylab="easiness change", 
      main="Item changes 2013-2014")
 with(compare_2013_2014, mapply("segments", 0, 0, time_change, easiness_change))
@@ -36,7 +36,7 @@ dev.off()
 # plot by question category
 
 
-png("change_by_level.png")
+png("items_change/change_by_level.png")
 
 cols <-  brewer.pal(3,"Dark2") 
 title="Item changes 2013-2014"
