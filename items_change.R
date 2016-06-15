@@ -72,23 +72,33 @@ for (i in 1:nrow(compare_2013_2014)) {
   changes = itemsChange[grep(q_String,itemsChange$Question.ID.2013),11:23]
 
   changed_index = which(!is.na(changes))
-  print(changed_index)
+  
+  for (j in changed_index){
+    if (j %in% c(1:5)){
+      compare_2013_2014[i,'FormatChange']=1      
+    }        
+    if (j == 6){
+      compare_2013_2014[i,'TextEdit']=1      
+    }
+    if (j %in% c(7,8)){
+      compare_2013_2014[i,'DistractorEdit']=1
+    }
+    if (j %in% c(9:11)){
+      compare_2013_2014[i,'MajorEdit']=1
+    }
+    if (j==12){
+      compare_2013_2014[i,'Unchanged']=1
+    }
+    if (j==13){
+      compare_2013_2014[i,'Deleted']=1
+    }
+  }
 }
   
-  # The following defines the nature of changes made to quiz questions as defined in 
-  # information provided by the course instructor. 
-  # Edit as needed
   
-#   format_change = c(1,5)
-#   text_edits = 6
-#   distractor_edits = c(7,8)
-#   format_change = c(1:5)
-#   major_edits = c(9:11)
-#   unchanged = 12
-#   deleted = 13
-  
-  
-  
+## plot star of change for different types of changes
+
+## compare characteristics of items that have changed with those of items that haven't
   
 
 
