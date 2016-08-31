@@ -71,12 +71,13 @@ for (i in 1:nrow(compare_2013_2014)) {
   q_String = paste("2013_Quiz",quiz,"_q",question,sep="")  
   changes = itemsChange[grep(q_String,itemsChange$Question.ID.2013),11:23]
 
+# classify changes
+# since we are measuring MCQs only, not interested questoins that changed format
+# or deleted questions
+  
   changed_index = which(!is.na(changes))
   
   for (j in changed_index){
-    if (j %in% c(1:5)){
-      compare_2013_2014[i,'FormatChange']=1      
-    }        
     if (j == 6){
       compare_2013_2014[i,'TextEdit']=1      
     }
@@ -89,14 +90,32 @@ for (i in 1:nrow(compare_2013_2014)) {
     if (j==12){
       compare_2013_2014[i,'Unchanged']=1
     }
-    if (j==13){
-      compare_2013_2014[i,'Deleted']=1
-    }
   }
 }
   
   
-## plot star of change for different types of changes
+# just check how many of what changes are in the dataset - some edits may be counted twice
+# Therefore totalEdits + nunberUnchanged will be >= total nmber of Questions
+
+numberTextEdits = length(which(compare_2013_2014[,'TextEdit']==1))
+numberDistractorEdits = length(which(compare_2013_2014[,'DistractorEdit']==1))
+numberMajorEdits = length(which(compare_2013_2014[,'MajorEdit']==1))
+
+totalEdits = numberTextEdits + numberDistractorEdits + numberMajorEdits
+    
+numberUnchanged = length(which(compare_2013_2014[,'Unchanged']==1))
+
+numberUnchanged+totalEdits
+nrow(compare_2013_2014)
+
+
+
+## plot star of change for different types of changes - text edit vs distractor edit vs unchanged
+## only 2 Major edits in this data set, so not looking at that
+
+
+
+
 
 ## compare characteristics of items that have changed with those of items that haven't
   
