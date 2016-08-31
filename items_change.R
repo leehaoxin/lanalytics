@@ -76,43 +76,62 @@ for (i in 1:nrow(compare_2013_2014)) {
 # or deleted questions
   
   changed_index = which(!is.na(changes))
-  
-  for (j in changed_index){
-    if (j == 6){
-      compare_2013_2014[i,'TextEdit']=1      
-    }
-    if (j %in% c(7,8)){
-      compare_2013_2014[i,'DistractorEdit']=1
-    }
-    if (j %in% c(9:11)){
-      compare_2013_2014[i,'MajorEdit']=1
-    }
-    if (j==12){
-      compare_2013_2014[i,'Unchanged']=1
-    }
-  }
+#   
+#   for (j in changed_index){
+#     if (j == 6){
+#       compare_2013_2014[i,'Edit']='Text'      
+#     }
+#     if (j %in% c(7,8)){
+#       compare_2013_2014[i,'Edit']='Distractor'
+#     }
+#     if (j %in% c(9:11)){
+#       compare_2013_2014[i,'Edit']='Major'
+#     }
+#     if (j==12){
+#       compare_2013_2014[i,'Edit']='None'
+#     }
+#   }
 }
   
   
 # just check how many of what changes are in the dataset - some edits may be counted twice
 # Therefore totalEdits + nunberUnchanged will be >= total nmber of Questions
 
-numberTextEdits = length(which(compare_2013_2014[,'TextEdit']==1))
-numberDistractorEdits = length(which(compare_2013_2014[,'DistractorEdit']==1))
-numberMajorEdits = length(which(compare_2013_2014[,'MajorEdit']==1))
+# numberTextEdits = length(which(compare_2013_2014[,'TextEdit']==1))
+# numberDistractorEdits = length(which(compare_2013_2014[,'DistractorEdit']==1))
+# numberMajorEdits = length(which(compare_2013_2014[,'MajorEdit']==1))
+# 
+# totalEdits = numberTextEdits + numberDistractorEdits + numberMajorEdits
+#     
+# numberUnchanged = length(which(compare_2013_2014[,'Unchanged']==1))
+# 
+# numberUnchanged+totalEdits
+# nrow(compare_2013_2014)
+# 
 
-totalEdits = numberTextEdits + numberDistractorEdits + numberMajorEdits
-    
-numberUnchanged = length(which(compare_2013_2014[,'Unchanged']==1))
 
-numberUnchanged+totalEdits
-nrow(compare_2013_2014)
-
-
-
-## plot star of change for different types of changes - text edit vs distractor edit vs unchanged
+## plot star of change for different types of changes
+## text edit vs distractor edit vs unchanged
 ## only 2 Major edits in this data set, so not looking at that
 
+# png("items_change/change_by_edit_type.png")
+# 
+# cols <-  brewer.pal(3,"Dark2") 
+# title="Item changes 2013-2014 by type of edit"
+# plot <- ggplot() +
+#     facet_wrap(~level_14) +
+#     geom_segment(data=compare_2013_2014[complete.cases(compare_2013_2014[,"TextEdit"]),], 
+#                  mapping=aes(x=0, y=0, xend=time_change, yend=easiness_change,col=level_14))+
+#     ggtitle(title) +
+#     scale_color_brewer(palette="Dark2", name="category") +  
+#     xlab("time change [min]") + 
+#     ylab("easiness change")  +
+#     theme(plot.title = element_text(size=20, face="bold", vjust=2)) +
+#     xlim(c(-5,5)) +
+#     ylim(c(-0.5,0.5)) 
+# 
+# print(plot)
+# dev.off()
 
 
 
