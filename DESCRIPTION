@@ -1,0 +1,16 @@
+Package: testPackage
+Type: Package
+Title: What the Package Does (Title Case)
+Version: 0.1.0
+Authors@R: c(person("Melanie", "Stefan", email = "melanie_test@gmail.com", role = c("aut")),
+             person("Salvador", "Garcia", email = "savrgg@gmail.com", role = c("aut", "cre")))
+Maintainer: The package maintainer <yourself@somewhere.net>
+Description: More about what it does (maybe more than one line)
+    Use four spaces when indenting paragraphs within the Description.
+License: This package is under the license...
+Encoding: UTF-8
+LazyData: true
+Description: The description of the package will go here
+Imports:
+  tidyverse,
+  stringr
