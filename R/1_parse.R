@@ -1,12 +1,9 @@
-
-file<- "test_data/Dataset1/Quiz1_session1_wide format.xlsx"
-
-parse_lc <- function(file){
+read_lc <- function(file){
   quiz_sheet <- readxl::read_excel(path = file, sheet = 1) %>%  
     data.frame() %>% 
     setNames(tolower(names(.))) %>% 
-    filter(str_detect(email.address, "@")) %>% data.frame() %>% 
-    mutate(email.address = as.character(email.address),
+    dplyr::filter(str_detect(email.address, "@")) %>% data.frame() %>% 
+    dplyr::mutate(email.address = as.character(email.address),
            id = md5(email.address)) 
   
   quiz_long <- lapply(c("response", "responded.at", "score"), function(df_subset){
@@ -33,7 +30,8 @@ parse_lc <- function(file){
     arrange(quiz, id, responded.at) %>% 
     mutate(n = 1:n(),
            time_per_question = responded.at - lag(responded.at),
-           time_per_quiz = sum(time_per_question, na.rm = T)) %>% data.frame
+           time_per_quiz = sum(time_per_question, na.rm = T)) %>% data.frame %>% 
+    dplyr::select(-response)
 }
 
 
