@@ -1,5 +1,5 @@
 read_lc <- function(file){
-  quiz_sheet <- readxl::read_excel(path = file, sheet = 1) %>%  
+  quiz_sheet <- read_csv(file) %>%  
     data.frame() %>% 
     setNames(tolower(names(.))) %>% 
     dplyr::filter(str_detect(email.address, "@")) %>% data.frame() %>% 
@@ -7,13 +7,13 @@ read_lc <- function(file){
            id = md5(email.address)) 
   
   quiz_long <- lapply(c("response", "responded.at", "score"), function(df_subset){
-    if(df_subset == "responded.at"){
-      cols_select <- c("email.address", "id", "last.name", "first.name", 
-                       quiz_sheet[sapply(quiz_sheet, is.POSIXt)] %>% names())
-    }else{
+    # if(df_subset == "responded.at"){
+    #   cols_select <- c("email.address", "id", "last.name", "first.name", 
+    #                    quiz_sheet[sapply(quiz_sheet, is.POSIXt)] %>% names())
+    # }else{
       cols_select <- c("email.address", "id", "last.name", "first.name", 
                        names(quiz_sheet)[str_detect(names(quiz_sheet), df_subset)])
-    }
+    #}
     
     quiz_long_join <- quiz_sheet[names(quiz_sheet) %in% cols_select] %>% 
       gather(question, value, -c(email.address, id, last.name, first.name)) %>% 
@@ -25,6 +25,7 @@ read_lc <- function(file){
   
   reduce(quiz_long, left_join) %>% 
     mutate(quiz = file,
+           responded.at = as.POSIXct(responded.at, format = "%d/%m/%Y %H:%M"),
            response = as.character(response)) %>% 
     group_by(quiz, id) %>%
     arrange(quiz, id, responded.at) %>% 

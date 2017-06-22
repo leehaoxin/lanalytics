@@ -28,6 +28,7 @@ ui <- dashboardPage(
                                'Double Quote'='"',
                                'Single Quote'="'"),
                              '"'),
+                
                 tableOutput('contents')
   ),
   skin = "black"
@@ -36,6 +37,7 @@ ui <- dashboardPage(
 # server ------------------------------------------------------------------
 
 server <- function(input, output) {
+  source("../R/1_parse.R")
   output$contents <- renderTable({
 
     inFile <- input$file1
@@ -43,8 +45,7 @@ server <- function(input, output) {
     if (is.null(inFile))
       return(NULL)
     
-    head(read.csv(inFile$datapath, header=input$header, sep=input$sep, 
-             quote=input$quote))
+    head(read_lc(inFile$datapath))
   })
 }
 
