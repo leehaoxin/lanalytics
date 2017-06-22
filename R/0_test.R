@@ -37,4 +37,4 @@
 # 
 # 
 # # 3) Example of shiny ========
-# runGitHub("shiny_example", "rstudio", subdir = "inst/shinyapp/")
+# runGitHub("lanalytics", "savrgg", subdir = "shinyapp/")
