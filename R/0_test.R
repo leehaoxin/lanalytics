@@ -24,6 +24,8 @@
 # # 1) Example of functions in the package =========
 # # Long format, each row is a question per quiz per person
 # file <- "datasets/Dataset1/Quiz1_session1_wide format.csv"
+# file <- "datasets/Dataset1/Quiz2_session1_wide format.csv"
+# file <- "datasets/Dataset1/Quiz3_session12098.csv"
 # 
 # # 1) Loading function
 # df_test <- read_lc(file)
