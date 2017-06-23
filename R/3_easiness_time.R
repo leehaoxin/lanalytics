@@ -9,4 +9,3 @@ plot_easiness_time <- function(df_quizzes){
     geom_point()+
     geom_smooth(method = "lm")
 }
-
