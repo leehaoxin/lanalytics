@@ -6,32 +6,50 @@ library(shinydashboard)
 
 ui <- dashboardPage(
   dashboardHeader(title = "lanalytics dashboard"),
+  
   dashboardSidebar(sidebarMenu(
-    menuItem("Input data", tabName = "dashboard", icon = icon("database")),
-    menuItem("Data analysis", tabName = "widgets", icon = icon("dashboard")),
-    menuItem("Output data", tabName = "widgets", icon = icon("save"))
+    menuItem("Import one quiz", tabName = "Input", icon = icon("database")),
+    menuItem("Import multiple quizzes", tabName = "Input_multiple", icon = icon("database")),
+    menuItem("Data analysis", tabName = "Analysis", icon = icon("dashboard")),
+    menuItem("Output data", tabName = "Output", icon = icon("save"))
   )),
   
-  dashboardBody(fileInput('file1', 'Choose CSV File',
-                          accept=c('text/csv', 
-                                   'text/comma-separated-values,text/plain', 
-                                   '.csv')),
-                tags$hr(),
-                checkboxInput('header', 'Header', TRUE),
-                radioButtons('sep', 'Separator',
-                             c(Comma=',',
-                               Semicolon=';',
-                               Tab='\t'),
-                             ','),
-                radioButtons('quote', 'Quote',
-                             c(None='',
-                               'Double Quote'='"',
-                               'Single Quote'="'"),
-                             '"'),
+  dashboardBody(
+    tabItems(
+      tabItem(tabName = "Input",
+              h2("Import the data from Learning Catalytics"),
+              fluidRow(
+                box(
+                  fileInput('file1', 'Choose CSV File',
+                            accept = c('text/csv', 
+                                       'text/comma-separated-values,text/plain',
+                                       '.csv')),
+                  checkboxInput('header', 'Header', TRUE),
+                  radioButtons('sep', 'Separator',
+                               c(Comma=',', Semicolon=';', Tab='\t'), ','),
+                  radioButtons('quote', 'Quote', 
+                               c(None='', 'Double Quote'='"', 'Single Quote'="'"),'"')
+                ),
                 
-                tableOutput('contents')
-  ),
-  skin = "black"
+                box(
+                  tableOutput('contents')
+                )
+              )
+              ),
+      
+      tabItem(tabName = "Input_multiple",
+              h2("hola input multiple")
+      ),
+      
+      tabItem(tabName = "Analysis",
+              h2("hola analisis")
+              ),
+      
+      tabItem(tabName = "Output",
+              h2("hola output")
+              )
+      )
+  )
 )
 
 # server ------------------------------------------------------------------

@@ -46,12 +46,10 @@
 # 
 # # 3) Example of shiny ========
 # runGitHub("lanalytics", "savrgg", subdir = "shinyapp/")
-
-
+#
 # x = seq(0,1, .01)
 # y = -x*log(x)
 # y2 = -log(x)
-# 
 # 
 # data.frame(x = c(x, x), y = c(y, y2), modelo = c(rep("entropy", 101), rep("likelihood", 101))) %>% 
 #   ggplot(aes(x = x, y = y, group = modelo, color = modelo))+
