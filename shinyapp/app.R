@@ -24,7 +24,6 @@ header <- dashboardHeader(title = "lanalytics dashboard")
 
 sidebar <- dashboardSidebar(sidebarMenu(
   menuItem("Import one quiz", tabName = "Input", icon = icon("database")),
-  menuItem("Import multiple quizzes", tabName = "Input_multiple", icon = icon("database")),
   menuItem("Data analysis", tabName = "Analysis", icon = icon("dashboard")),
   menuItem("Output data", tabName = "Output", icon = icon("save"))
 ))
@@ -33,12 +32,17 @@ body <- dashboardBody(
   tabItems(
     tabItem(tabName = "Input",
             fluidRow(
-              box(title = "Import quiz file", status = "primary", width = 4,
-                  solidHeader = TRUE, collapsible = TRUE,
+              box(title = "Import quiz file", width = 4,
+                  status = "primary", 
+                  solidHeader = TRUE, 
+                  collapsible = TRUE,
                   fileInput('file1', 'Select file:',
                             accept = c('text/csv', 
                                      'text/comma-separated-values,text/plain',
-                                     '.csv')),
+                                     '.csv'
+                                     ),
+                            multiple = TRUE
+                            ),
                   checkboxInput('header', 'Header', TRUE),
                   radioButtons('sep', 'Separator',
                                c(Comma=',', Semicolon=';', Tab='\t'), ',')
@@ -55,8 +59,8 @@ body <- dashboardBody(
                   fileInput('file2', 'Select file:',
                             accept = c('text/csv', 
                                        'text/comma-separated-values,text/plain',
-                                       '.csv'),
-                            multiple = TRUE),
+                                       '.csv')
+                            ),
                   checkboxInput('header2', 'Header', TRUE),
                   radioButtons('sep2', 'Separator',
                                c(Comma=',', Semicolon=';', Tab='\t'), ',')
@@ -68,48 +72,14 @@ body <- dashboardBody(
               )
             ) # fluidrow 2
     ),
-    # 
-    # tabItem(tabName = "Input_multiple",
-    #         fluidRow(
-    #           box(title = "Import quiz file", status = "primary", width = 4,
-    #               solidHeader = TRUE, collapsible = TRUE,
-    #               fileInput('file1', 'Select file:',
-    #                         multiple = TRUE, 
-    #                         accept = c('text/csv', 
-    #                                    'text/comma-separated-values,text/plain',
-    #                                    '.csv')),
-    #               checkboxInput('header', 'Header', TRUE),
-    #               radioButtons('sep', 'Separator',
-    #                            c(Comma=',', Semicolon=';', Tab='\t'), ',')
-    #           ),
-    #           
-    #           box(title = "First 6 rows of data:", status = "primary", width = 8,
-    #               solidHeader = TRUE, collapsible = TRUE,
-    #               tableOutput('contents_multiple')
-    #           )
-    #         ), # fluidrow 1
-    #         fluidRow(
-    #           box(title = "Import cognitive levels file", status = "primary", width = 4,
-    #               solidHeader = TRUE, collapsible = TRUE,
-    #               fileInput('file2', 'Select file:',
-    #                         accept = c('text/csv', 
-    #                                    'text/comma-separated-values,text/plain',
-    #                                    '.csv'),
-    #                         multiple = TRUE),
-    #               checkboxInput('header2', 'Header', TRUE),
-    #               radioButtons('sep2', 'Separator',
-    #                            c(Comma=',', Semicolon=';', Tab='\t'), ',')
-    #           ),
-    #           
-    #           box(title = "First 6 rows of data:", status = "primary", width = 8,
-    #               solidHeader = TRUE, collapsible = TRUE,
-    #               tableOutput('contents2')
-    #           )
-    #         ) # fluidrow 2
-    # ),
-    # 
-    
     tabItem(tabName = "Analysis",
+            fluidRow(
+              box(title = "Select quizzes to analize:", status = "info", width = 12,
+                  solidHeader = TRUE, collapsible = TRUE,
+                  uiOutput("choose_files")
+              )
+            ),
+            
             fluidRow(
               box(title = "Order plot", status = "primary", width = 6,
                   solidHeader = TRUE, collapsible = TRUE,
@@ -157,14 +127,20 @@ server <- function(input, output) {
       inFile <- input$file1
       if (is.null(inFile))
         return(NULL)
-      df_test <- read_lc(inFile$datapath)
-      DT::datatable(df_test %>% dplyr::select(id, question, responded.at, score), 
+      print(inFile$datapath)
+      xx <- lapply(1:nrow(inFile), function(num){
+        read_lc(inFile$datapath[num]) %>% 
+          mutate(quiz = inFile$name[num]) %>% 
+          dplyr::select(quiz, question, id, responded.at, score )
+      })
+      df_test <- data.frame(do.call(rbind, xx))
+      DT::datatable(df_test,
                     extensions = 'Responsive',
                     options = list(
                       deferRender = TRUE,
                       scrollY = 200,
                       scroller = TRUE
-                    ))
+                      ))
     })  
   
   output$contents_cognitive <- DT::renderDataTable({
@@ -185,10 +161,15 @@ server <- function(input, output) {
     inFile <- input$file1
     if (is.null(inFile))
       return(NULL)
-    df_test <- read_lc(inFile$datapath)
+    print(inFile$datapath)
+    xx <- lapply(1:nrow(inFile), function(num){
+      read_lc(inFile$datapath[num]) %>% 
+        mutate(quiz = inFile$name[num])
+    })
+    df_test <- data.frame(do.call(rbind, xx))
     if(exists("df_test")){
       input$newplot
-      plot_order(df_test)  
+      plot_order(df_test %>% filter(quiz %in% input$files))  
     }
   })
   
@@ -196,10 +177,15 @@ server <- function(input, output) {
     inFile <- input$file1
     if (is.null(inFile))
       return(NULL)
-    df_test <- read_lc(inFile$datapath)
+    print(inFile$datapath)
+    xx <- lapply(1:nrow(inFile), function(num){
+      read_lc(inFile$datapath[num]) %>% 
+        mutate(quiz = inFile$name[num]) 
+    })
+    df_test <- data.frame(do.call(rbind, xx))
     if(exists("df_test")){
       input$newplot
-      plot_easiness_time(df_test)  
+      plot_easiness_time(df_test %>% filter(quiz %in% input$files))  
     }
   })
   
@@ -207,10 +193,15 @@ server <- function(input, output) {
     inFile <- input$file1
     if (is.null(inFile))
       return(NULL)
-    df_test <- read_lc(inFile$datapath)
+    print(inFile$datapath)
+    xx <- lapply(1:nrow(inFile), function(num){
+      read_lc(inFile$datapath[num]) %>% 
+        mutate(quiz = inFile$name[num])
+    })
+    df_test <- data.frame(do.call(rbind, xx))
     if(exists("df_test")){
       input$newplot
-      guessers(df_test)  
+      guessers(df_test %>% filter(quiz %in% input$files))  
     }
   })
   
@@ -218,7 +209,11 @@ server <- function(input, output) {
     inFile <- input$file1
     if (is.null(inFile))
       return(NULL)
-    df_test <- read_lc(inFile$datapath)
+    xx <- lapply(1:nrow(inFile), function(num){
+      read_lc(inFile$datapath[num]) %>% 
+        mutate(quiz = inFile$name[num]) 
+    })
+    df_test <- data.frame(do.call(rbind, xx))
     
     inFile2 <- input$file2
     if (is.null(inFile2))
@@ -227,11 +222,18 @@ server <- function(input, output) {
     
     if(exists("df_test")){
       input$newplot
-      etl(df_test, df_test_2)  
+      etl(df_test %>% filter(quiz %in% input$files), df_test_2)  
     }
   })
   
-  
+output$choose_files <- renderUI({
+  inFile <- input$file1
+  if (is.null(inFile))
+    return(NULL)
+    checkboxGroupInput("files", "Choose files", 
+                       choices  = c(inFile$name),
+                       selected = 1)
+  })
 }
 
 shinyApp(ui, server)
