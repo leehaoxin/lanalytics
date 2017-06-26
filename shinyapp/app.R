@@ -33,7 +33,7 @@ body <- dashboardBody(
   tabItems(
     tabItem(tabName = "Input",
             fluidRow(
-              box(title = "Import quizz file", status = "primary", width = 4,
+              box(title = "Import quiz file", status = "primary", width = 4,
                   solidHeader = TRUE, collapsible = TRUE,
                   fileInput('file1', 'Select file:',
                             accept = c('text/csv', 
@@ -41,14 +41,12 @@ body <- dashboardBody(
                                      '.csv')),
                   checkboxInput('header', 'Header', TRUE),
                   radioButtons('sep', 'Separator',
-                               c(Comma=',', Semicolon=';', Tab='\t'), ','),
-                  radioButtons('quote', 'Quote', 
-                               c(None='', 'Double Quote'='"', 'Single Quote'="'"),'"')
+                               c(Comma=',', Semicolon=';', Tab='\t'), ',')
               ),
               
-              box(title = "First 6 rows of data:", status = "primary", width = 8,
+              box(title = "Quiz dataset:", status = "primary", width = 8,
                   solidHeader = TRUE, collapsible = TRUE,
-                  tableOutput('contents')
+                  DT::dataTableOutput('contents_single')
               )
             ), # fluidrow 1
             fluidRow(
@@ -57,24 +55,59 @@ body <- dashboardBody(
                   fileInput('file2', 'Select file:',
                             accept = c('text/csv', 
                                        'text/comma-separated-values,text/plain',
-                                       '.csv')),
+                                       '.csv'),
+                            multiple = TRUE),
                   checkboxInput('header2', 'Header', TRUE),
                   radioButtons('sep2', 'Separator',
-                               c(Comma=',', Semicolon=';', Tab='\t'), ','),
-                  radioButtons('quote2', 'Quote', 
-                               c(None='', 'Double Quote'='"', 'Single Quote'="'"),'"')
+                               c(Comma=',', Semicolon=';', Tab='\t'), ',')
               ),
               
-              box(title = "First 6 rows of data:", status = "primary", width = 8,
+              box(title = "Cognitive levels dataset:", status = "primary", width = 8,
                   solidHeader = TRUE, collapsible = TRUE,
-                  tableOutput('contents2')
+                  DT::dataTableOutput('contents_cognitive')
               )
             ) # fluidrow 2
     ),
-    
-    tabItem(tabName = "Input_multiple",
-            h2("hola analisis")
-    ),
+    # 
+    # tabItem(tabName = "Input_multiple",
+    #         fluidRow(
+    #           box(title = "Import quiz file", status = "primary", width = 4,
+    #               solidHeader = TRUE, collapsible = TRUE,
+    #               fileInput('file1', 'Select file:',
+    #                         multiple = TRUE, 
+    #                         accept = c('text/csv', 
+    #                                    'text/comma-separated-values,text/plain',
+    #                                    '.csv')),
+    #               checkboxInput('header', 'Header', TRUE),
+    #               radioButtons('sep', 'Separator',
+    #                            c(Comma=',', Semicolon=';', Tab='\t'), ',')
+    #           ),
+    #           
+    #           box(title = "First 6 rows of data:", status = "primary", width = 8,
+    #               solidHeader = TRUE, collapsible = TRUE,
+    #               tableOutput('contents_multiple')
+    #           )
+    #         ), # fluidrow 1
+    #         fluidRow(
+    #           box(title = "Import cognitive levels file", status = "primary", width = 4,
+    #               solidHeader = TRUE, collapsible = TRUE,
+    #               fileInput('file2', 'Select file:',
+    #                         accept = c('text/csv', 
+    #                                    'text/comma-separated-values,text/plain',
+    #                                    '.csv'),
+    #                         multiple = TRUE),
+    #               checkboxInput('header2', 'Header', TRUE),
+    #               radioButtons('sep2', 'Separator',
+    #                            c(Comma=',', Semicolon=';', Tab='\t'), ',')
+    #           ),
+    #           
+    #           box(title = "First 6 rows of data:", status = "primary", width = 8,
+    #               solidHeader = TRUE, collapsible = TRUE,
+    #               tableOutput('contents2')
+    #           )
+    #         ) # fluidrow 2
+    # ),
+    # 
     
     tabItem(tabName = "Analysis",
             fluidRow(
@@ -120,22 +153,32 @@ server <- function(input, output) {
   source("../R/5_ETL.R") 
   
   
-  output$contents <- renderTable({
+  output$contents_single <- DT::renderDataTable({
       inFile <- input$file1
       if (is.null(inFile))
         return(NULL)
       df_test <- read_lc(inFile$datapath)
-      head(df_test) %>% dplyr::select(id, question, responded.at, score) %>% 
-          mutate(question = as.character(question),
-                 responded.at = strftime(responded.at, format = "%Y-%m-%d %H:%M:%S"))
+      DT::datatable(df_test %>% dplyr::select(id, question, responded.at, score), 
+                    extensions = 'Responsive',
+                    options = list(
+                      deferRender = TRUE,
+                      scrollY = 200,
+                      scroller = TRUE
+                    ))
     })  
   
-  output$contents2 <- renderTable({
+  output$contents_cognitive <- DT::renderDataTable({
     inFile2 <- input$file2
     if (is.null(inFile2))
       return(NULL)
     df_test_2 <- read.csv(inFile2$datapath)
-    head(df_test_2)
+    DT::datatable(df_test_2,
+                  extensions = 'Responsive',
+                  options = list(
+                    deferRender = TRUE,
+                    scrollY = 200,
+                    scroller = TRUE
+                  ))
   })  
 
   output$plot <- renderPlot({
