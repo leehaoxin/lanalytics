@@ -23,9 +23,8 @@ if (interactive()) {
 header <- dashboardHeader(title = "lanalytics dashboard")
 
 sidebar <- dashboardSidebar(sidebarMenu(
-  menuItem("Import one quiz", tabName = "Input", icon = icon("database")),
-  menuItem("Data analysis", tabName = "Analysis", icon = icon("dashboard")),
-  menuItem("Output data", tabName = "Output", icon = icon("save"))
+  menuItem("Import quizzes", tabName = "Input", icon = icon("database")),
+  menuItem("Data analysis", tabName = "Analysis", icon = icon("dashboard"))
 ))
 
 body <- dashboardBody(
@@ -99,10 +98,6 @@ body <- dashboardBody(
                   plotOutput("plot4")
               )
             )
-    ),
-    
-    tabItem(tabName = "Output",
-            h2("hola output")
     )
   )
 )
@@ -201,7 +196,7 @@ server <- function(input, output) {
     df_test <- data.frame(do.call(rbind, xx))
     if(exists("df_test")){
       input$newplot
-      guessers(df_test %>% filter(quiz %in% input$files))  
+      plot_guessers(df_test %>% filter(quiz %in% input$files))  
     }
   })
   
@@ -222,7 +217,7 @@ server <- function(input, output) {
     
     if(exists("df_test")){
       input$newplot
-      etl(df_test %>% filter(quiz %in% input$files), df_test_2)  
+      plot_etl(df_test %>% filter(quiz %in% input$files), df_test_2)  
     }
   })
   
@@ -232,7 +227,7 @@ output$choose_files <- renderUI({
     return(NULL)
     checkboxGroupInput("files", "Choose files", 
                        choices  = c(inFile$name),
-                       selected = 1)
+                       selected = c(inFile$name)[1])
   })
 }
 

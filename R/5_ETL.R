@@ -1,5 +1,5 @@
 # read in easiness and median time data
-etl <- function(df_quizzes, challengeLevel){
+plot_etl <- function(df_quizzes, challengeLevel){
   xx1 <- df_quizzes %>% 
     mutate(score = as.numeric(score)) %>% 
     group_by(quiz, question) %>% 

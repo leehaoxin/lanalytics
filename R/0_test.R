@@ -21,6 +21,7 @@
 # source("R/2_order.R")
 # source("R/3_easiness_time.R")
 # source("R/4_guessers.R")
+# source("R/5_ETL.R")
 # 
 # # 1) Example of functions in the package =========
 # # Long format, each row is a question per quiz per person

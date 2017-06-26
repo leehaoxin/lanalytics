@@ -1,4 +1,4 @@
-guessers <- function(df_quizzes){
+plot_guessers <- function(df_quizzes){
   thresholds_df <- df_quizzes %>% 
     group_by(quiz) %>% 
     filter(question %in% c(1,2, max(question), (max(question)-1))) %>% data.frame() %>% 
