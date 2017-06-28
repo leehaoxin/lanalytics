@@ -1,17 +1,30 @@
 Package: lanalytics
 Type: Package
-Title: What the Package Does (Title Case)
+Title: It contains useful functions for learning analytics...
 Version: 0.1.0
 Authors@R: c(person("Melanie", "Stefan", email = "melanie_test@gmail.com", role = c("aut")),
              person("Dragan", "Gasevic", email = "dragan_test@gmail.com", role = c("aut")),
              person("Salvador", "Garcia", email = "savrgg@gmail.com", role = c("aut", "cre")))
 Maintainer: Salvador Garcia <savrgg@gmail.com>
-Description: More about what it does (maybe more than one line)
-    Use four spaces when indenting paragraphs within the Description.
+Description: Description: The description of the package will go here...
 License: This package is under the license GPL-2
 Encoding: UTF-8
 LazyData: true
-Description: The description of the package will go here
 Imports:
+  DT,
+  fields,
+  Hmisc,
+  lubridate,
+  knitr,
+  openssl,
+  pkgdown,
+  random, 
+  RColorBrewer,
+  roxygen2,
+  rstudioapi,
+  stringr,
+  shiny,
+  shinydashboard,
   tidyverse,
-  stringr
+  xlsx
+Suggests: testthat
