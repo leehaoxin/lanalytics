@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Read file exported from Learning Catalytics — read_lc • lanalytics</title>
+<title>Order plot with ggplot2 — plot_order • lanalytics</title>
 
 <!-- jquery -->
 <script src="https://code.jquery.com/jquery-3.1.0.min.js" integrity="sha384-nrOSfDHtoPMzJHjVTdCopGqIqeYETSXhZDFyniQ8ZHcVy08QesyHcnOUpMpqnmWq" crossorigin="anonymous"></script>
@@ -75,20 +75,32 @@
       <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Read file exported from Learning Catalytics</h1>
+    <h1>Order plot with ggplot2</h1>
     </div>
 
     
-    <p>This function receives as input a learning catalytics *csv* file and parse it to create a long format data frame.</p>
+    <p>This function computes a graph with the order of answering of each student for each quiz.</p>
     
 
-    <pre class="usage">read_lc(quiz_dir)
-  This function only receives as input the directory where all the quizzes files are stored.</pre>
-        
+    <pre class="usage"><span class='fu'>plot_order</span>(<span class='no'>df_quizzes</span>)</pre>
+    
+    <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a> Arguments</h2>
+    <table class="ref-arguments">
+    <colgroup><col class="name" /><col class="desc" /></colgroup>
+    <tr>
+      <th>df_quizzes</th>
+      <td><p>Receives as input the dataframe un long format of all quizzes (Generated with read_lc)</p></td>
+    </tr>
+    </table>
+    
+    <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
+
+    <p>A plot of the order of answering</p>
+    
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'>  <span class='no'>file_to_read</span> <span class='kw'>&lt;-</span> <span class='st'>"../../datasets/Dataset1/Quiz3_session12098.csv"</span>
-  <span class='fu'>head</span>(<span class='fu'>read_lc</span>(<span class='no'>file_to_read</span>))</div><div class='output co'>#&gt; <span class='message'>Parsed with column specification:</span>
+    <pre class="examples"><div class='input'><span class='no'>file_to_read</span> <span class='kw'>&lt;-</span> <span class='st'>"../../datasets/Dataset1/Quiz3_session12098.csv"</span>
+<span class='no'>long_format</span> <span class='kw'>&lt;-</span> <span class='fu'>read_lc</span>(<span class='no'>file_to_read</span>)</div><div class='output co'>#&gt; <span class='message'>Parsed with column specification:</span>
 #&gt; <span class='message'>cols(</span>
 #&gt; <span class='message'>  .default = col_integer(),</span>
 #&gt; <span class='message'>  `Email address` = col_character(),</span>
@@ -112,39 +124,15 @@
 #&gt; <span class='message'>  `Question 11 (round 1) responded at` = col_character(),</span>
 #&gt; <span class='message'>  `Question 12 (round 1) responded at` = col_character()</span>
 #&gt; <span class='message'>  # ... with 2 more columns</span>
-#&gt; <span class='message'>)</span></div><div class='output co'>#&gt; <span class='message'>See spec(...) for full column specifications.</span></div><div class='output co'>#&gt; <span class='message'>Joining, by = c("email.address", "last.name", "first.name", "id", "question")</span></div><div class='output co'>#&gt; <span class='message'>Joining, by = c("email.address", "last.name", "first.name", "id", "question")</span></div><div class='output co'>#&gt;        email.address last.name  first.name                               id
-#&gt; 1 AdoraBelle@mail.tp Dearheart Adora Belle 034e92d2de2d411ba3c2d0351ac210da
-#&gt; 2 AdoraBelle@mail.tp Dearheart Adora Belle 034e92d2de2d411ba3c2d0351ac210da
-#&gt; 3 AdoraBelle@mail.tp Dearheart Adora Belle 034e92d2de2d411ba3c2d0351ac210da
-#&gt; 4 AdoraBelle@mail.tp Dearheart Adora Belle 034e92d2de2d411ba3c2d0351ac210da
-#&gt; 5 AdoraBelle@mail.tp Dearheart Adora Belle 034e92d2de2d411ba3c2d0351ac210da
-#&gt; 6 AdoraBelle@mail.tp Dearheart Adora Belle 034e92d2de2d411ba3c2d0351ac210da
-#&gt;   question        responded.at score
-#&gt; 1        1 2009-09-03 14:52:00     1
-#&gt; 2        3 2009-09-03 14:57:00     1
-#&gt; 3        4 2009-09-03 14:59:00     1
-#&gt; 4        5 2009-09-03 15:04:00     1
-#&gt; 5        6 2009-09-03 15:07:00     1
-#&gt; 6        7 2009-09-03 15:10:00     1
-#&gt;                                             quiz n time_per_question
-#&gt; 1 ../../datasets/Dataset1/Quiz3_session12098.csv 1           NA mins
-#&gt; 2 ../../datasets/Dataset1/Quiz3_session12098.csv 2            5 mins
-#&gt; 3 ../../datasets/Dataset1/Quiz3_session12098.csv 3            2 mins
-#&gt; 4 ../../datasets/Dataset1/Quiz3_session12098.csv 4            5 mins
-#&gt; 5 ../../datasets/Dataset1/Quiz3_session12098.csv 5            3 mins
-#&gt; 6 ../../datasets/Dataset1/Quiz3_session12098.csv 6            3 mins
-#&gt;   time_per_quiz
-#&gt; 1     7006 mins
-#&gt; 2     7006 mins
-#&gt; 3     7006 mins
-#&gt; 4     7006 mins
-#&gt; 5     7006 mins
-#&gt; 6     7006 mins</div></pre>
+#&gt; <span class='message'>)</span></div><div class='output co'>#&gt; <span class='message'>See spec(...) for full column specifications.</span></div><div class='output co'>#&gt; <span class='message'>Joining, by = c("email.address", "last.name", "first.name", "id", "question")</span></div><div class='output co'>#&gt; <span class='message'>Joining, by = c("email.address", "last.name", "first.name", "id", "question")</span></div><div class='input'><span class='fu'>plot_order</span>(<span class='no'>long_format</span>)</div><div class='img'><img src='plot_order-1.png' alt='' width='700' height='432.632880098887' /></div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>
     <ul class="nav nav-pills nav-stacked">
-            
+      <li><a href="#arguments">Arguments</a></li>
+      
+      <li><a href="#value">Value</a></li>
+      
       <li><a href="#examples">Examples</a></li>
     </ul>
 

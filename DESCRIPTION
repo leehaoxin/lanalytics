@@ -23,8 +23,8 @@ Imports:
   roxygen2,
   rstudioapi,
   stringr,
+  tidyverse
+Suggests: testthat,
   shiny,
-  shinydashboard,
-  tidyverse,
-  xlsx
-Suggests: testthat
+  shinydashboard
+RoxygenNote: 6.0.1
