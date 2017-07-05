@@ -8,34 +8,35 @@
 #' @return The ETL plot
 #'
 #' @examples
-#' file_to_read <- "../../datasets/Dataset1/Quiz3_session12098.csv"
-#' file_cognitivelevel <- "../../datasets/Quiz2013-14_cognitive level_HB.csv" 
-#' long_format <- read_lc(file_to_read)
+#' file_to_read <- "datasets/Dataset1/Quiz3_session12098.csv"
+#' file_cognitivelevel <- "datasets/Quiz2013-14_cognitive level_HB.csv" 
+#' quiz_object <- read_lc(file_to_read)
 #' cognitive_level <- data.frame(read_csv(file_cognitivelevel))
-#' plot_etl(long_format, cognitive_level)
+#' quiz_object <- add_times(quiz_object)
+#' plot_etl(quiz_object, cognitive_level)
 #' @export
-plot_etl <- function(df_quizzes, challengeLevel){
-  xx1 <- df_quizzes %>% 
+plot_etl <- function(quiz_object, challengeLevel){
+  homo_quiz_object <- quiz_object %>% 
     dplyr::mutate(score = as.numeric(score)) %>% 
     dplyr::group_by(quiz, question) %>% 
-    dplyr::summarise(rate_correct = mean(score, na.rm = T),
-                     median_time = median(time_per_question, na.rm = T)) %>% data.frame %>% 
-    dplyr::filter(rate_correct > 0, 
-                  median_time < 600) %>% 
+    dplyr::summarise(`mean score` = mean(score, na.rm = T),
+                     `mean time` = median(`time per question`, na.rm = T)) %>%
+    dplyr::filter(`mean score` > 0, 
+                  `mean time` < 600) %>% 
     dplyr::mutate(question_id = paste0("Q4_", "q", question)) %>% 
-    dplyr::select(question_id, median_time, rate_correct)
+    dplyr::select(question_id, `mean time`, `mean score`)
   
-  xx2 <- challengeLevel %>% 
+  homo_challenge_level <- challengeLevel %>% 
     dplyr::rename(question_id = MCM.2014.item,
                   rating = Rating.HB) %>% 
     dplyr::select(question_id, rating)
   
-  xx1 %>% 
-    dplyr::left_join(xx2) %>% 
-    dplyr::mutate(median_time = as.numeric(median_time),
+  homo_quiz_object %>% 
+    dplyr::left_join(homo_challenge_level) %>% 
+    dplyr::mutate(`mean time` = as.numeric(`mean time`),
                   rating = factor(rating)) %>% 
-    ggplot2::ggplot(aes(x = median_time, 
-                        y = rate_correct, 
+    ggplot2::ggplot(aes(x = `mean time`, 
+                        y = `mean score`, 
                         color = rating, 
                         label = question_id)) +
     ggplot2::geom_point() +

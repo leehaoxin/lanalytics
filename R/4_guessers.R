@@ -7,32 +7,34 @@
 #' @return A plot of the guessers of the selected quiz
 #'
 #' @examples
-#' file_to_read <- "../../datasets/Dataset1/Quiz3_session12098.csv"
-#' long_format <- read_lc(file_to_read)
-#' plot_guessers(long_format)
+#' file_to_read <- "datasets/Dataset1/Quiz3_session12098.csv"
+#' quiz_object <- read_lc(file_to_read)
+#' quiz_object <- add_times(quiz_object)
+#' plot_guessers(quiz_object)
 #' @export
-plot_guessers <- function(df_quizzes){
-  thresholds_df <- df_quizzes %>% 
+#' 
+plot_guessers <- function(quiz_object){
+  thresholds_df <- quiz_object %>% 
     dplyr::group_by(quiz) %>% 
     dplyr::filter(question %in% c(1,2, max(question), (max(question)-1))) %>% 
-    data.frame() %>% 
-    dplyr::group_by(id, quiz) %>% 
-    dplyr::summarise(threshold = min(time_per_question, na.rm = T),
+    dplyr::group_by(`email address`, quiz) %>% 
+    dplyr::summarise(threshold = min(`time per question`, na.rm = T),
                      threshold = ifelse(threshold == Inf, NA, threshold),
-                     threshold = ifelse((is.na(threshold) || threshold > 20), 20, threshold)) %>% data.frame() 
+                     threshold = ifelse((is.na(threshold) || threshold > 20), 20, threshold)) 
     
-  guessing <- df_quizzes %>% 
+  guessing <- quiz_object %>% 
     dplyr::left_join(thresholds_df) %>% 
-    dplyr::mutate(guessing = ifelse((!is.na(time_per_question) & time_per_question < threshold), 
-                                    ifelse(score == 1, 1, -1), 0)) %>% arrange(time_per_question) 
+    dplyr::mutate(guessing = ifelse((!is.na(`time per question`) & `time per question` < threshold), 
+                                    ifelse(score == 1, 1, -1), 0)) %>% 
+    dplyr::arrange(`time per question`) 
     
   guessing %>% 
-    dplyr::mutate(quiz_response=question) %>% 
-    dplyr::select(id, guessing, quiz_response) %>% 
+    dplyr::select(`email address`, guessing, question) %>% 
     dplyr::filter(guessing != 0) %>%
-    ggplot2::ggplot(aes(x = as.factor(id), 
-                        y = quiz_response, 
+    ggplot2::ggplot(aes(x = `email address`, 
+                        y = question, 
                         color = factor(guessing))) +
-    ggplot2::geom_point()  
+    ggplot2::geom_point() +
+    theme(axis.text.x = element_text(angle=90, hjust = 1))
 }
 

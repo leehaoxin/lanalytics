@@ -7,21 +7,21 @@
 #' @return A plot of the easiness-time of the selected quiz
 #'
 #' @examples
-#' file_to_read <- "../../datasets/Dataset1/Quiz3_session12098.csv"
-#' long_format <- read_lc(file_to_read)
-#' plot_easiness_time(long_format)
+#' file_to_read <- "datasets/Dataset1/Quiz3_session12098.csv"
+#' quiz_object <- read_lc(file_to_read)
+#' quiz_object <- add_times(quiz_object)
+#' plot_easiness_time(quiz_object)
 #' @export
-plot_easiness_time <- function(df_quizzes){
-  df_quizzes %>%
+plot_easiness_time <- function(quiz_object){
+  quiz_object %>%
     dplyr::mutate(score = as.numeric(score)) %>% 
     dplyr::group_by(quiz, question) %>% 
-    dplyr::summarise(rate_correct = mean(score, na.rm = T),
-                     median_time = median(time_per_question, na.rm = T)) %>% 
-    data.frame %>%
-    dplyr::filter(rate_correct > 0, 
-                  median_time < 600) %>% 
-    ggplot2::ggplot(aes(x = median_time, 
-                        y = rate_correct)) +
+    dplyr::summarise(`mean score` = mean(score, na.rm = T),
+                     `mean time` = median(`time per question`, na.rm = T)) %>% 
+    dplyr::filter(`mean score` > 0, 
+                  `mean time` < 600) %>% 
+    ggplot2::ggplot(aes(x = `mean time`, 
+                        y = `mean score`)) +
     ggplot2::geom_point()+
     ggplot2::geom_smooth(method = "lm")
 }
