@@ -18,7 +18,7 @@ knitr::opts_chunk$set(
 
 ## Overview
 
-The lanalytics package provides tools to ease the analysis and visualization of online quizzes at three different levels: per quiz, per person and per course. Currently, the package can process the quizzes from two different sources __Google Forms__ and __Learning Catalytics__. If the quizzes data is from any other software, is necessary to wrangle the dataset in the specified input format. In addition to the package, a [shiny dashboard](https://rstudio.github.io/shinydashboard/) was to visualize the plots with [ggviz](http://ggvis.rstudio.com/).
+The lanalytics package provides tools to ease the analysis and visualization of online quizzes at three different levels: per quiz, per person and per course. Currently, the package can process the quizzes from csv files of two different sources __Google Forms__ and __Learning Catalytics__. If the quizzes data is from any other software, is necessary to wrangle the dataset in the specified input format. In addition to the package, a [shiny dashboard](https://rstudio.github.io/shinydashboard/) was to visualize the plots with [ggviz](http://ggvis.rstudio.com/).
 
 ## Installation
 
@@ -29,7 +29,7 @@ install.packages("tidyverse")
 # Also, if the Shiny Dashboard wants to be used, the shiny package should be installed:
 install.packages("shiny")
 
-# Finally, the lanalytics package can be installed from Github:
+# Finally, the lanalytics package can be installed from Github (using devtools library):
 install.packages("devtools")
 install_github(repo = "savrgg/lanalytics")
 

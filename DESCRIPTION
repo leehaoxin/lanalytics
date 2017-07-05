@@ -17,7 +17,6 @@ Imports:
   lubridate,
   knitr,
   openssl,
-  pkgdown,
   random, 
   RColorBrewer,
   roxygen2,
