@@ -14,6 +14,6 @@ class(quiz_object)
 head(quiz_object)
 
 # add times per question and total time
-quiz_object <- add_times(quiz_object)
+quiz_object <- lanalytics::add_times(quiz_object)
 
 #
