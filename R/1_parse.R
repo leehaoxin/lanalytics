@@ -13,7 +13,6 @@
 #' quiz_object <- read_lc(file_to_read)
 #' quiz_object <- add_times(quiz_object)
 #' @export
-
 read_lc <- function(file){
   quiz_sheet <- readr::read_csv(file) %>% 
     setNames(tolower(names(.)))
@@ -47,7 +46,7 @@ read_lc <- function(file){
   class(quiz_long) <- c("quizz", class(quiz_long))
   quiz_long
 }
-
+#' @export
 add_times <- function(course){
   course <- course %>% 
     dplyr::group_by(quiz, `email address`) %>%
