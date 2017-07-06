@@ -7,7 +7,7 @@
 #' @return A plot of the order of answering
 #'
 #' @examples
-#' file_to_read <- "datasets/Dataset1/Quiz3_session12098.csv"
+#' file_to_read <- "../../datasets/Dataset1/Quiz3_session12098.csv"
 #' quiz_object <- read_lc(file_to_read)
 #' quiz_object <- add_times(quiz_object)
 #' plot_order(quiz_object)

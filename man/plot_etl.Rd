@@ -4,12 +4,12 @@
 \alias{plot_etl}
 \title{Easiness-time-cognitive level plot.}
 \usage{
-plot_etl(df_quizzes, challengeLevel)
+plot_etl(quiz_object, challengeLevel)
 }
 \arguments{
-\item{df_quizzes}{dataframe in long format of all quizzes (Generated with read_lc)}
-
 \item{challengeLevel}{file of challengue level}
+
+\item{df_quizzes}{dataframe in long format of all quizzes (Generated with read_lc)}
 }
 \value{
 The ETL plot
@@ -20,7 +20,8 @@ This function computes a graph displaying the guessers plot for each quiz.
 \examples{
 file_to_read <- "../../datasets/Dataset1/Quiz3_session12098.csv"
 file_cognitivelevel <- "../../datasets/Quiz2013-14_cognitive level_HB.csv" 
-long_format <- read_lc(file_to_read)
+quiz_object <- read_lc(file_to_read)
 cognitive_level <- data.frame(read_csv(file_cognitivelevel))
-plot_etl(long_format, cognitive_level)
+quiz_object <- add_times(quiz_object)
+plot_etl(quiz_object, cognitive_level)
 }

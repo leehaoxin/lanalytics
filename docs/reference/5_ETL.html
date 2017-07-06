@@ -113,7 +113,7 @@
 #&gt; <span class='message'>  `Question 11 (round 1) responded at` = col_character(),</span>
 #&gt; <span class='message'>  `Question 12 (round 1) responded at` = col_character()</span>
 #&gt; <span class='message'>  # ... with 2 more columns</span>
-#&gt; <span class='message'>)</span></div><div class='output co'>#&gt; <span class='message'>See spec(...) for full column specifications.</span></div><div class='output co'>#&gt; <span class='message'>Joining, by = c("email.address", "last.name", "first.name", "id", "question")</span></div><div class='output co'>#&gt; <span class='message'>Joining, by = c("email.address", "last.name", "first.name", "id", "question")</span></div><div class='input'>  <span class='no'>cognitive_level</span> <span class='kw'>&lt;-</span> <span class='fu'>data.frame</span>(<span class='fu'>read_csv</span>(<span class='no'>file_cognitivelevel</span>))</div><div class='output co'>#&gt; <span class='warning'>Warning: Missing column names filled in: 'X6' [6]</span></div><div class='output co'>#&gt; <span class='warning'>Warning: Duplicated column names deduplicated: 'Type' =&gt; 'Type_1' [4]</span></div><div class='output co'>#&gt; <span class='message'>Parsed with column specification:</span>
+#&gt; <span class='message'>)</span></div><div class='output co'>#&gt; <span class='message'>See spec(...) for full column specifications.</span></div><div class='output co'>#&gt; <span class='message'>Joining, by = c("email address", "question")</span></div><div class='input'>  <span class='no'>cognitive_level</span> <span class='kw'>&lt;-</span> <span class='fu'>data.frame</span>(<span class='fu'>read_csv</span>(<span class='no'>file_cognitivelevel</span>))</div><div class='output co'>#&gt; <span class='warning'>Warning: Missing column names filled in: 'X6' [6]</span></div><div class='output co'>#&gt; <span class='warning'>Warning: Duplicated column names deduplicated: 'Type' =&gt; 'Type_1' [4]</span></div><div class='output co'>#&gt; <span class='message'>Parsed with column specification:</span>
 #&gt; <span class='message'>cols(</span>
 #&gt; <span class='message'>  `Question ID 2013` = col_character(),</span>
 #&gt; <span class='message'>  Type = col_character(),</span>
@@ -121,7 +121,7 @@
 #&gt; <span class='message'>  Type_1 = col_character(),</span>
 #&gt; <span class='message'>  `Rating HB` = col_integer(),</span>
 #&gt; <span class='message'>  X6 = col_character()</span>
-#&gt; <span class='message'>)</span></div><div class='input'>  <span class='fu'>plot_etl</span>(<span class='no'>long_format</span>, <span class='no'>cognitive_level</span>)</div><div class='output co'>#&gt; <span class='message'>Joining, by = "question_id"</span></div><div class='img'><img src='5_ETL-1.png' alt='' width='700' height='432.632880098887' /></div></pre>
+#&gt; <span class='message'>)</span></div><div class='input'>  <span class='fu'>plot_etl</span>(<span class='no'>long_format</span>, <span class='no'>cognitive_level</span>)</div><div class='output co'>#&gt; <span class='error'>Error in summarise_impl(.data, dots): Evaluation error: object 'time per question' not found.</span></div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>

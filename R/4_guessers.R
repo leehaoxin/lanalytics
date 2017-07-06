@@ -7,7 +7,7 @@
 #' @return A plot of the guessers of the selected quiz
 #'
 #' @examples
-#' file_to_read <- "datasets/Dataset1/Quiz3_session12098.csv"
+#' file_to_read <- "../../datasets/Dataset1/Quiz3_session12098.csv"
 #' quiz_object <- read_lc(file_to_read)
 #' quiz_object <- add_times(quiz_object)
 #' plot_guessers(quiz_object)

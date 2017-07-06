@@ -10,13 +10,15 @@ read_lc(file)
 \item{file}{The name of the csv file to read}
 }
 \value{
-it returns a data frame containing the columns:
+it returns a quiz object containing the following columns:  
+"email address", "question", "responded at", "score" and "quiz"
 }
 \description{
 This function receives as input a learning catalytics *csv* 
-file and parse it to create a long format data frame.
+file and parse it to create quiz object.
 }
 \examples{
 file_to_read <- "../../datasets/Dataset1/Quiz3_session12098.csv"
-head(read_lc(file_to_read))
+quiz_object <- read_lc(file_to_read)
+quiz_object <- add_times(quiz_object)
 }

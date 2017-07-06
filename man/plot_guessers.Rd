@@ -4,7 +4,7 @@
 \alias{plot_guessers}
 \title{Guessers per quiz plot}
 \usage{
-plot_guessers(df_quizzes)
+plot_guessers(quiz_object)
 }
 \arguments{
 \item{df_quizzes}{receives as input the dataframe un long format of all quizzes (Generated with read_lc)}
@@ -17,6 +17,7 @@ This function computes a graph displaying the guessers plot for each quiz.
 }
 \examples{
 file_to_read <- "../../datasets/Dataset1/Quiz3_session12098.csv"
-long_format <- read_lc(file_to_read)
-plot_guessers(long_format)
+quiz_object <- read_lc(file_to_read)
+quiz_object <- add_times(quiz_object)
+plot_guessers(quiz_object)
 }

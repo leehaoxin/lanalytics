@@ -8,8 +8,8 @@
 #' @return The ETL plot
 #'
 #' @examples
-#' file_to_read <- "datasets/Dataset1/Quiz3_session12098.csv"
-#' file_cognitivelevel <- "datasets/Quiz2013-14_cognitive level_HB.csv" 
+#' file_to_read <- "../../datasets/Dataset1/Quiz3_session12098.csv"
+#' file_cognitivelevel <- "../../datasets/Quiz2013-14_cognitive level_HB.csv" 
 #' quiz_object <- read_lc(file_to_read)
 #' cognitive_level <- data.frame(read_csv(file_cognitivelevel))
 #' quiz_object <- add_times(quiz_object)

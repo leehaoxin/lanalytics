@@ -4,7 +4,7 @@
 \alias{plot_order}
 \title{Order plot with ggplot2}
 \usage{
-plot_order(df_quizzes)
+plot_order(quiz_object)
 }
 \arguments{
 \item{df_quizzes}{Receives as input the dataframe un long format of all quizzes (Generated with read_lc)}
@@ -17,6 +17,7 @@ This function computes a graph with the order of answering of each student for e
 }
 \examples{
 file_to_read <- "../../datasets/Dataset1/Quiz3_session12098.csv"
-long_format <- read_lc(file_to_read)
-plot_order(long_format)
+quiz_object <- read_lc(file_to_read)
+quiz_object <- add_times(quiz_object)
+plot_order(quiz_object)
 }
