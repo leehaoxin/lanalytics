@@ -35,6 +35,9 @@ runGitHub(repo = "savrgg/lanalytics", subdir = "shinyapp/app.R")
 # the documentation of the package will be with pkgdown. Everything else is hosted in github:
 build_site()
 
+# or in the webpage:
+# https://savrgg.github.io/lanalytics/
+
 
 
 
