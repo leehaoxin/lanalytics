@@ -4,6 +4,10 @@ library(shinydashboard)
 library(lanalytics)
 library(tidyverse)
 library(stringr)
+library(ggvis)
+library(ltm)
+library(ggrepel)
+library(directlabels)
 
 ## lanalytics ##
 
@@ -27,7 +31,8 @@ read_lc <- function(file){
       tidyr::gather(question, value, 
                     -c(`email address`)) %>% 
       dplyr::mutate(question = str_extract(tolower(question), "question.[0-9]*"),
-                    question = str_replace(question, "question ", ""))
+                    question = str_replace(question, "question ", "")) %>% 
+      filter(!is.na(value))
     
     names(quiz_long_sheet)[which(names(quiz_long_sheet) == "value")] <- df_subset
     quiz_long_sheet
@@ -40,7 +45,6 @@ read_lc <- function(file){
   class(quiz_long) <- c("quizz", class(quiz_long))
   quiz_long
 }
-
 add_times <- function(course){
   course <- course %>% 
     dplyr::group_by(quiz, `email address`) %>%
@@ -53,23 +57,31 @@ add_times <- function(course){
 plot_order <- function(quiz_object){
   quiz_object %>% 
     dplyr::group_by(question) %>% 
-    dplyr::mutate(`time tercil` = cut(as.numeric(`time per question`), 
-                                      breaks = quantile(as.numeric(.$`time per question`), 
-                                                        probs = c(0, .33, .66, 1), 
-                                                        na.rm = T), 
-                                      include.lowest = T, 
-                                      labels = c("First Tercil", "Second Tercil", "Third Tercil"))) %>% 
-    dplyr::filter(!is.na(`time tercil`)) %>% 
-    dplyr::group_by(question, `time tercil`) %>% 
+    dplyr::mutate(`Tercil per time` = cut(as.numeric(`time per question`), 
+                                          breaks = quantile(as.numeric(.$`time per question`), 
+                                                            probs = c(0, .33, .66, 1), 
+                                                            na.rm = T), 
+                                          include.lowest = T, 
+                                          labels = c("First Tercil (Fastest)", "Second Tercil", "Third Tercil (Slowest)")),
+                  temp = sum(!is.na(`Tercil per time`)), 
+                  `Tercil per time` = if_else(temp > 10, as.character(`Tercil per time`), "NA")) %>% 
+    dplyr::filter(!is.na(`Tercil per time`), `Tercil per time`!= "NA") %>% 
+    dplyr::group_by(question, `Tercil per time`) %>% 
     dplyr::summarise(`mean score` = mean(as.numeric(score), na.rm = T)) %>% 
     dplyr::filter(`mean score`>.05) %>% 
-    ggplot2::ggplot(aes(x = question, 
-                        y = `mean score`, 
-                        group = `time tercil`, 
-                        color = `time tercil`)) +
-    ggplot2::facet_wrap(~`time tercil`, ncol = 1) +
+    ggplot2::ggplot(aes(x = factor(question), 
+                        y = `mean score` * 100, 
+                        group = `Tercil per time`, 
+                        color = `Tercil per time`,
+                        label = round(`mean score` * 100, 0))) +
+    ggplot2::facet_wrap(~`Tercil per time`, ncol = 1) +
     geom_line() +
-    geom_point()
+    geom_point() +
+    geom_smooth() +
+    labs(x = "Question in the quiz",
+         y = "Average score per tercil (max score = 100)") +
+    ylim(0, 100) +
+    geom_label(alpha = .7) 
 }
 
 
@@ -81,10 +93,15 @@ plot_easiness_time <- function(quiz_object){
                      `mean time` = median(`time per question`, na.rm = T)) %>% 
     dplyr::filter(`mean score` > 0, 
                   `mean time` < 600) %>% 
-    ggplot2::ggplot(aes(x = `mean time`, 
-                        y = `mean score`)) +
+    ggplot2::ggplot(aes(x = as.numeric(`mean time`), 
+                        y = `mean score`* 100, 
+                        label = paste0("q", `question`))) +
     ggplot2::geom_point()+
-    ggplot2::geom_smooth(method = "lm")
+    ggplot2::geom_smooth(method = "lm") +
+    ggrepel::geom_label_repel() +
+    labs(y = "Average score per item (max score = 100)", 
+         x = "Average time taken to answer each item (in seconds)") +
+    ylim(0,100)
 }
 
 plot_guessers <- function(quiz_object){
@@ -106,10 +123,11 @@ plot_guessers <- function(quiz_object){
     dplyr::select(`email address`, guessing, question) %>% 
     dplyr::filter(guessing != 0) %>%
     ggplot2::ggplot(aes(x = `email address`, 
-                        y = question, 
+                        y = factor(question), 
                         color = factor(guessing))) +
     ggplot2::geom_point() +
-    theme(axis.text.x = element_text(angle=90, hjust = 1))
+    theme(axis.text.x = element_text(angle=90, hjust = 1)) +
+    labs(x = "Email address", y = "Question number (Item)", color = "Guessing score")
 }
 
 
@@ -129,22 +147,31 @@ plot_etl <- function(quiz_object, challengeLevel){
                   rating = Rating.HB) %>% 
     dplyr::select(question_id, rating)
   
+  rating_df <- data.frame(rating = factor(c(1,2,3)), 
+                          rating2 = factor(c("Low cognitive level", 
+                                             "Medium cognitive level", 
+                                             "High cognitive level")))
+  
   homo_quiz_object %>% 
     dplyr::left_join(homo_challenge_level) %>% 
     dplyr::mutate(`mean time` = as.numeric(`mean time`),
                   rating = factor(rating)) %>% 
+    left_join(rating_df) %>% 
+    dplyr::select(-rating) %>% 
     ggplot2::ggplot(aes(x = `mean time`, 
-                        y = `mean score`, 
-                        color = rating, 
+                        y = `mean score` *100, 
+                        color = rating2, 
                         label = question_id)) +
     ggplot2::geom_point() +
-    ggplot2::geom_text()
+    ggrepel::geom_label_repel() +
+    labs(y = "Average score per item (max score = 100)",
+         x = "Average time taken to answer each item (in seconds)",
+         color = "Cognitive level") 
 }
 
 
-
-plot_rasch <- function(quiz_object){
-  x_vals = seq(zrange[1], zrange[2], length = 100)
+plot_rasch <- function(quiz_object, type = c("ICC", "IIC")){
+  x_vals = seq(-3.8, 3.8, length = 100)
   d_matrix <- cbind(1, x_vals)
   
   data_tibble <- quiz_object %>% 
@@ -160,18 +187,137 @@ plot_rasch <- function(quiz_object){
   model <- rasch(data_tibble)
   betas <- model$coefficients
   
-  plogis(d_matrix %*% t(betas)) %>%
+  plot_vals <- if (type == "ICC") {
+    y_lab <- "Probability of correctness"
+    plogis(d_matrix %*% t(betas))
+  }else {
+    y_lab <- "Information"
+    temp <- plogis(d_matrix %*% t(betas))
+    betas[1, 2]^2 * temp * (1 - temp)
+  }
+  
+  plot_vals %>%
     as_tibble() %>% 
     mutate(x_vals = x_vals) %>% 
     gather(item, value, -x_vals) %>% 
-    ggplot(aes(x = x_vals, y = value, group = item, color = item)) +
-    geom_line()
+    ggplot(aes(x = x_vals, 
+               y = value, 
+               group = item, 
+               color = item)) +
+    geom_line() +
+    labs(x = "Ability", y = y_lab) 
+}  
+
+
+plot_hist <- function(quiz_object){
+  summarized_data <- quiz_object %>%  
+    dplyr::group_by(`email address`, `quiz`) %>% 
+    dplyr::summarise(`total score` = sum(as.numeric(score)/n()*10, na.rm = T)) 
+  
+  summarized_data %>% 
+    ggplot(aes(x = `total score`*10)) +
+    geom_histogram(binwidth = 10, alpha = .7, 
+                   color = "dodgerblue4", fill = "dodgerblue4") +
+    labs(x = "Total score (max score = 100)", 
+         y = "Count")
 }  
 
 
 
+plot_boxplots <- function(quiz_object){
+  summarized_data <- quiz_object %>%  
+    dplyr::group_by(`email address`, `quiz`) %>% 
+    dplyr::summarise(`total score` = sum(as.numeric(score)/n()*10, na.rm = T)) 
+  
+  summarized_data %>% 
+    ggplot(aes(x = `quiz`, 
+               y = `total score`*10)) +
+    geom_boxplot() +
+    labs(x = "Quiz name", 
+         y = "Total score (max score = 100)")
+}
+
+plot_2pars <- function(quiz_object, type = c("ICC", "IIC")){
+  x_vals = seq(-3.8, 3.8, length = 100)
+  d_matrix <- cbind(1, x_vals)
+  
+  data_tibble <- quiz_object %>% 
+    ungroup() %>% 
+    dplyr::select(`email address`, question, score) %>% 
+    tidyr::spread(question, score, fill = 0) %>% 
+    dplyr::select(-`email address`) %>% 
+    stats::setNames(paste("item", names(.))) %>% 
+    purrr::map_if(is.character, as.numeric) %>% 
+    tibble::as_tibble() %>% 
+    purrr::discard(~sum(.)==0)
+  
+  model <- ltm(data_tibble ~ z1)
+  betas <- model$coefficients
+  
+  plot_vals <- if (type == "ICC") {
+    y_lab <- "Probability of correctness"
+    plogis(d_matrix %*% t(betas))
+  }
+  else {
+    y_lab <- "Information"
+    temp <- plogis(d_matrix %*% t(betas))
+    temp2 <- temp * (1 - temp)
+    t(t(temp2) * betas[, 2]^2)
+  }
+  
+  plot_vals %>%
+    as_tibble() %>% 
+    mutate(x_vals = x_vals) %>% 
+    gather(item, value, -x_vals) %>% 
+    ggplot(aes(x = x_vals, y = value, group = item, color = item)) +
+    geom_line() +
+    labs(x = "Ability", y = y_lab) 
+}  
 
 
+plot_3pars <- function(quiz_object, type = c("ICC", "IIC")){
+  x_vals = seq(-3.8, 3.8, length = 100)
+  d_matrix <- cbind(1, x_vals)
+  
+  data_tibble <- quiz_object %>% 
+    ungroup() %>% 
+    dplyr::select(`email address`, question, score) %>% 
+    tidyr::spread(question, score, fill = 0) %>% 
+    dplyr::select(-`email address`) %>% 
+    stats::setNames(paste("item", names(.))) %>% 
+    purrr::map_if(is.character, as.numeric) %>% 
+    tibble::as_tibble() %>% 
+    purrr::discard(~sum(.)==0)
+  
+  model <- tpm(data_tibble)
+  thetas <- model$coefficients
+  temp <- plogis(thetas[, 1]) * model$max.guessing
+  betas <- thetas[, 2:3]
+  p <- nrow(betas)
+  
+  
+  plot_vals <- if (type == "ICC") {
+    temp <- matrix(temp, length(x_vals), p, TRUE)
+    y_lab <- "Probability of correctness"
+    temp + (1 - temp) * ltm:::probs(d_matrix %*% t(betas)) 
+    
+  } else {
+    y_lab <- "Information"
+    pi_2 <- plogis(d_matrix %*% t(betas))
+    temp <- matrix(temp, length(x_vals), p, TRUE)
+    pi <- temp + (1 - temp) * pi_2
+    pqr <- pi * (1 - pi) * (pi_2/pi)^2
+    t(t(pqr) * betas[, 2]^2)
+  }
+  
+  plot_vals %>% 
+    as_tibble() %>% 
+    mutate(x_vals = x_vals) %>% 
+    gather(item, value, -x_vals) %>% 
+    ggplot(aes(x = x_vals, y = value, group = item, color = item)) +
+    geom_line() +
+    labs(x = "Ability", y = y_lab) 
+}  
 
 # ui ----------------------------------------------------------------------
 header <- dashboardHeader(title = "lanalytics Dashboard")
@@ -181,10 +327,15 @@ sidebar <- dashboardSidebar(sidebarMenu(
   menuItem("Instructions", tabName = "1_instructions", icon = icon("info")),
   menuItem("Import quizzes", tabName = "2_input", icon = icon("th")),
   menuItem("Display quizzes", tabName = "3_display", icon = icon("eye")),
-  menuItem("Data analysis", tabName = "4_analysis", icon = icon("dashboard"),
-           menuSubItem("Individual analysis", tabName = "4_1_individual", icon = icon("dashboard")),
-           menuSubItem("Quiz analysis", tabName = "4_2_quiz", icon = icon("dashboard")),
-           menuSubItem("Grupal analysis", tabName = "4_3_grupal", icon = icon("dashboard"))
+  menuItem("n-PL IRT", tabName = "4_irt", icon = icon("eye"),
+           menuSubItem("1-PL IRT", tabName = "4_1_irt", icon = icon("dashboard")),
+           menuSubItem("2-PL IRT", tabName = "4_2_irt", icon = icon("dashboard")),
+           menuSubItem("3-PL IRT", tabName = "4_3_irt", icon = icon("dashboard"))
+           ),
+  menuItem("Data analysis", tabName = "5_analysis", icon = icon("dashboard"),
+           menuSubItem("Individual analysis", tabName = "5_1_individual", icon = icon("dashboard")),
+           menuSubItem("Quiz analysis", tabName = "5_2_quiz", icon = icon("dashboard")),
+           menuSubItem("Grupal analysis", tabName = "5_3_grupal", icon = icon("dashboard"))
            ),
   br(),
   actionButton("quit_button", "Exit", icon("sign-out")),
@@ -269,24 +420,95 @@ body <- dashboardBody(
             )
            ),
      
-    tabItem(tabName = "4_analysis"),
+    tabItem(tabName = "4_irt"),
     
-    tabItem(tabName = "4_1_individual",
+    tabItem(tabName = "4_1_irt",
+            fluidRow(
+              br(),
+              titlePanel(strong("1 PL")),
+              box(title = "Select quizzes to analize:", status = "info", width = 10,
+                  collapsible = TRUE,
+                  uiOutput("choose_files_4_1")
+              )
+            ), 
+            fluidRow(
+              box(title = "1 PL", status = "primary", width = 12,
+                  collapsible = TRUE,
+                  plotOutput("plot_rasch")
+              )
+            ),
+            fluidRow(
+              box(title = "1 PL", status = "primary", width = 12,
+                  collapsible = TRUE,
+                  plotOutput("plot_rasch2")
+              )
+            )
+            ),
+    tabItem(tabName = "4_2_irt",
+            fluidRow(
+              br(),
+              titlePanel(strong("2 PL")),
+              box(title = "Select quizzes to analize:", status = "info", width = 10,
+                  collapsible = TRUE,
+                  uiOutput("choose_files_4_2")
+              )
+            ),
+            fluidRow(
+              box(title = "2 PL", status = "primary", width = 12,
+                  collapsible = TRUE,
+                  plotOutput("plot_2pars")
+              )
+            ),
+            fluidRow(
+              box(title = "2 PL", status = "primary", width = 12,
+                  collapsible = TRUE,
+                  plotOutput("plot_2pars2")
+              )
+            )
+            ),
+    tabItem(tabName = "4_3_irt", 
+            fluidRow(
+              br(),
+              titlePanel(strong("3 PL")),
+              box(title = "Select quizzes to analize:", status = "info", width = 10,
+                  collapsible = TRUE,
+                  uiOutput("choose_files_4_3")
+              )
+            ),
+            fluidRow(
+              box(title = "3 PL", status = "primary", width = 12,
+                  collapsible = TRUE,
+                  plotOutput("plot_3pars")
+              )
+            ),
+            fluidRow(
+              box(title = "3 PL", status = "primary", width = 12,
+                  collapsible = TRUE,
+                  plotOutput("plot_3pars2")
+              )
+            )
+            ),
+    
+    tabItem(tabName = "5_analysis"),
+    
+    tabItem(tabName = "5_1_individual",
             fluidRow(
               br(),
               titlePanel(strong("Individual!")),
               box(title = "Select quizzes to analize:", status = "info", width = 10,
                   collapsible = TRUE,
-                  uiOutput("choose_files_1")
+                  uiOutput("choose_files_5_1")
               )
             ),
             
             fluidRow(
-              box(title = "Guessers", status = "primary", width = 6,
+              box(title = "Guessers", status = "primary", width = 12,
                   collapsible = TRUE,
                   plotOutput("plot_guessers")
-              ),
-              box(title = "Order plot", status = "primary", width = 6,
+              )
+            ),
+            fluidRow(
+              box(title = "Order plot", status = "primary", width = 12,
                   collapsible = TRUE,
                   plotOutput("plot_order")
               )
@@ -295,28 +517,36 @@ body <- dashboardBody(
 
     ),
 
-    tabItem(tabName = "4_2_quiz",
+    tabItem(tabName = "5_2_quiz",
             fluidRow(
               br(),
               titlePanel(strong("Quiz")),
               box(title = "Select quizzes to analize:", status = "info", width = 10,
                   collapsible = TRUE,
-                  uiOutput("choose_files_2")
+                  uiOutput("choose_files_5_2")
                   )
             ),
             
+            
             fluidRow(
-              box(title = "ICC plot", status = "primary", width = 12,
+              box(title = "Histogram", status = "primary", width = 12,
                   collapsible = TRUE,
-                  plotOutput("plot_rasch")
+                  plotOutput("plot_hist")
               )
             ),
-
+            
             fluidRow(
-              # box(title = "Easiness-time", status = "primary", width = 6,
-              #     collapsible = TRUE,
-              #     plotOutput("plot_et")
-              # ),
+              box(title = "Boxplot", status = "primary", width = 12,
+                  collapsible = TRUE,
+                  plotOutput("plot_boxplots")
+              )
+            ),
+            
+            fluidRow(
+              box(title = "Easiness-time", status = "primary", width = 6,
+                  collapsible = TRUE,
+                  plotOutput("plot_et")
+              ),
               box(title = "ETL", status = "primary", width = 6,
                   collapsible = TRUE,
                   plotOutput("plot_etl")
@@ -324,21 +554,21 @@ body <- dashboardBody(
             )
     ),
 
-    tabItem(tabName = "4_3_grupal",
+    tabItem(tabName = "5_3_grupal",
 
             fluidRow(
               titlePanel(strong("Grupal")),
               box(title = "Select quizzes to analize:", status = "info", width = 12,
                   collapsible = TRUE,
-                  uiOutput("choose_files_3")
+                  uiOutput("choose_files_5_3")
               )
-            ),
-            fluidRow( ## borrar
-              box(title = "Easiness-time", status = "primary", width = 6,  ## borrar
-                  collapsible = TRUE, ## borrar
-                  plotOutput("plot_et") ## borrar
-              ) ## borrar
-            )   ## borrar
+            )
+            # fluidRow( ## borrar
+            #   box(title = "Easiness-time", status = "primary", width = 6,  ## borrar
+            #       collapsible = TRUE, ## borrar
+            #       plotOutput("plot_et")
+            #   ) ## borrar
+            # )   ## borrar
     )
   )
 )
@@ -413,54 +643,117 @@ server <- function(input, output) {
   output$plot_order <- renderPlot({
     if(exists("df_quiz")){
       input$newplot
-      plot_order(df_quiz() %>% filter(quiz %in% input$choose_files_1))  
+      plot_order(df_quiz() %>% filter(quiz %in% input$choose_files_5_1))  
     }
   })
   
   output$plot_guessers <- renderPlot({
     if(exists("df_quiz")){
       input$newplot
-      plot_guessers(df_quiz() %>% filter(quiz %in% input$choose_files_1))  
+      plot_guessers(df_quiz() %>% filter(quiz %in% input$choose_files_5_1))  
     }
   })
   
   output$plot_et <- renderPlot({
     if(exists("df_quiz")){
       input$newplot
-      plot_easiness_time(df_quiz() %>% filter(quiz %in% input$choose_files_2))  
+      plot_easiness_time(df_quiz() %>% filter(quiz %in% input$choose_files_5_2))  
     }
   })
   
   output$plot_etl <- renderPlot({
     if(exists("df_quiz")){
       input$newplot
-      plot_etl(df_quiz() %>% filter(quiz %in% input$choose_files_2), df_cognitive())  
+      plot_etl(df_quiz() %>% filter(quiz %in% input$choose_files_5_2), df_cognitive())  
     }
   })
   
   output$plot_rasch <- renderPlot({
     if(exists("df_quiz")){
       input$newplot
-      plot_rasch(df_quiz() %>% filter(quiz %in% input$choose_files_2))  
+      plot_rasch(df_quiz() %>% filter(quiz %in% input$choose_files_4_1), type = c("ICC"))  
+    }
+  })
+  output$plot_rasch2 <- renderPlot({
+    if(exists("df_quiz")){
+      input$newplot
+      plot_rasch(df_quiz() %>% filter(quiz %in% input$choose_files_4_1), type = c("IIC"))  
+    }
+  })
+  
+  output$plot_2pars <- renderPlot({
+    if(exists("df_quiz")){
+      input$newplot
+      plot_2pars(df_quiz() %>% filter(quiz %in% input$choose_files_4_2), type = c("ICC"))  
+    }
+  })
+  output$plot_2pars2 <- renderPlot({
+    if(exists("df_quiz")){
+      input$newplot
+      plot_2pars(df_quiz() %>% filter(quiz %in% input$choose_files_4_2), type = c("IIC"))  
+    }
+  })
+  
+  output$plot_3pars <- renderPlot({
+    if(exists("df_quiz")){
+      input$newplot
+      plot_3pars(df_quiz() %>% filter(quiz %in% input$choose_files_4_3), type = c("ICC"))
+    }
+  })
+  output$plot_3pars2 <- renderPlot({
+    if(exists("df_quiz")){
+      input$newplot
+      plot_3pars(df_quiz() %>% filter(quiz %in% input$choose_files_4_3), type = c("IIC"))
     }
   })
 
-output$choose_files_1 <- renderUI({
-  checkboxGroupInput("choose_files_1", "Choose files", 
+  output$plot_hist <- renderPlot({
+    if(exists("df_quiz")){
+      input$newplot
+      plot_hist(df_quiz() %>% filter(quiz %in% input$choose_files_5_2))  
+    }
+  })
+  
+  output$plot_boxplots <- renderPlot({
+    if(exists("df_quiz")){
+      input$newplot
+      plot_boxplots(df_quiz() %>% filter(quiz %in% input$choose_files_5_2))  
+    }
+  })
+  
+output$choose_files_4_1 <- renderUI({
+  checkboxGroupInput("choose_files_4_1", "Choose files", 
                        choices  = c(infile_quiz()$name),
                        selected = c(infile_quiz()$name)[1])
   })
-output$choose_files_2 <- renderUI({
-  checkboxGroupInput("choose_files_2", "Choose files", 
+output$choose_files_4_2 <- renderUI({
+  checkboxGroupInput("choose_files_4_2", "Choose files", 
                      choices  = c(infile_quiz()$name),
                      selected = c(infile_quiz()$name)[1])
 })
-output$choose_files_3 <- renderUI({
-  checkboxGroupInput("choose_files_3", "Choose files", 
+output$choose_files_4_3 <- renderUI({
+  checkboxGroupInput("choose_files_4_3", "Choose files", 
+                     choices  = c(infile_quiz()$name),
+                     selected = c(infile_quiz()$name)[1])
+})
+output$choose_files_5_1 <- renderUI({
+  checkboxGroupInput("choose_files_5_1", "Choose files", 
+                     choices  = c(infile_quiz()$name),
+                     selected = c(infile_quiz()$name)[1])
+})
+output$choose_files_5_2 <- renderUI({
+  checkboxGroupInput("choose_files_5_2", "Choose files", 
+                     choices  = c(infile_quiz()$name),
+                     selected = c(infile_quiz()$name)[1])
+})
+output$choose_files_5_3 <- renderUI({
+  checkboxGroupInput("choose_files_5_3", "Choose files", 
                      choices  = c(infile_quiz()$name),
                      selected = c(infile_quiz()$name)[1])
 })
 
-}
+
+
+} # end server
 
 shinyApp(ui, server)

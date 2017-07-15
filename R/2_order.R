@@ -13,24 +13,32 @@
 #' plot_order(quiz_object)
 #' @export
 plot_order <- function(quiz_object){
-  quiz_object %>% 
+quiz_object %>% 
     dplyr::group_by(question) %>% 
-    dplyr::mutate(`time tercil` = cut(as.numeric(`time per question`), 
+    dplyr::mutate(`Tercil per time` = cut(as.numeric(`time per question`), 
                                        breaks = quantile(as.numeric(.$`time per question`), 
                                                          probs = c(0, .33, .66, 1), 
                                                          na.rm = T), 
                                        include.lowest = T, 
-                                       labels = c("First Tercil", "Second Tercil", "Third Tercil"))) %>% 
-    dplyr::filter(!is.na(`time tercil`)) %>% 
-    dplyr::group_by(question, `time tercil`) %>% 
+                                       labels = c("First Tercil (Fastest)", "Second Tercil", "Third Tercil (Slowest)")),
+                  temp = sum(!is.na(`Tercil per time`)), 
+                  `Tercil per time` = if_else(temp > 10, as.character(`Tercil per time`), "NA")) %>% 
+    dplyr::filter(!is.na(`Tercil per time`), `Tercil per time`!= "NA") %>% 
+    dplyr::group_by(question, `Tercil per time`) %>% 
     dplyr::summarise(`mean score` = mean(as.numeric(score), na.rm = T)) %>% 
     dplyr::filter(`mean score`>.05) %>% 
-    ggplot2::ggplot(aes(x = question, 
-                        y = `mean score`, 
-                        group = `time tercil`, 
-                        color = `time tercil`)) +
-    ggplot2::facet_wrap(~`time tercil`, ncol = 1) +
+    ggplot2::ggplot(aes(x = factor(question), 
+                        y = `mean score` * 100, 
+                        group = `Tercil per time`, 
+                        color = `Tercil per time`,
+                        label = round(`mean score` * 100, 0))) +
+    ggplot2::facet_wrap(~`Tercil per time`, ncol = 1) +
     geom_line() +
-    geom_point()
+    geom_point() +
+    geom_smooth() +
+    labs(x = "Question in the quiz",
+         y = "Average score per tercil (max score = 100)") +
+    ylim(0, 100) +
+    geom_label(alpha = .7) 
 }
 

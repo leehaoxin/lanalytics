@@ -33,7 +33,8 @@ read_lc <- function(file){
       tidyr::gather(question, value, 
                     -c(`email address`)) %>% 
       dplyr::mutate(question = str_extract(tolower(question), "question.[0-9]*"),
-                    question = str_replace(question, "question ", ""))
+                    question = str_replace(question, "question ", "")) %>% 
+      filter(!is.na(value))
     
     names(quiz_long_sheet)[which(names(quiz_long_sheet) == "value")] <- df_subset
     quiz_long_sheet

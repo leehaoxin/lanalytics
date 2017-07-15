@@ -32,9 +32,10 @@ plot_guessers <- function(quiz_object){
     dplyr::select(`email address`, guessing, question) %>% 
     dplyr::filter(guessing != 0) %>%
     ggplot2::ggplot(aes(x = `email address`, 
-                        y = question, 
+                        y = factor(question), 
                         color = factor(guessing))) +
     ggplot2::geom_point() +
-    theme(axis.text.x = element_text(angle=90, hjust = 1))
+    theme(axis.text.x = element_text(angle=90, hjust = 1)) +
+    labs(x = "Email address", y = "Question number (Item)", color = "Guessing score")
 }
 

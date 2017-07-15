@@ -12,6 +12,7 @@
 #' quiz_object <- add_times(quiz_object)
 #' plot_easiness_time(quiz_object)
 #' @export
+#' 
 plot_easiness_time <- function(quiz_object){
   quiz_object %>%
     dplyr::mutate(score = as.numeric(score)) %>% 
@@ -20,8 +21,13 @@ plot_easiness_time <- function(quiz_object){
                      `mean time` = median(`time per question`, na.rm = T)) %>% 
     dplyr::filter(`mean score` > 0, 
                   `mean time` < 600) %>% 
-    ggplot2::ggplot(aes(x = `mean time`, 
-                        y = `mean score`)) +
+    ggplot2::ggplot(aes(x = as.numeric(`mean time`), 
+                        y = `mean score`* 100, 
+                        label = paste0("q", `question`))) +
     ggplot2::geom_point()+
-    ggplot2::geom_smooth(method = "lm")
+    ggplot2::geom_smooth(method = "lm") +
+    ggrepel::geom_label_repel() +
+    labs(y = "Average score per item (max score = 100)", 
+         x = "Average time taken to answer each item (in seconds)") +
+    ylim(0,100)
 }

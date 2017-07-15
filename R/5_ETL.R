@@ -31,15 +31,25 @@ plot_etl <- function(quiz_object, challengeLevel){
                   rating = Rating.HB) %>% 
     dplyr::select(question_id, rating)
   
+  rating_df <- data.frame(rating = factor(c(1,2,3)), 
+                          rating2 = factor(c("Low cognitive level", 
+                                             "Medium cognitive level", 
+                                             "High cognitive level")))
+  
   homo_quiz_object %>% 
     dplyr::left_join(homo_challenge_level) %>% 
     dplyr::mutate(`mean time` = as.numeric(`mean time`),
                   rating = factor(rating)) %>% 
+    left_join(rating_df) %>% 
+    dplyr::select(-rating) %>% 
     ggplot2::ggplot(aes(x = `mean time`, 
-                        y = `mean score`, 
-                        color = rating, 
+                        y = `mean score` *100, 
+                        color = rating2, 
                         label = question_id)) +
     ggplot2::geom_point() +
-    ggplot2::geom_text()
+    ggrepel::geom_label_repel() +
+    labs(y = "Average score per item (max score = 100)",
+         x = "Average time taken to answer each item (in seconds)",
+         color = "Cognitive level") 
 }
 
