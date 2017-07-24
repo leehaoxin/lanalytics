@@ -45,5 +45,6 @@ read_lc <- function(file){
                   `responded at` = parse_datetime(x = `responded at`, 
                                                   format = "%d/%m/%Y %H:%M"))
   class(quiz_long) <- c("quizz", class(quiz_long))
-  quiz_long
+  quiz_long %>% 
+    mutate(score = as.integer(score))
 }
