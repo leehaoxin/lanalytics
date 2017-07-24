@@ -24,17 +24,23 @@ plot_2pars <- function(quiz_object, type = c("ICC", "IIC")){
     stats::setNames(paste("item", names(.))) %>% 
     purrr::map_if(is.character, as.numeric) %>% 
     tibble::as_tibble() %>% 
-    purrr::discard(~sum(.)==0) %>% dplyr::select(-`item 1`)
-    
+    purrr::discard(~sum(.)<05) %>% 
+    purrr::discard(~sum(.)>95)
   
-  model <- ltm(data_tibble ~ z1)
+  # constraint <- t(matrix(c(1:ncol(data_tibble),
+  #        rep(1, ncol(data_tibble)), 
+  #        betas[,1]), ncol = ncol(data_tibble), byrow = T))
+
+  model <- ltm(data_tibble~z1, IRT.param = T,
+               control= list(method = "L-BFGS-B", verbose = TRUE), 
+               constraint = constraint)
+  plot(model)
   betas <- model$coefficients
   
   plot_vals <- if (type == "ICC") {
     y_lab <- "Probability of correctness"
     plogis(d_matrix %*% t(betas))
-  }
-  else {
+  }else {
     y_lab <- "Information"
     temp <- plogis(d_matrix %*% t(betas))
     temp2 <- temp * (1 - temp)
@@ -49,4 +55,12 @@ plot_2pars <- function(quiz_object, type = c("ICC", "IIC")){
     geom_line() +
     labs(x = "Ability", y = y_lab) 
 }  
+
+
+
+
+res <- RM(raschdat1, sum0 = FALSE)
+res$npar
+
+
 

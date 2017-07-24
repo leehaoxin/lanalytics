@@ -24,9 +24,10 @@ plot_3pars <- function(quiz_object, type = c("ICC", "IIC")){
     stats::setNames(paste("item", names(.))) %>% 
     purrr::map_if(is.character, as.numeric) %>% 
     tibble::as_tibble() %>% 
-    purrr::discard(~sum(.)==0)
+    purrr::discard(~sum(.)<15) %>% 
+    purrr::discard(~sum(.)>85)
   
-  model <- tpm(data_tibble)
+  model <- tpm(data_tibble, start.val = "random")
   thetas <- model$coefficients
   temp <- plogis(thetas[, 1]) * model$max.guessing
   betas <- thetas[, 2:3]

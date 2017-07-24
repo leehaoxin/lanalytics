@@ -25,7 +25,8 @@ plot_rasch <- function(quiz_object, type = c("ICC", "IIC")){
     stats::setNames(paste("item", names(.))) %>% 
     purrr::map_if(is.character, as.numeric) %>% 
     tibble::as_tibble() %>% 
-    purrr::discard(~sum(.)==0)
+    purrr::discard(~sum(.)<05) %>% 
+    purrr::discard(~sum(.)>95)
   
   model <- rasch(data_tibble)
   betas <- model$coefficients
