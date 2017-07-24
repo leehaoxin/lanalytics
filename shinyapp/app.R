@@ -319,7 +319,7 @@ plot_guessers <- function(quiz_object){
     labs(x = "Email address", y = "Question number (Item)", color = "Guessing score")+
     facet_wrap(~quiz, ncol = 1)
 }
-plot_etl <- function(quiz_object, challengeLevel){
+plot_etl <- function(quiz_object, challengeLevel, item = "MCM.2014.item", rating = "Rating.HB"){
   homo_quiz_object <- quiz_object %>% 
     dplyr::mutate(score = as.numeric(score)) %>% 
     dplyr::group_by(quiz, question) %>% 
@@ -331,9 +331,8 @@ plot_etl <- function(quiz_object, challengeLevel){
     dplyr::select(question_id, `mean time`, `mean score`)
   
   homo_challenge_level <- challengeLevel %>% 
-    dplyr::rename(question_id = MCM.2014.item,
-                  rating = Rating.HB) %>% 
-    dplyr::select(question_id, rating)
+    dplyr::select(get(item), get(rating)) %>% 
+    setNames(c("question_id", "rating"))
   
   rating_df <- data.frame(rating = factor(c(1,2,3)), 
                           rating2 = factor(c("Low cognitive level", 
@@ -434,16 +433,28 @@ body <- dashboardBody(
                             accept = c('.csv'),
                             multiple = TRUE
                             ),
-                  actionButton(inputId = "upload_quiz_dataset", 
-                               label = "Upload quiz dataset")
+                  column(3, 
+                    actionButton(inputId = "upload_quiz_dataset", 
+                                 label = "Add quiz dataset")
+                  ),
+                  column(3, offset = 3,
+                    actionButton(inputId = "remove_quiz_dataset", 
+                                 label = "Remove quiz datasets")
+                  )
               ),
               box(title = "Import cognitive levels file", status = "primary", width = 6,
                   collapsible = TRUE,
                   fileInput('file2', 'Select file:',
                             accept = c('.csv')
                             ),
-                  actionButton(inputId = "upload_cognitive_dataset", 
-                               label = "Upload cognitive dataset")
+                  column(3, 
+                         actionButton(inputId = "upload_cognitive_dataset", 
+                                      label = "Upload cognitive dataset")
+                  ),
+                  column(3, offset = 3,
+                         actionButton(inputId = "remove_cognitive_dataset", 
+                                      label = "Remove congnitive datasets")
+                  )
               )
             ),
             fluidRow(
@@ -465,6 +476,18 @@ body <- dashboardBody(
                   DT::dataTableOutput('quiz_dataset')
                   )
               ), 
+            fluidRow(
+              box(title = "Select column of the item:", 
+                  status = "primary", width = 6,
+                  collapsible = TRUE,
+                  uiOutput('choose_cognitive_item')
+              ),
+              box(title = "Select column of the rating:", 
+                  status = "primary", width = 6,
+                  collapsible = TRUE,
+                  uiOutput('choose_cognitive_rating')
+              )
+            ),
             fluidRow(
               box(title = "Cognitive levels dataset:", status = "primary", width = 12,
                   collapsible = TRUE,
@@ -674,7 +697,7 @@ server <- function(input, output) {
 # s1 instructions ------------------------------------------------------------------
 # s2 input ------------------------------------------------------------------
   infile_quiz <- eventReactive(input$upload_quiz_dataset, {
-    validate(need(input$file1, message = "Please select a quizz"))
+    validate(need(input$file1, message = "Please add a quiz dataset"))  
     infile_quiz <- input$file1
     infile_quiz
   })
@@ -683,17 +706,33 @@ server <- function(input, output) {
     infile_cognitive <- input$file2
     infile_cognitive
   })
-  df_quiz <- eventReactive(input$upload_quiz_dataset, {
+  quiz_values <- reactiveValues(df_data = NULL)
+  cognitive_values <- reactiveValues(df_data = NULL)
+  observeEvent(input$remove_quiz_dataset, {
+    quiz_values$df_data <- NULL
+    })
+  observeEvent(input$upload_quiz_dataset, {
     xx <- lapply(1:nrow(infile_quiz()), function(num){
       add_times(read_lc(infile_quiz()$datapath[num]) %>% 
                   mutate(quiz = infile_quiz()$name[num]))
     })
-    do.call(bind_rows, xx)
+    xx_temp = bind_rows(xx)
+    temp <- is.null(quiz_values$df_data)
+    if(temp){
+      quiz_values$df_data = xx_temp
+    }else{
+      quiz_values$df_data = unique(bind_rows(quiz_values$df_data, xx_temp))
+    }
   })
-  df_cognitive <- eventReactive(input$upload_cognitive_dataset, {
-    read.csv(infile_cognitive()$datapath) %>% 
+  observeEvent(input$remove_cognitive_dataset, {
+    cognitive_values$df_data <- NULL
+  })
+  observeEvent(input$upload_cognitive_dataset, {
+    cognitive_values$df_data <- read.csv(infile_cognitive()$datapath) %>% 
       mutate(file = infile_cognitive()$name[1])
   })
+  df_quiz <- reactive(quiz_values$df_data)
+  df_cognitive <- reactive(cognitive_values$df_data)
   output$names_quiz <- DT::renderDataTable({
     DT::datatable(df_quiz()$quiz %>% unique %>% data.frame(),
                   extensions = 'Responsive',
@@ -722,8 +761,24 @@ server <- function(input, output) {
                       scroller = TRUE
                       ))
     })
+  output$choose_cognitive_item <- renderUI({
+    validate(need((df_cognitive() %>% data.frame() %>% names)[1], "Introduce a valid file."))
+    radioButtons("choose_cognitive_item", "Choose level column", 
+                 choices  = c(df_cognitive() %>% data.frame() %>% names),
+                 selected = c(df_cognitive() %>% data.frame() %>% names)[1])
+  })
+  output$choose_cognitive_rating <- renderUI({
+    validate(need((df_cognitive() %>% data.frame() %>% names)[1], "Introduce a valid file."))
+    radioButtons("choose_cognitive_rating", "Choose rating column", 
+                 choices  = c(df_cognitive() %>% data.frame() %>% names),
+                 selected = c(df_cognitive() %>% data.frame() %>% names)[1])
+  })
   output$cognitive_dataset <- DT::renderDataTable({
-    DT::datatable(df_cognitive(),
+    req(input$choose_cognitive_item)
+    req(input$choose_cognitive_item)
+    DT::datatable(df_cognitive() %>% 
+                    dplyr::select(get(input$choose_cognitive_item),
+                                  get(input$choose_cognitive_rating)),
                   extensions = 'Responsive',
                   options = list(
                     deferRender = TRUE,
@@ -836,7 +891,10 @@ server <- function(input, output) {
     validate(need(input$choose_files_6_2, message = "Please select a quizz"))
     if(exists("df_quiz")){
       input$newplot
-      plot_etl(df_quiz() %>% filter(quiz %in% input$choose_files_6_2), df_cognitive())  
+      plot_etl(df_quiz() %>% filter(quiz %in% input$choose_files_6_2), 
+               df_cognitive(), 
+               item = input$choose_cognitive_item, 
+               rating = input$choose_cognitive_rating)  
     }
   })
 # s-final ------------------------------------------------------------------
