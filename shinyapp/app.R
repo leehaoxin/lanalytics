@@ -71,27 +71,45 @@ plot_rasch <- function(quiz_object, type = c("ICC", "IIC")){
     purrr::discard(~sum(.)==0)
   
   model <- rasch(data_tibble)
-  betas <- model$coefficients
+  plot(model, type = type)
+  # betas <- model$coefficients
+  # 
+  # plot_vals <- if (type == "ICC") {
+  #   y_lab <- "Probability of correctness"
+  #   plogis(d_matrix %*% t(betas))
+  # }else {
+  #   y_lab <- "Information"
+  #   temp <- plogis(d_matrix %*% t(betas))
+  #   betas[1, 2]^2 * temp * (1 - temp)
+  # }
+  # 
+  # plot_vals %>%
+  #   as_tibble() %>% 
+  #   mutate(x_vals = x_vals) %>% 
+  #   gather(item, value, -x_vals) %>% 
+  #   ggplot(aes(x = x_vals, 
+  #              y = value, 
+  #              group = item, 
+  #              color = item)) +
+  #   geom_line() +
+  #   labs(x = "Ability", y = y_lab) 
+}  
+plot_rasch <- function(quiz_object, type = c("ICC", "IIC")){
+  x_vals = seq(-3.8, 3.8, length = 100)
+  d_matrix <- cbind(1, x_vals)
   
-  plot_vals <- if (type == "ICC") {
-    y_lab <- "Probability of correctness"
-    plogis(d_matrix %*% t(betas))
-  }else {
-    y_lab <- "Information"
-    temp <- plogis(d_matrix %*% t(betas))
-    betas[1, 2]^2 * temp * (1 - temp)
-  }
+  data_tibble <- quiz_object %>% 
+    ungroup() %>% 
+    dplyr::select(`email address`, question, score) %>% 
+    tidyr::spread(question, score, fill = 0) %>% 
+    dplyr::select(-`email address`) %>% 
+    stats::setNames(paste("item", names(.))) %>% 
+    purrr::map_if(is.character, as.numeric) %>% 
+    tibble::as_tibble() %>% 
+    purrr::discard(~sum(.)==0)
   
-  plot_vals %>%
-    as_tibble() %>% 
-    mutate(x_vals = x_vals) %>% 
-    gather(item, value, -x_vals) %>% 
-    ggplot(aes(x = x_vals, 
-               y = value, 
-               group = item, 
-               color = item)) +
-    geom_line() +
-    labs(x = "Ability", y = y_lab) 
+  model <- rasch(data_tibble)
+  plot(model, type = type)
 }  
 plot_2pars <- function(quiz_object, type = c("ICC", "IIC")){
   x_vals = seq(-3.8, 3.8, length = 100)
@@ -108,26 +126,27 @@ plot_2pars <- function(quiz_object, type = c("ICC", "IIC")){
     purrr::discard(~sum(.)==0)
   
   model <- ltm(data_tibble ~ z1)
-  betas <- model$coefficients
-  
-  plot_vals <- if (type == "ICC") {
-    y_lab <- "Probability of correctness"
-    plogis(d_matrix %*% t(betas))
-  }
-  else {
-    y_lab <- "Information"
-    temp <- plogis(d_matrix %*% t(betas))
-    temp2 <- temp * (1 - temp)
-    t(t(temp2) * betas[, 2]^2)
-  }
-  
-  plot_vals %>%
-    as_tibble() %>% 
-    mutate(x_vals = x_vals) %>% 
-    gather(item, value, -x_vals) %>% 
-    ggplot(aes(x = x_vals, y = value, group = item, color = item)) +
-    geom_line() +
-    labs(x = "Ability", y = y_lab) 
+  plot(model, type = type)
+  # betas <- model$coefficients
+  # 
+  # plot_vals <- if (type == "ICC") {
+  #   y_lab <- "Probability of correctness"
+  #   plogis(d_matrix %*% t(betas))
+  # }
+  # else {
+  #   y_lab <- "Information"
+  #   temp <- plogis(d_matrix %*% t(betas))
+  #   temp2 <- temp * (1 - temp)
+  #   t(t(temp2) * betas[, 2]^2)
+  # }
+  # 
+  # plot_vals %>%
+  #   as_tibble() %>% 
+  #   mutate(x_vals = x_vals) %>% 
+  #   gather(item, value, -x_vals) %>% 
+  #   ggplot(aes(x = x_vals, y = value, group = item, color = item)) +
+  #   geom_line() +
+  #   labs(x = "Ability", y = y_lab) 
 }  
 plot_3pars <- function(quiz_object, type = c("ICC", "IIC")){
   x_vals = seq(-3.8, 3.8, length = 100)
@@ -143,34 +162,35 @@ plot_3pars <- function(quiz_object, type = c("ICC", "IIC")){
     tibble::as_tibble() %>% 
     purrr::discard(~sum(.)==0)
   
-  model <- tpm(data_tibble)
-  thetas <- model$coefficients
-  temp <- plogis(thetas[, 1]) * model$max.guessing
-  betas <- thetas[, 2:3]
-  p <- nrow(betas)
-  
-  
-  plot_vals <- if (type == "ICC") {
-    temp <- matrix(temp, length(x_vals), p, TRUE)
-    y_lab <- "Probability of correctness"
-    temp + (1 - temp) * ltm:::probs(d_matrix %*% t(betas)) 
-    
-  } else {
-    y_lab <- "Information"
-    pi_2 <- plogis(d_matrix %*% t(betas))
-    temp <- matrix(temp, length(x_vals), p, TRUE)
-    pi <- temp + (1 - temp) * pi_2
-    pqr <- pi * (1 - pi) * (pi_2/pi)^2
-    t(t(pqr) * betas[, 2]^2)
-  }
-  
-  plot_vals %>% 
-    as_tibble() %>% 
-    mutate(x_vals = x_vals) %>% 
-    gather(item, value, -x_vals) %>% 
-    ggplot(aes(x = x_vals, y = value, group = item, color = item)) +
-    geom_line() +
-    labs(x = "Ability", y = y_lab) 
+   model <- tpm(data_tibble)
+   plot(model, type = type)
+  # thetas <- model$coefficients
+  # temp <- plogis(thetas[, 1]) * model$max.guessing
+  # betas <- thetas[, 2:3]
+  # p <- nrow(betas)
+  # 
+  # 
+  # plot_vals <- if (type == "ICC") {
+  #   temp <- matrix(temp, length(x_vals), p, TRUE)
+  #   y_lab <- "Probability of correctness"
+  #   temp + (1 - temp) * ltm:::probs(d_matrix %*% t(betas)) 
+  #   
+  # } else {
+  #   y_lab <- "Information"
+  #   pi_2 <- plogis(d_matrix %*% t(betas))
+  #   temp <- matrix(temp, length(x_vals), p, TRUE)
+  #   pi <- temp + (1 - temp) * pi_2
+  #   pqr <- pi * (1 - pi) * (pi_2/pi)^2
+  #   t(t(pqr) * betas[, 2]^2)
+  # }
+  # 
+  # plot_vals %>% 
+  #   as_tibble() %>% 
+  #   mutate(x_vals = x_vals) %>% 
+  #   gather(item, value, -x_vals) %>% 
+  #   ggplot(aes(x = x_vals, y = value, group = item, color = item)) +
+  #   geom_line() +
+  #   labs(x = "Ability", y = y_lab) 
 }  
 # f5 IRT-NO-discrim -----------------------------------------------
 plot_jointICC <- function(quiz_object){
@@ -428,8 +448,11 @@ body <- dashboardBody(
             fluidRow(
               tabBox(
                 title = "Import quiz file", width = 6, 
-                id = "2_tabset_1", height = "250px",
-                tabPanel("From Learning Catalytics", 
+                id = "2_tabset_1", height = "350px",
+                tabPanel("Learning Catalytics",
+                         p("Select a *.csv file exported from the Learning Catalytics software. This file must contain
+                          two columns per item, the first indicating the ", em("score"), " and the second indicating the ", 
+                           em("answering time") ,". In addition, the file should contain an ID column called ", em("email address")),
                   fileInput('file1', 'Select file:',
                             accept = c('.csv'),
                             multiple = TRUE
@@ -443,13 +466,16 @@ body <- dashboardBody(
                                       label = "Remove quiz datasets")
                          )
                 ),
-                tabPanel("From Google Forms", "Tab content 2"),
-                tabPanel("From R file", "Tab content 2")
+                tabPanel("Google Forms", "Tab content 2"),
+                tabPanel("R file", "Tab content 2")
               ),
               tabBox(
                 title = "Import cognitive levels file", width = 6,
-                id = "2_tabset_2", height = "250px",
-                tabPanel("From Learning Canalytics", 
+                id = "2_tabset_2", height = "350px",
+                tabPanel("From *.csv file", 
+                         p("Select a *.csv file exported from the Learning Catalytics software. This file must contain
+                           two columns, one indicating the quiz and item number in the format Q1_q3 (Quiz 1, question 3) and the
+                           other indicating the cognitive level in the scale 1-3 (1=low, 3=high)."),
                          fileInput('file2', 'Select file:',
                                    accept = c('.csv')
                          ),
@@ -461,19 +487,17 @@ body <- dashboardBody(
                                 actionButton(inputId = "remove_cognitive_dataset", 
                                              label = "Remove congnitive datasets")
                          )       
-                ),
-                tabPanel("From Google Forms", "Tab content 2"),
-                tabPanel("From R file", "Tab content 2")
+                )
               )
             ),
             fluidRow(
               box(title = "Uploaded files:", status = "primary", width = 6,
                   collapsible = TRUE,
-                  DT::dataTableOutput('names_quiz')
+                  tableOutput('names_quiz')
               ),
               box(title = "Uploaded files:", status = "primary", width = 6,
                   collapsible = TRUE,
-                  DT::dataTableOutput('names_cognitive')
+                  tableOutput('names_cognitive')
               )
             )
     ),
@@ -510,19 +534,17 @@ body <- dashboardBody(
             fluidRow(
               br(),
               titlePanel(strong("1 PL")),
-              box(title = "Select quizzes to analize:", status = "info", width = 10,
+              box(title = "Select quizzes to analize:", status = "info", width = 12,
                   collapsible = TRUE,
                   uiOutput("choose_files_4_1")
               )
             ), 
             fluidRow(
-              box(title = "1 PL", status = "primary", width = 12,
+              box(title = "1 PL", status = "primary", width = 6,
                   collapsible = TRUE,
                   plotOutput("plot_rasch")
-              )
-            ),
-            fluidRow(
-              box(title = "1 PL", status = "primary", width = 12,
+              ),
+              box(title = "1 PL", status = "primary", width = 6,
                   collapsible = TRUE,
                   plotOutput("plot_rasch2")
               )
@@ -532,19 +554,17 @@ body <- dashboardBody(
             fluidRow(
               br(),
               titlePanel(strong("2 PL")),
-              box(title = "Select quizzes to analize:", status = "info", width = 10,
+              box(title = "Select quizzes to analize:", status = "info", width = 12,
                   collapsible = TRUE,
                   uiOutput("choose_files_4_2")
               )
             ),
             fluidRow(
-              box(title = "2 PL", status = "primary", width = 12,
+              box(title = "2 PL", status = "primary", width = 6,
                   collapsible = TRUE,
                   plotOutput("plot_2pars")
-              )
-            ),
-            fluidRow(
-              box(title = "2 PL", status = "primary", width = 12,
+              ),
+              box(title = "2 PL", status = "primary", width = 6,
                   collapsible = TRUE,
                   plotOutput("plot_2pars2")
               )
@@ -560,13 +580,11 @@ body <- dashboardBody(
               )
             ),
             fluidRow(
-              box(title = "3 PL", status = "primary", width = 12,
+              box(title = "3 PL", status = "primary", width = 6,
                   collapsible = TRUE,
                   plotOutput("plot_3pars")
-              )
-            ),
-            fluidRow(
-              box(title = "3 PL", status = "primary", width = 12,
+              ),
+              box(title = "3 PL", status = "primary", width = 6,
                   collapsible = TRUE,
                   plotOutput("plot_3pars2")
               )
@@ -742,34 +760,15 @@ server <- function(input, output) {
   })
   df_quiz <- reactive(quiz_values$df_data)
   df_cognitive <- reactive(cognitive_values$df_data)
-  output$names_quiz <- DT::renderDataTable({
-    DT::datatable(df_quiz()$quiz %>% unique %>% data.frame(),
-                  extensions = 'Responsive',
-                  options = list(
-                    deferRender = TRUE,
-                    scrollY = 200,
-                    scroller = TRUE
-                  ))
+  output$names_quiz <- renderTable({
+    if((df_quiz()$quiz %>% length())>0){
+      df_quiz()$quiz %>% unique %>% data.frame() %>% setNames("Uploaded files")}
   })
-  output$names_cognitive <- DT::renderDataTable({
-    DT::datatable(df_cognitive()$file %>% unique %>% data.frame(),
-                  extensions = 'Responsive',
-                  options = list(
-                    deferRender = TRUE,
-                    scrollY = 200,
-                    scroller = TRUE
-                  ))
+  output$names_cognitive <- renderTable({
+    if((df_cognitive()$file %>% unique %>% length())>0){
+      df_cognitive()$file %>% unique %>% data.frame() %>% setNames("Uploaded files")}
   })
 # s3 display ------------------------------------------------------------------
-  output$quiz_dataset <- DT::renderDataTable({
-      DT::datatable(df_quiz(),
-                    extensions = 'Responsive',
-                    options = list(
-                      deferRender = TRUE,
-                      scrollY = 200,
-                      scroller = TRUE
-                      ))
-    })
   output$choose_cognitive_item <- renderUI({
     validate(need((df_cognitive() %>% data.frame() %>% names)[1], "Introduce a valid file."))
     radioButtons("choose_cognitive_item", "Choose level column", 
@@ -781,6 +780,15 @@ server <- function(input, output) {
     radioButtons("choose_cognitive_rating", "Choose rating column", 
                  choices  = c(df_cognitive() %>% data.frame() %>% names),
                  selected = c(df_cognitive() %>% data.frame() %>% names)[1])
+  })
+  output$quiz_dataset <- DT::renderDataTable({
+    DT::datatable(df_quiz(),
+                  extensions = 'Responsive',
+                  options = list(
+                    deferRender = TRUE,
+                    scrollY = 200,
+                    scroller = TRUE
+                  ))
   })
   output$cognitive_dataset <- DT::renderDataTable({
     req(input$choose_cognitive_item)
@@ -803,6 +811,13 @@ server <- function(input, output) {
       plot_rasch(df_quiz() %>% filter(quiz %in% input$choose_files_4_1), type = c("ICC"))  
     }
   })
+  # output$plot_rasch_text <- DT::renderDataTable({
+  #   validate(need(input$choose_files_4_1, message = "Please select a quizz"))
+  #   if(exists("df_quiz")){
+  #     input$newplot
+  #     plot_rasch(df_quiz() %>% filter(quiz %in% input$choose_files_4_1), type = c("ICC"))  
+  #   }
+  # })
   output$plot_rasch2 <- renderPlot({
     validate(need(input$choose_files_4_1, message = "Please select a quizz"))
     if(exists("df_quiz")){
@@ -908,49 +923,58 @@ server <- function(input, output) {
   })
 # s-final ------------------------------------------------------------------
   output$choose_files_4_1 <- renderUI({
+    validate(need((df_quiz()$quiz %>% unique)[1], "Introduce a quiz datafile"))
     radioButtons("choose_files_4_1", "Choose files", 
-                         choices  = c(infile_quiz()$name),
-                         selected = c(infile_quiz()$name)[1])
+                         choices  = c(df_quiz()$quiz %>% unique),
+                         selected = c(df_quiz()$quiz %>% unique)[1])
   })
   output$choose_files_4_2 <- renderUI({
+    validate(need((df_quiz()$quiz %>% unique)[1], "Introduce a quiz datafile"))
     radioButtons("choose_files_4_2", "Choose files", 
-                       choices  = c(infile_quiz()$name),
-                       selected = c(infile_quiz()$name)[1])
+                       choices  = c(df_quiz()$quiz %>% unique),
+                       selected = c(df_quiz()$quiz %>% unique)[1])
   })
   output$choose_files_4_3 <- renderUI({
+    validate(need((df_quiz()$quiz %>% unique)[1], "Introduce a quiz datafile"))
     radioButtons("choose_files_4_3", "Choose files", 
-                       choices  = c(infile_quiz()$name),
-                       selected = c(infile_quiz()$name)[1])
+                       choices  = c(df_quiz()$quiz %>% unique),
+                       selected = c(df_quiz()$quiz %>% unique)[1])
   })
   output$choose_files_5_1 <- renderUI({
+    validate(need((df_quiz()$quiz %>% unique)[1], "Introduce a quiz datafile"))
     radioButtons("choose_files_5_1", "Choose files", 
-                       choices  = c(infile_quiz()$name),
-                       selected = c(infile_quiz()$name)[1])
+                       choices  = c(df_quiz()$quiz %>% unique),
+                       selected = c(df_quiz()$quiz %>% unique)[1])
   })
   output$choose_files_5_2 <- renderUI({
+    validate(need((df_quiz()$quiz %>% unique)[1], "Introduce a quiz datafile"))
     radioButtons("choose_files_5_2", "Choose files", 
-                       choices  = c(infile_quiz()$name),
-                       selected = c(infile_quiz()$name)[1])
+                       choices  = c(df_quiz()$quiz %>% unique),
+                       selected = c(df_quiz()$quiz %>% unique)[1])
   })
   output$choose_files_5_3 <- renderUI({
+    validate(need((df_quiz()$quiz %>% unique)[1], "Introduce a quiz datafile"))
     radioButtons("choose_files_5_3", "Choose files", 
-                       choices  = c(infile_quiz()$name),
-                       selected = c(infile_quiz()$name)[1])
+                       choices  = c(df_quiz()$quiz %>% unique),
+                       selected = c(df_quiz()$quiz %>% unique)[1])
   })  
   output$choose_files_6_1 <- renderUI({
+    validate(need((df_quiz()$quiz %>% unique)[1], "Introduce a quiz datafile"))
     checkboxGroupInput("choose_files_6_1", "Choose files", 
-                       choices  = c(infile_quiz()$name),
-                       selected = c(infile_quiz()$name)[1])
+                       choices  = c(df_quiz()$quiz %>% unique),
+                       selected = c(df_quiz()$quiz %>% unique)[1])
   })
   output$choose_files_6_2 <- renderUI({
+    validate(need((df_quiz()$quiz %>% unique)[1], "Introduce a quiz datafile"))
     checkboxGroupInput("choose_files_6_2", "Choose files", 
-                       choices  = c(infile_quiz()$name),
-                       selected = c(infile_quiz()$name)[1])
+                       choices  = c(df_quiz()$quiz %>% unique),
+                       selected = c(df_quiz()$quiz %>% unique)[1])
   })
   output$choose_files_6_3 <- renderUI({
+    validate(need((df_quiz()$quiz %>% unique)[1], "Introduce a quiz datafile"))
     checkboxGroupInput("choose_files_6_3", "Choose files", 
-                       choices  = c(infile_quiz()$name),
-                       selected = c(infile_quiz()$name)[1])
+                       choices  = c(df_quiz()$quiz %>% unique),
+                       selected = c(df_quiz()$quiz %>% unique)[1])
   })
 } # end server
 
