@@ -426,35 +426,44 @@ body <- dashboardBody(
 # u2 input --------------------------------------------------------
     tabItem(tabName = "2_input",
             fluidRow(
-              box(title = "Import quiz file", width = 6,
-                  status = "primary", 
-                  collapsible = TRUE,
+              tabBox(
+                title = "Import quiz file", width = 6, 
+                id = "2_tabset_1", height = "250px",
+                tabPanel("From Learning Catalytics", 
                   fileInput('file1', 'Select file:',
                             accept = c('.csv'),
                             multiple = TRUE
                             ),
                   column(3, 
-                    actionButton(inputId = "upload_quiz_dataset", 
-                                 label = "Add quiz dataset")
-                  ),
+                         actionButton(inputId = "upload_quiz_dataset", 
+                                      label = "Add quiz dataset")
+                         ),
                   column(3, offset = 3,
-                    actionButton(inputId = "remove_quiz_dataset", 
-                                 label = "Remove quiz datasets")
-                  )
+                         actionButton(inputId = "remove_quiz_dataset", 
+                                      label = "Remove quiz datasets")
+                         )
+                ),
+                tabPanel("From Google Forms", "Tab content 2"),
+                tabPanel("From R file", "Tab content 2")
               ),
-              box(title = "Import cognitive levels file", status = "primary", width = 6,
-                  collapsible = TRUE,
-                  fileInput('file2', 'Select file:',
-                            accept = c('.csv')
-                            ),
-                  column(3, 
-                         actionButton(inputId = "upload_cognitive_dataset", 
-                                      label = "Upload cognitive dataset")
-                  ),
-                  column(3, offset = 3,
-                         actionButton(inputId = "remove_cognitive_dataset", 
-                                      label = "Remove congnitive datasets")
-                  )
+              tabBox(
+                title = "Import cognitive levels file", width = 6,
+                id = "2_tabset_2", height = "250px",
+                tabPanel("From Learning Canalytics", 
+                         fileInput('file2', 'Select file:',
+                                   accept = c('.csv')
+                         ),
+                         column(3, 
+                                actionButton(inputId = "upload_cognitive_dataset", 
+                                             label = "Upload cognitive dataset")
+                         ),
+                         column(3, offset = 3,
+                                actionButton(inputId = "remove_cognitive_dataset", 
+                                             label = "Remove congnitive datasets")
+                         )       
+                ),
+                tabPanel("From Google Forms", "Tab content 2"),
+                tabPanel("From R file", "Tab content 2")
               )
             ),
             fluidRow(
