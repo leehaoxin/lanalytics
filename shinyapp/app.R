@@ -56,7 +56,7 @@ add_times <- function(course){
 }
 # f3 display ------------------------------------------------------
 # f4 IRT-discrim --------------------------------------------------
-plot_rasch <- function(quiz_object, type = c("ICC", "IIC")){
+plot_rasch <- function(quiz_object){
   x_vals = seq(-3.8, 3.8, length = 100)
   d_matrix <- cbind(1, x_vals)
   
@@ -71,47 +71,9 @@ plot_rasch <- function(quiz_object, type = c("ICC", "IIC")){
     purrr::discard(~sum(.)==0)
   
   model <- rasch(data_tibble)
-  plot(model, type = type)
-  # betas <- model$coefficients
-  # 
-  # plot_vals <- if (type == "ICC") {
-  #   y_lab <- "Probability of correctness"
-  #   plogis(d_matrix %*% t(betas))
-  # }else {
-  #   y_lab <- "Information"
-  #   temp <- plogis(d_matrix %*% t(betas))
-  #   betas[1, 2]^2 * temp * (1 - temp)
-  # }
-  # 
-  # plot_vals %>%
-  #   as_tibble() %>% 
-  #   mutate(x_vals = x_vals) %>% 
-  #   gather(item, value, -x_vals) %>% 
-  #   ggplot(aes(x = x_vals, 
-  #              y = value, 
-  #              group = item, 
-  #              color = item)) +
-  #   geom_line() +
-  #   labs(x = "Ability", y = y_lab) 
+  model
 }  
-plot_rasch <- function(quiz_object, type = c("ICC", "IIC")){
-  x_vals = seq(-3.8, 3.8, length = 100)
-  d_matrix <- cbind(1, x_vals)
-  
-  data_tibble <- quiz_object %>% 
-    ungroup() %>% 
-    dplyr::select(`email address`, question, score) %>% 
-    tidyr::spread(question, score, fill = 0) %>% 
-    dplyr::select(-`email address`) %>% 
-    stats::setNames(paste("item", names(.))) %>% 
-    purrr::map_if(is.character, as.numeric) %>% 
-    tibble::as_tibble() %>% 
-    purrr::discard(~sum(.)==0)
-  
-  model <- rasch(data_tibble)
-  plot(model, type = type)
-}  
-plot_2pars <- function(quiz_object, type = c("ICC", "IIC")){
+plot_2pars <- function(quiz_object){
   x_vals = seq(-3.8, 3.8, length = 100)
   d_matrix <- cbind(1, x_vals)
   
@@ -126,29 +88,9 @@ plot_2pars <- function(quiz_object, type = c("ICC", "IIC")){
     purrr::discard(~sum(.)==0)
   
   model <- ltm(data_tibble ~ z1)
-  plot(model, type = type)
-  # betas <- model$coefficients
-  # 
-  # plot_vals <- if (type == "ICC") {
-  #   y_lab <- "Probability of correctness"
-  #   plogis(d_matrix %*% t(betas))
-  # }
-  # else {
-  #   y_lab <- "Information"
-  #   temp <- plogis(d_matrix %*% t(betas))
-  #   temp2 <- temp * (1 - temp)
-  #   t(t(temp2) * betas[, 2]^2)
-  # }
-  # 
-  # plot_vals %>%
-  #   as_tibble() %>% 
-  #   mutate(x_vals = x_vals) %>% 
-  #   gather(item, value, -x_vals) %>% 
-  #   ggplot(aes(x = x_vals, y = value, group = item, color = item)) +
-  #   geom_line() +
-  #   labs(x = "Ability", y = y_lab) 
+  model
 }  
-plot_3pars <- function(quiz_object, type = c("ICC", "IIC")){
+plot_3pars <- function(quiz_object){
   x_vals = seq(-3.8, 3.8, length = 100)
   d_matrix <- cbind(1, x_vals)
   
@@ -163,34 +105,7 @@ plot_3pars <- function(quiz_object, type = c("ICC", "IIC")){
     purrr::discard(~sum(.)==0)
   
    model <- tpm(data_tibble)
-   plot(model, type = type)
-  # thetas <- model$coefficients
-  # temp <- plogis(thetas[, 1]) * model$max.guessing
-  # betas <- thetas[, 2:3]
-  # p <- nrow(betas)
-  # 
-  # 
-  # plot_vals <- if (type == "ICC") {
-  #   temp <- matrix(temp, length(x_vals), p, TRUE)
-  #   y_lab <- "Probability of correctness"
-  #   temp + (1 - temp) * ltm:::probs(d_matrix %*% t(betas)) 
-  #   
-  # } else {
-  #   y_lab <- "Information"
-  #   pi_2 <- plogis(d_matrix %*% t(betas))
-  #   temp <- matrix(temp, length(x_vals), p, TRUE)
-  #   pi <- temp + (1 - temp) * pi_2
-  #   pqr <- pi * (1 - pi) * (pi_2/pi)^2
-  #   t(t(pqr) * betas[, 2]^2)
-  # }
-  # 
-  # plot_vals %>% 
-  #   as_tibble() %>% 
-  #   mutate(x_vals = x_vals) %>% 
-  #   gather(item, value, -x_vals) %>% 
-  #   ggplot(aes(x = x_vals, y = value, group = item, color = item)) +
-  #   geom_line() +
-  #   labs(x = "Ability", y = y_lab) 
+   model
 }  
 # f5 IRT-NO-discrim -----------------------------------------------
 plot_jointICC <- function(quiz_object){
@@ -808,49 +723,42 @@ server <- function(input, output) {
     validate(need(input$choose_files_4_1, message = "Please select a quizz"))
     if(exists("df_quiz")){
       input$newplot
-      plot_rasch(df_quiz() %>% filter(quiz %in% input$choose_files_4_1), type = c("ICC"))  
+      plot(plot_rasch(df_quiz() %>% filter(quiz %in% input$choose_files_4_1)), type = c("ICC"))
     }
   })
-  # output$plot_rasch_text <- DT::renderDataTable({
-  #   validate(need(input$choose_files_4_1, message = "Please select a quizz"))
-  #   if(exists("df_quiz")){
-  #     input$newplot
-  #     plot_rasch(df_quiz() %>% filter(quiz %in% input$choose_files_4_1), type = c("ICC"))  
-  #   }
-  # })
   output$plot_rasch2 <- renderPlot({
     validate(need(input$choose_files_4_1, message = "Please select a quizz"))
     if(exists("df_quiz")){
       input$newplot
-      plot_rasch(df_quiz() %>% filter(quiz %in% input$choose_files_4_1), type = c("IIC"))  
+      plot(plot_rasch(df_quiz() %>% filter(quiz %in% input$choose_files_4_1)), type = c("IIC"))
     }
   })
   output$plot_2pars <- renderPlot({
     validate(need(input$choose_files_4_2, message = "Please select a quizz"))
     if(exists("df_quiz")){
       input$newplot
-      plot_2pars(df_quiz() %>% filter(quiz %in% input$choose_files_4_2), type = c("ICC"))  
+      plot(plot_2pars(df_quiz() %>% filter(quiz %in% input$choose_files_4_2)), type = c("ICC"))  
     }
   })
   output$plot_2pars2 <- renderPlot({
     validate(need(input$choose_files_4_2, message = "Please select a quizz"))
     if(exists("df_quiz")){
       input$newplot
-      plot_2pars(df_quiz() %>% filter(quiz %in% input$choose_files_4_2), type = c("IIC"))  
+      plot(plot_2pars(df_quiz() %>% filter(quiz %in% input$choose_files_4_2)), type = c("IIC"))
     }
   })
   output$plot_3pars <- renderPlot({
     validate(need(input$choose_files_4_3, message = "Please select a quizz"))
     if(exists("df_quiz")){
       input$newplot
-      plot_3pars(df_quiz() %>% filter(quiz %in% input$choose_files_4_3), type = c("ICC"))
+      plot(plot_3pars(df_quiz() %>% filter(quiz %in% input$choose_files_4_3)), type = c("ICC"))
     }
   })
   output$plot_3pars2 <- renderPlot({
     validate(need(input$choose_files_4_3, message = "Please select a quizz"))
     if(exists("df_quiz")){
       input$newplot
-      plot_3pars(df_quiz() %>% filter(quiz %in% input$choose_files_4_3), type = c("IIC"))
+      plot(plot_3pars(df_quiz() %>% filter(quiz %in% input$choose_files_4_3)), type = c("IIC"))
     }
   })
 # s5 IRT-NO-disc ------------------------------------------------------------------
