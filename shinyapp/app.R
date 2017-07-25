@@ -8,6 +8,7 @@ library(ggvis)
 library(ltm)
 library(ggrepel)
 library(directlabels)
+library(eRm)
 
 ## lanalytics ##
 # f2 input --------------------------------------------------------
@@ -56,7 +57,7 @@ add_times <- function(course){
 }
 # f3 display ------------------------------------------------------
 # f4 IRT-discrim --------------------------------------------------
-plot_rasch <- function(quiz_object){
+rasch_model <- function(quiz_object){
   x_vals = seq(-3.8, 3.8, length = 100)
   d_matrix <- cbind(1, x_vals)
   
@@ -72,8 +73,8 @@ plot_rasch <- function(quiz_object){
   
   model <- rasch(data_tibble)
   model
-}  
-plot_2pars <- function(quiz_object){
+}
+pars2_model <- function(quiz_object){
   x_vals = seq(-3.8, 3.8, length = 100)
   d_matrix <- cbind(1, x_vals)
   
@@ -90,7 +91,7 @@ plot_2pars <- function(quiz_object){
   model <- ltm(data_tibble ~ z1)
   model
 }  
-plot_3pars <- function(quiz_object){
+pars3_model <- function(quiz_object){
   x_vals = seq(-3.8, 3.8, length = 100)
   d_matrix <- cbind(1, x_vals)
   
@@ -254,7 +255,8 @@ plot_guessers <- function(quiz_object){
     labs(x = "Email address", y = "Question number (Item)", color = "Guessing score")+
     facet_wrap(~quiz, ncol = 1)
 }
-plot_etl <- function(quiz_object, challengeLevel, item = "MCM.2014.item", rating = "Rating.HB"){
+plot_etl <- function(quiz_object, challengeLevel, 
+                     item = "MCM.2014.item", rating = "Rating.HB"){
   homo_quiz_object <- quiz_object %>% 
     dplyr::mutate(score = as.numeric(score)) %>% 
     dplyr::group_by(quiz, question) %>% 
@@ -291,7 +293,6 @@ plot_etl <- function(quiz_object, challengeLevel, item = "MCM.2014.item", rating
          color = "Cognitive level") +
     facet_wrap(~quiz, ncol = 1)
 }
-
 # u0 interface --------------------------------------------------------
 header <- dashboardHeader(title = "lanalytics Dashboard")
 sidebar <- dashboardSidebar(sidebarMenu(
@@ -449,19 +450,29 @@ body <- dashboardBody(
             fluidRow(
               br(),
               titlePanel(strong("1 PL")),
-              box(title = "Select quizzes to analize:", status = "info", width = 12,
+              box(title = "Select quizzes to analize:", status = "info", width = 6,
                   collapsible = TRUE,
                   uiOutput("choose_files_4_1")
+              ),
+              box(title = "Select condition number:", status = "info", width = 6,
+                  collapsible = TRUE,
+                  numericInput("cond_4_1", "Observations:", 10000, min = 1, max = 10000000000000)
               )
             ), 
             fluidRow(
               box(title = "1 PL", status = "primary", width = 6,
                   collapsible = TRUE,
-                  plotOutput("plot_rasch")
+                  plotOutput("rasch_model")
               ),
               box(title = "1 PL", status = "primary", width = 6,
                   collapsible = TRUE,
-                  plotOutput("plot_rasch2")
+                  plotOutput("rasch_model2")
+              )
+            ),
+            fluidRow(
+              box(title = "Coefficients:", status = "primary", width = 12,
+                  collapsible = TRUE,
+                  tableOutput('rasch_model_coef')
               )
             )
             ),
@@ -469,19 +480,29 @@ body <- dashboardBody(
             fluidRow(
               br(),
               titlePanel(strong("2 PL")),
-              box(title = "Select quizzes to analize:", status = "info", width = 12,
+              box(title = "Select quizzes to analize:", status = "info", width = 6,
                   collapsible = TRUE,
                   uiOutput("choose_files_4_2")
+              ),
+              box(title = "Select condition number:", status = "info", width = 6,
+                  collapsible = TRUE,
+                  numericInput("cond_4_2", "Observations:", 10000, min = 1, max = 10000000000000)
               )
             ),
             fluidRow(
               box(title = "2 PL", status = "primary", width = 6,
                   collapsible = TRUE,
-                  plotOutput("plot_2pars")
+                  plotOutput("pars2_model")
               ),
               box(title = "2 PL", status = "primary", width = 6,
                   collapsible = TRUE,
-                  plotOutput("plot_2pars2")
+                  plotOutput("pars2_model2")
+              )
+            ),
+            fluidRow(
+              box(title = "Coefficients:", status = "primary", width = 12,
+                  collapsible = TRUE,
+                  tableOutput('pars2_model_coef')
               )
             )
             ),
@@ -489,19 +510,29 @@ body <- dashboardBody(
             fluidRow(
               br(),
               titlePanel(strong("3 PL")),
-              box(title = "Select quizzes to analize:", status = "info", width = 10,
+              box(title = "Select quizzes to analize:", status = "info", width = 6,
                   collapsible = TRUE,
                   uiOutput("choose_files_4_3")
+              ),
+              box(title = "Select condition number:", status = "info", width = 6,
+                  collapsible = TRUE,
+                  numericInput("cond_4_3", "Observations:", 10000, min = 1, max = 10000000000000)
               )
             ),
             fluidRow(
               box(title = "3 PL", status = "primary", width = 6,
                   collapsible = TRUE,
-                  plotOutput("plot_3pars")
+                  plotOutput("pars3_model")
               ),
               box(title = "3 PL", status = "primary", width = 6,
                   collapsible = TRUE,
-                  plotOutput("plot_3pars2")
+                  plotOutput("pars3_model2")
+              )
+            ),
+            fluidRow(
+              box(title = "Coefficients:", status = "primary", width = 12,
+                  collapsible = TRUE,
+                  tableOutput('pars3_model_coef')
               )
             )
             ),
@@ -511,7 +542,7 @@ body <- dashboardBody(
             fluidRow(
               br(),
               titlePanel(strong("1 PL")),
-              box(title = "Select quizzes to analize:", status = "info", width = 10,
+              box(title = "Select quizzes to analize:", status = "info", width = 12,
                   collapsible = TRUE,
                   uiOutput("choose_files_5_1")
               )
@@ -719,46 +750,112 @@ server <- function(input, output) {
                   ))
   })  
 # s4 IRT-disc ------------------------------------------------------------------
-  output$plot_rasch <- renderPlot({
+  model_rasch_val <- reactive({
+  })
+  output$rasch_model <- renderPlot({
     validate(need(input$choose_files_4_1, message = "Please select a quizz"))
     if(exists("df_quiz")){
+      model <- rasch_model(df_quiz() %>% filter(quiz %in% input$choose_files_4_1))
+      validate(need(kappa(model$hessian)<input$cond_4_1, message = paste("The condition number is larger: ", kappa(model$hessian))))
       input$newplot
-      plot(plot_rasch(df_quiz() %>% filter(quiz %in% input$choose_files_4_1)), type = c("ICC"))
+      plot(model, type = c("ICC"))
     }
   })
-  output$plot_rasch2 <- renderPlot({
+  output$rasch_model2 <- renderPlot({
     validate(need(input$choose_files_4_1, message = "Please select a quizz"))
     if(exists("df_quiz")){
+      model <- rasch_model(df_quiz() %>% filter(quiz %in% input$choose_files_4_1))
+      validate(need(kappa(model$hessian)<input$cond_4_1, message = paste("The condition number is larger: ", kappa(model$hessian))))
       input$newplot
-      plot(plot_rasch(df_quiz() %>% filter(quiz %in% input$choose_files_4_1)), type = c("IIC"))
+      plot(model, type = c("IIC"))
     }
   })
-  output$plot_2pars <- renderPlot({
+  output$rasch_model_coef <- renderTable({
+    validate(need(input$choose_files_4_1, message = "Please select a quizz"))
+    if(exists("df_quiz")){
+      model <- rasch_model(df_quiz() %>% 
+                             filter(quiz %in% input$choose_files_4_1))
+      validate(need(kappa(model$hessian)<input$cond_4_1, message = paste("The condition number is larger: ", kappa(model$hessian))))
+      coef(summary(model)) %>% 
+        data.frame() %>% 
+        mutate(beta = row.names(.)) %>% 
+        as.tibble() %>% 
+        dplyr::rename(item = beta, `Easiness parameter` = value) %>% 
+        dplyr::select(item, `Easiness parameter`, std.err, z.vals) %>% 
+        na.omit()
+    }
+  })
+  output$pars2_model <- renderPlot({
+    set.seed(123456)
     validate(need(input$choose_files_4_2, message = "Please select a quizz"))
     if(exists("df_quiz")){
+      model <- pars2_model(df_quiz() %>% filter(quiz %in% input$choose_files_4_2))
+      validate(need(kappa(model$hessian)<input$cond_4_2, message = paste("The condition number is larger: ", kappa(model$hessian))))
       input$newplot
-      plot(plot_2pars(df_quiz() %>% filter(quiz %in% input$choose_files_4_2)), type = c("ICC"))  
+      plot(model, type = c("ICC"))  
     }
   })
-  output$plot_2pars2 <- renderPlot({
+  output$pars2_model2 <- renderPlot({
+    set.seed(123456)
     validate(need(input$choose_files_4_2, message = "Please select a quizz"))
     if(exists("df_quiz")){
+      model <- pars2_model(df_quiz() %>% filter(quiz %in% input$choose_files_4_2))
+      validate(need(kappa(model$hessian)<input$cond_4_2, message = paste("The condition number is larger: ", kappa(model$hessian))))
       input$newplot
-      plot(plot_2pars(df_quiz() %>% filter(quiz %in% input$choose_files_4_2)), type = c("IIC"))
+      plot(model, type = c("IIC"))
     }
   })
-  output$plot_3pars <- renderPlot({
-    validate(need(input$choose_files_4_3, message = "Please select a quizz"))
+  output$pars2_model_coef <- renderTable({
+    set.seed(123456)
+    validate(need(input$choose_files_4_2, message = "Please select a quizz"))
     if(exists("df_quiz")){
-      input$newplot
-      plot(plot_3pars(df_quiz() %>% filter(quiz %in% input$choose_files_4_3)), type = c("ICC"))
+      model <- pars2_model(df_quiz() %>% 
+                             filter(quiz %in% input$choose_files_4_2))
+      validate(need(kappa(model$hessian)<input$cond_4_2, message = paste("The condition number is larger: ", kappa(model$hessian))))
+      coef(summary(model)) %>% 
+        data.frame() %>% 
+        mutate(beta = row.names(.)) %>% 
+        as.tibble() %>% 
+        dplyr::rename(item= beta, `Parameter value` = value) %>% 
+        dplyr::select(item, `Parameter value`, std.err, z.vals) %>% 
+        na.omit()
+      
     }
   })
-  output$plot_3pars2 <- renderPlot({
+  output$pars3_model <- renderPlot({
+    set.seed(123456)
     validate(need(input$choose_files_4_3, message = "Please select a quizz"))
     if(exists("df_quiz")){
+      model <- pars3_model(df_quiz() %>% filter(quiz %in% input$choose_files_4_3))
+      validate(need(kappa(model$hessian)<input$cond_4_3, message = paste("The condition number is larger: ", kappa(model$hessian))))
       input$newplot
-      plot(plot_3pars(df_quiz() %>% filter(quiz %in% input$choose_files_4_3)), type = c("IIC"))
+      plot(model, type = c("ICC"))
+    }
+  })
+  output$pars3_model2 <- renderPlot({
+    set.seed(123456)
+    validate(need(input$choose_files_4_3, message = "Please select a quizz"))
+    if(exists("df_quiz")){
+      model <- pars3_model(df_quiz() %>% filter(quiz %in% input$choose_files_4_3))
+      validate(need(kappa(model$hessian)<input$cond_4_3, message = paste("The condition number is larger: ", kappa(model$hessian))))
+      input$newplot
+      plot(model, type = c("IIC"))
+    }
+  })
+  output$pars3_model_coef <- renderTable({
+    set.seed(123456)
+    validate(need(input$choose_files_4_3, message = "Please select a quizz"))
+    if(exists("df_quiz")){
+      model <- pars3_model(df_quiz() %>% 
+                             filter(quiz %in% input$choose_files_4_3))
+      validate(need(kappa(model$hessian)<input$cond_4_3, message = paste("The condition number is larger: ", kappa(model$hessian))))
+      coef(summary(model)) %>% 
+        data.frame() %>% 
+        mutate(beta = row.names(.)) %>% 
+        as.tibble() %>% 
+        dplyr::rename(item= beta, `Parameter value` = value) %>% 
+        dplyr::select(item, `Parameter value`, std.err, z.vals) %>% 
+        na.omit()
     }
   })
 # s5 IRT-NO-disc ------------------------------------------------------------------
@@ -865,7 +962,7 @@ server <- function(input, output) {
     radioButtons("choose_files_5_3", "Choose files", 
                        choices  = c(df_quiz()$quiz %>% unique),
                        selected = c(df_quiz()$quiz %>% unique)[1])
-  })  
+  })
   output$choose_files_6_1 <- renderUI({
     validate(need((df_quiz()$quiz %>% unique)[1], "Introduce a quiz datafile"))
     checkboxGroupInput("choose_files_6_1", "Choose files", 
