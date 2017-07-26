@@ -349,29 +349,49 @@ body <- dashboardBody(
                   br(),
                   p("The ", strong("ltm"), " and the ", strong("eRm"),
                     " packages are two important packages in the psychometric section of the 
-                    CRAN and these can be installed with the followind command: ",
-                  code("install_packages('ltm')"),
-                  code("install_packages('eRm')"),
-                  "while the lanalytics package contain some useful statistical analysis 
+                    CRAN and these can be installed with the followind commands: "),
+                  p(code("install_packages('ltm')"), code("install_packages('eRm')")),
+                  p("while the lanalytics package contain some useful statistical analysis 
                    to be used for online quizzes. This package can be installed with the following command: ",
-                  code("install_github('savrgg/lanalytics')"),
+                  code("install_github('savrgg/lanalytics')")),
                   br(),
                   p("For an introduction and examples of the lanalytics package, please visit the ", 
-                    a("lanalytics homepage.", 
-                      href = "https://savrgg.github.io/lanalytics/")))
+                    a("lanalytics homepage.", href = "https://savrgg.github.io/lanalytics/"))
                 ),
                 mainPanel(
                   h1("Instructions"),
-                  p("The Learning Analytics dashboard contains five tabs, three of them are used for different kind of analysis
-                      while the other two are used for import data and display the datasets."), 
+                  p("The Learning Analytics dashboard consist five tabs, the first two are
+                     used to import data and display the datasets. The consequtive tabs are used 
+                    for analysis and graphs given by the eRm package, the ltm package and the lanalytics package.
+                    To get started follow this instructions:"), 
                   br(),
-                  p("For an introduction and live examples, visit the ",
-                    a("Shiny homepage.", 
-                      href = "http://www.rstudio.com/shiny")),
+                  p("1) Import your quizzes datafiles in the ", strong("Import quizzes"), 
+                    " tab and press the upload button."),
+                  p("2) (Optionally) in the ", strong("Import quizzes"), 
+                    " tab import a file containing the cognitive level of each question of 
+                    each quiz and press the upload button."),
+                  p("3) Go to the ", strong("Display quizzes"), 
+                    " tab and check that the data file is imported correctly."),
+                  p("4) (Optionally) If you upload a cognitive level file, select in the ",
+                    strong("Display quizzes"), " tab which colum correspond to the item and
+                    which to the cognitive level."),
+                  p("5) Go to the ", strong("High discrimination quiz"), 
+                    " tab and for each subtab select the quiz to analyze."),
+                  p("6) Go to the ", strong("Low discrimination quiz"), 
+                    " tab and for each subtab select the quiz to analyze."),
+                  p("7) Go to the ", strong("Data analysis"), 
+                    " tab and for each subtab select the quiz to analyze."),
                   br(),
                   h2("Features"),
-                  p("Feature 1"),
-                  p("Feature 2")
+                  p("In this dashboard the models implemented in the ltm are used in the 
+                    high discrimination quiz: Rasch model, ltm, tpm marginal maximum likelihood"),
+                  p("Also the eRm functions are used in the Low discrimination quiz: RM 
+                    conditional marginal likelihood"),
+                  p("If the discrimination if very low in the quizzes
+                    (items with almost all the answers equals to 1 or 0), then the matrix can be
+                    numerically singular, having as a result unreliable solutions."),
+                  p("For this kind of quizzes, the Data analysis tab and the ETL plot can be used to
+                    have more insight about the applied quizzes.")
                   )
                 )
               )
