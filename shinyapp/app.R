@@ -204,7 +204,6 @@ plot_order <- function(quiz_object){
     ggplot2::facet_wrap(~`Tercil per time`, ncol = 1) +
     geom_line() +
     geom_point() +
-    geom_smooth() +
     labs(x = "Question in the quiz",
          y = "Average score per tercil (max score = 100)") +
     ylim(0, 100) +
@@ -255,8 +254,7 @@ plot_guessers <- function(quiz_object){
     labs(x = "Email address", y = "Question number (Item)", color = "Guessing score")+
     facet_wrap(~quiz, ncol = 1)
 }
-plot_etl <- function(quiz_object, challengeLevel, 
-                     item = "MCM.2014.item", rating = "Rating.HB"){
+plot_etl <- function(quiz_object, challengeLevel, item = "MCM.2014.item", rating = "Rating.HB"){
   homo_quiz_object <- quiz_object %>% 
     dplyr::mutate(score = as.numeric(score)) %>% 
     dplyr::group_by(quiz, question) %>% 
@@ -293,24 +291,36 @@ plot_etl <- function(quiz_object, challengeLevel,
          color = "Cognitive level") +
     facet_wrap(~quiz, ncol = 1)
 }
+plot_group <- function(quiz_object, email_filtered){
+  quiz_object %>% 
+    group_by(`email address`, quiz) %>% 
+    dplyr::summarise(`mean score` = round(100*mean(as.numeric(score), na.rm = T), 0)) %>% 
+    filter(`email address` %in% email_filtered) %>% 
+    ggplot(aes(x = quiz, y = `mean score`, group = `email address`)) +
+    geom_line() + geom_point() +
+    facet_wrap(~`email address`, ncol = 2)
+}
+
 # u0 interface --------------------------------------------------------
-header <- dashboardHeader(title = "lanalytics Dashboard")
+header <- dashboardHeader(title = span("Learning Analytics Dashboard", 
+                                       img(src="logo.png", width = 60)), 
+                          titleWidth=360)
 sidebar <- dashboardSidebar(sidebarMenu(
   br(),
   menuItem("Instructions", tabName = "1_instructions", icon = icon("info")),
   menuItem("Import quizzes", tabName = "2_input", icon = icon("th")),
   menuItem("Display quizzes", tabName = "3_display", icon = icon("eye")),
-  menuItem("High discrimination quizz", tabName = "4_irt", icon = icon("eye"),
+  menuItem("High discrimination quizz", tabName = "4_irt", icon = icon("book"),
            menuSubItem("1-PL IRT", tabName = "4_1_irt", icon = icon("dashboard")),
            menuSubItem("2-PL IRT", tabName = "4_2_irt", icon = icon("dashboard")),
            menuSubItem("3-PL IRT", tabName = "4_3_irt", icon = icon("dashboard"))
            ),
-  menuItem("Low discrimination quizz", tabName = "5_irt", icon = icon("eye"),
-           menuSubItem("Item Characteristic Curves", tabName = "5_1_irt", icon = icon("dashboard")),
-           menuSubItem("Person-Item Map", tabName = "5_2_irt", icon = icon("dashboard")),
-           menuSubItem("Person parameters", tabName = "5_3_irt", icon = icon("dashboard"))
+  menuItem("Low discrimination quizz", tabName = "5_irt", icon = icon("book"),
+           menuSubItem("Item Characteristic Curves", tabName = "5_1_irt", icon = icon("desktop")),
+           menuSubItem("Person-Item Map", tabName = "5_2_irt", icon = icon("desktop")),
+           menuSubItem("Person parameters", tabName = "5_3_irt", icon = icon("desktop"))
   ),
-  menuItem("Data analysis", tabName = "6_analysis", icon = icon("dashboard"),
+  menuItem("Data analysis", tabName = "6_analysis", icon = icon("line-chart"),
            menuSubItem("Individual analysis", tabName = "6_1_individual", icon = icon("dashboard")),
            menuSubItem("Quiz analysis", tabName = "6_2_quiz", icon = icon("dashboard")),
            menuSubItem("Grupal analysis", tabName = "6_3_grupal", icon = icon("dashboard"))
@@ -331,22 +341,29 @@ body <- dashboardBody(
               sidebarLayout(
                 sidebarPanel(
                   h2("Introduction"),
-                  p("The lanalytics dashboard is an interface of the", strong("lanalytics"), "package, 
-                    which provides useful functions to analyze online quizzes."),
+                  p("This dashboard is an interface of the ", 
+                    strong("eRm"), ", ", strong("ltm"), " and the ", 
+                    strong("lanalytics"), " packages, which provide useful functions to 
+                    analyze online quizzes. The first two are available in the CRAN, 
+                    while the last is available in GitHub."),
                   br(),
-                  br(),
-                  p("If you want to use the functions outside this dashboard, you can install the package
-                    with devtools:"),
+                  p("The ", strong("ltm"), " and the ", strong("eRm"),
+                    " packages are two important packages in the psychometric section of the 
+                    CRAN and these can be installed with the followind command: ",
+                  code("install_packages('ltm')"),
+                  code("install_packages('eRm')"),
+                  "while the lanalytics package contain some useful statistical analysis 
+                   to be used for online quizzes. This package can be installed with the following command: ",
                   code("install_github('savrgg/lanalytics')"),
                   br(),
-                  br(),
-                  p("For an introduction and examples visit the ", 
+                  p("For an introduction and examples of the lanalytics package, please visit the ", 
                     a("lanalytics homepage.", 
-                      href = "https://savrgg.github.io/lanalytics/"))
+                      href = "https://savrgg.github.io/lanalytics/")))
                 ),
                 mainPanel(
                   h1("Instructions"),
-                  p("1) Load quiz dataset from a *.csv file (hint: you can upload several *.csv files at the same time)"), 
+                  p("The Learning Analytics dashboard contains five tabs, three of them are used for different kind of analysis
+                      while the other two are used for import data and display the datasets."), 
                   br(),
                   p("For an introduction and live examples, visit the ",
                     a("Shiny homepage.", 
@@ -644,14 +661,23 @@ body <- dashboardBody(
     tabItem(tabName = "6_3_grupal",
             fluidRow(
               titlePanel(strong("Grupal")),
-              box(title = "Select quizzes to analize:", status = "info", width = 12,
+              box(title = "Select quizzes to analize:", status = "info", width = 6,
                   collapsible = TRUE,
                   uiOutput("choose_files_6_3")
+              ),
+              box(title = "Select email to filter:", status = "info", width = 6,
+                  collapsible = TRUE,
+                  uiOutput("email_filtered")
+              )
+            ),
+            fluidRow(
+              box(title = "Group history", status = "primary", width = 12,
+                  collapsible = TRUE,
+                  plotOutput("plot_group_tot")
+                  )
               )
             )
-    )
-  )
-)
+))
 
 # u-final --------------------------------------------------------
 ui <- dashboardPage(
@@ -739,6 +765,7 @@ server <- function(input, output) {
   output$cognitive_dataset <- DT::renderDataTable({
     req(input$choose_cognitive_item)
     req(input$choose_cognitive_item)
+    validate(need(nrow(df_cognitive())>0, message = "Please select a cognitive file"))
     DT::datatable(df_cognitive() %>% 
                     dplyr::select(get(input$choose_cognitive_item),
                                   get(input$choose_cognitive_rating)),
@@ -751,112 +778,80 @@ server <- function(input, output) {
   })  
 # s4 IRT-disc ------------------------------------------------------------------
   model_rasch_val <- reactive({
+    set.seed(123456)
+    validate(need(input$choose_files_4_1, message = "Please select a quizz"))
+    if(exists("df_quiz")){
+      model <- rasch_model(df_quiz() %>% filter(quiz %in% input$choose_files_4_1))
+      validate(need(kappa(model$hessian)<input$cond_4_1, message = paste("The condition number is larger: ", kappa(model$hessian))))
+      model}
   })
   output$rasch_model <- renderPlot({
-    validate(need(input$choose_files_4_1, message = "Please select a quizz"))
-    if(exists("df_quiz")){
-      model <- rasch_model(df_quiz() %>% filter(quiz %in% input$choose_files_4_1))
-      validate(need(kappa(model$hessian)<input$cond_4_1, message = paste("The condition number is larger: ", kappa(model$hessian))))
+    
       input$newplot
-      plot(model, type = c("ICC"))
-    }
+      plot(model_rasch_val(), type = c("ICC"))
   })
   output$rasch_model2 <- renderPlot({
-    validate(need(input$choose_files_4_1, message = "Please select a quizz"))
-    if(exists("df_quiz")){
-      model <- rasch_model(df_quiz() %>% filter(quiz %in% input$choose_files_4_1))
-      validate(need(kappa(model$hessian)<input$cond_4_1, message = paste("The condition number is larger: ", kappa(model$hessian))))
       input$newplot
-      plot(model, type = c("IIC"))
-    }
+      plot(model_rasch_val(), type = c("IIC"))
   })
   output$rasch_model_coef <- renderTable({
-    validate(need(input$choose_files_4_1, message = "Please select a quizz"))
-    if(exists("df_quiz")){
-      model <- rasch_model(df_quiz() %>% 
-                             filter(quiz %in% input$choose_files_4_1))
-      validate(need(kappa(model$hessian)<input$cond_4_1, message = paste("The condition number is larger: ", kappa(model$hessian))))
-      coef(summary(model)) %>% 
+      coef(summary(model_rasch_val())) %>% 
         data.frame() %>% 
         mutate(beta = row.names(.)) %>% 
         as.tibble() %>% 
         dplyr::rename(item = beta, `Easiness parameter` = value) %>% 
         dplyr::select(item, `Easiness parameter`, std.err, z.vals) %>% 
         na.omit()
+  })
+  model_pars2_val <- reactive({
+    set.seed(123456)
+    validate(need(input$choose_files_4_2, message = "Please select a quizz"))
+    if(exists("df_quiz")){
+      model <- pars2_model(df_quiz() %>% filter(quiz %in% input$choose_files_4_2))
+      validate(need(kappa(model$hessian)<input$cond_4_2, message = paste("The condition number is larger: ", kappa(model$hessian))))
     }
   })
   output$pars2_model <- renderPlot({
-    set.seed(123456)
-    validate(need(input$choose_files_4_2, message = "Please select a quizz"))
-    if(exists("df_quiz")){
-      model <- pars2_model(df_quiz() %>% filter(quiz %in% input$choose_files_4_2))
-      validate(need(kappa(model$hessian)<input$cond_4_2, message = paste("The condition number is larger: ", kappa(model$hessian))))
       input$newplot
-      plot(model, type = c("ICC"))  
-    }
+      plot(model_pars2_val(), type = c("ICC"))  
   })
   output$pars2_model2 <- renderPlot({
-    set.seed(123456)
-    validate(need(input$choose_files_4_2, message = "Please select a quizz"))
-    if(exists("df_quiz")){
-      model <- pars2_model(df_quiz() %>% filter(quiz %in% input$choose_files_4_2))
-      validate(need(kappa(model$hessian)<input$cond_4_2, message = paste("The condition number is larger: ", kappa(model$hessian))))
       input$newplot
-      plot(model, type = c("IIC"))
-    }
+      plot(model_pars2_val(), type = c("IIC"))
   })
   output$pars2_model_coef <- renderTable({
-    set.seed(123456)
-    validate(need(input$choose_files_4_2, message = "Please select a quizz"))
-    if(exists("df_quiz")){
-      model <- pars2_model(df_quiz() %>% 
-                             filter(quiz %in% input$choose_files_4_2))
-      validate(need(kappa(model$hessian)<input$cond_4_2, message = paste("The condition number is larger: ", kappa(model$hessian))))
-      coef(summary(model)) %>% 
+      coef(summary(model_pars2_val())) %>% 
         data.frame() %>% 
         mutate(beta = row.names(.)) %>% 
         as.tibble() %>% 
         dplyr::rename(item= beta, `Parameter value` = value) %>% 
         dplyr::select(item, `Parameter value`, std.err, z.vals) %>% 
         na.omit()
-      
+  })
+  model_pars3_val <- reactive({
+    set.seed(123456)
+    validate(need(input$choose_files_4_3, message = "Please select a quizz"))
+    if(exists("df_quiz")){
+      model <- pars3_model(df_quiz() %>% filter(quiz %in% input$choose_files_4_3))
+      validate(need(kappa(model$hessian)<input$cond_4_3, message = paste("The condition number is larger: ", kappa(model$hessian))))
     }
   })
   output$pars3_model <- renderPlot({
-    set.seed(123456)
-    validate(need(input$choose_files_4_3, message = "Please select a quizz"))
-    if(exists("df_quiz")){
-      model <- pars3_model(df_quiz() %>% filter(quiz %in% input$choose_files_4_3))
-      validate(need(kappa(model$hessian)<input$cond_4_3, message = paste("The condition number is larger: ", kappa(model$hessian))))
       input$newplot
-      plot(model, type = c("ICC"))
-    }
+      plot(model_pars3_val(), type = c("ICC"))
   })
   output$pars3_model2 <- renderPlot({
-    set.seed(123456)
-    validate(need(input$choose_files_4_3, message = "Please select a quizz"))
-    if(exists("df_quiz")){
-      model <- pars3_model(df_quiz() %>% filter(quiz %in% input$choose_files_4_3))
-      validate(need(kappa(model$hessian)<input$cond_4_3, message = paste("The condition number is larger: ", kappa(model$hessian))))
       input$newplot
-      plot(model, type = c("IIC"))
-    }
+      plot(model_pars3_val(), type = c("IIC"))
   })
   output$pars3_model_coef <- renderTable({
-    set.seed(123456)
-    validate(need(input$choose_files_4_3, message = "Please select a quizz"))
-    if(exists("df_quiz")){
-      model <- pars3_model(df_quiz() %>% 
-                             filter(quiz %in% input$choose_files_4_3))
-      validate(need(kappa(model$hessian)<input$cond_4_3, message = paste("The condition number is larger: ", kappa(model$hessian))))
-      coef(summary(model)) %>% 
+      coef(summary(model_pars3_val())) %>% 
         data.frame() %>% 
         mutate(beta = row.names(.)) %>% 
         as.tibble() %>% 
         dplyr::rename(item= beta, `Parameter value` = value) %>% 
         dplyr::select(item, `Parameter value`, std.err, z.vals) %>% 
         na.omit()
-    }
   })
 # s5 IRT-NO-disc ------------------------------------------------------------------
   output$plot_jointICC <- renderPlot({
@@ -918,12 +913,20 @@ server <- function(input, output) {
   })
   output$plot_etl <- renderPlot({
     validate(need(input$choose_files_6_2, message = "Please select a quizz"))
+    validate(need(nrow(df_cognitive())>0, message = "Please select a cognitive file"))
     if(exists("df_quiz")){
       input$newplot
       plot_etl(df_quiz() %>% filter(quiz %in% input$choose_files_6_2), 
                df_cognitive(), 
                item = input$choose_cognitive_item, 
                rating = input$choose_cognitive_rating)  
+    }
+  })
+  output$plot_group_tot <- renderPlot({
+    validate(need(input$choose_files_6_3, message = "Please select a quizz"))
+    if(exists("df_quiz")){
+      input$newplot
+      plot_group(df_quiz() %>% filter(quiz %in% input$choose_files_6_3), input$email_filtered)
     }
   })
 # s-final ------------------------------------------------------------------
@@ -979,7 +982,13 @@ server <- function(input, output) {
     validate(need((df_quiz()$quiz %>% unique)[1], "Introduce a quiz datafile"))
     checkboxGroupInput("choose_files_6_3", "Choose files", 
                        choices  = c(df_quiz()$quiz %>% unique),
-                       selected = c(df_quiz()$quiz %>% unique)[1])
+                       selected = c(df_quiz()$quiz %>% unique))
+  })
+  output$email_filtered <- renderUI({
+    validate(need((df_quiz()$`email address` %>% unique)[1], "Introduce a quiz datafile"))
+    selectInput("email_filtered", "Choose email", 
+                       choices  = c(df_quiz()$`email address` %>% unique),
+                       selected = c(df_quiz()$`email address` %>% unique)[1])
   })
 } # end server
 

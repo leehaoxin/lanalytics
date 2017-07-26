@@ -42,3 +42,4 @@ quiz_object %>%
     geom_label(alpha = .7) 
 }
 
+
