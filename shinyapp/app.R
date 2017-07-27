@@ -310,21 +310,21 @@ sidebar <- dashboardSidebar(sidebarMenu(
   menuItem("Instructions", tabName = "1_instructions", icon = icon("info")),
   menuItem("Import quizzes", tabName = "2_input", icon = icon("th")),
   menuItem("Display quizzes", tabName = "3_display", icon = icon("eye")),
-  menuItem("High discrimination quizz", tabName = "4_irt", icon = icon("book"),
-           menuSubItem("1-PL IRT", tabName = "4_1_irt", icon = icon("dashboard")),
-           menuSubItem("2-PL IRT", tabName = "4_2_irt", icon = icon("dashboard")),
-           menuSubItem("3-PL IRT", tabName = "4_3_irt", icon = icon("dashboard"))
+  menuItem("Data analysis", tabName = "6_analysis", icon = icon("line-chart"),
+           menuSubItem("Individual analysis", tabName = "6_3_grupal", icon = icon("dashboard")),
+           menuSubItem("Group analysis", tabName = "6_1_individual", icon = icon("dashboard")),
+           menuSubItem("Quiz analysis", tabName = "6_2_quiz", icon = icon("dashboard"))
+  ),
+  menuItem("IRT: tlm package", tabName = "4_irt", icon = icon("book"),
+           menuSubItem("Rasch model", tabName = "4_1_irt", icon = icon("dashboard")),
+           menuSubItem("Latent Trait Model", tabName = "4_2_irt", icon = icon("dashboard")),
+           menuSubItem("Birnbaum's three pars", tabName = "4_3_irt", icon = icon("dashboard"))
            ),
-  menuItem("Low discrimination quizz", tabName = "5_irt", icon = icon("book"),
+  menuItem("IRT: eRm package", tabName = "5_irt", icon = icon("book"),
            menuSubItem("Item Characteristic Curves", tabName = "5_1_irt", icon = icon("desktop")),
            menuSubItem("Person-Item Map", tabName = "5_2_irt", icon = icon("desktop")),
            menuSubItem("Person parameters", tabName = "5_3_irt", icon = icon("desktop"))
   ),
-  menuItem("Data analysis", tabName = "6_analysis", icon = icon("line-chart"),
-           menuSubItem("Individual analysis", tabName = "6_1_individual", icon = icon("dashboard")),
-           menuSubItem("Quiz analysis", tabName = "6_2_quiz", icon = icon("dashboard")),
-           menuSubItem("Grupal analysis", tabName = "6_3_grupal", icon = icon("dashboard"))
-           ),
   br(),
   actionButton("quit_button", "Exit", icon("sign-out")),
   helpText("\t Press 'Exit' to quit app")
@@ -383,15 +383,16 @@ body <- dashboardBody(
                     " tab and for each subtab select the quiz to analyze."),
                   br(),
                   h2("Features"),
-                  p("In this dashboard the models implemented in the ltm are used in the 
-                    high discrimination quiz: Rasch model, ltm, tpm marginal maximum likelihood"),
-                  p("Also the eRm functions are used in the Low discrimination quiz: RM 
-                    conditional marginal likelihood"),
-                  p("If the discrimination if very low in the quizzes
-                    (items with almost all the answers equals to 1 or 0), then the matrix can be
+                  p("In this dashboard the implemented models are the corresponding to the ltm package: Rasch model, 
+                    ltm and tpm. All of them are calculated using marginal maximum likelihood."),
+                  #p("ModelAlso the eRm functions are used in the Low discrimination quiz: RM 
+                  #  conditional marginal likelihood"),
+                  p("If the discrimination is very low in the quizzes
+                    (items with almost all the answers equals to 1 or 0), then the used matrix in the
+                    optimization procedure of the methods can be
                     numerically singular, having as a result unreliable solutions."),
                   p("For this kind of quizzes, the Data analysis tab and the ETL plot can be used to
-                    have more insight about the applied quizzes.")
+                    have more insights about the applied quizzes.")
                   )
                 )
               )
@@ -401,15 +402,19 @@ body <- dashboardBody(
             fluidRow(
               tabBox(
                 title = "Import quiz file", width = 6, 
-                id = "2_tabset_1", height = "350px",
+                id = "2_tabset_1", height = "400px",
                 tabPanel("Learning Catalytics",
+                         br(),
                          p("Select a *.csv file exported from the Learning Catalytics software. This file must contain
                           two columns per item, the first indicating the ", em("score"), " and the second indicating the ", 
                            em("answering time") ,". In addition, the file should contain an ID column called ", em("email address")),
+                         br(),
                   fileInput('file1', 'Select file:',
                             accept = c('.csv'),
                             multiple = TRUE
                             ),
+                  p("Now click ", strong("Add quiz dataset"), " to correctly upload one or more files 
+                    or press ", strong("Remove cognitive dataset"), " to delete them all."),
                   column(3, 
                          actionButton(inputId = "upload_quiz_dataset", 
                                       label = "Add quiz dataset")
@@ -423,15 +428,20 @@ body <- dashboardBody(
                 tabPanel("R file", "Tab content 2")
               ),
               tabBox(
-                title = "Import cognitive levels file", width = 6,
-                id = "2_tabset_2", height = "350px",
+                title = "(Optional) Import cognitive levels file", width = 6,
+                id = "2_tabset_2", height = "400px",
                 tabPanel("From *.csv file", 
-                         p("Select a *.csv file exported from the Learning Catalytics software. This file must contain
-                           two columns, one indicating the quiz and item number in the format Q1_q3 (Quiz 1, question 3) and the
-                           other indicating the cognitive level in the scale 1-3 (1=low, 3=high)."),
+                         br(),
+                         p("Select a *.csv file that contains the cognitive level of each item. This file must contain
+                           two columns, one indicating the quiz and the item number in the format Q1_q3 
+                          (Quiz 1, question 3) and the other indicating the cognitive level in the scale 
+                           1-3 (1=low, 3=high)."),
+                         br(),
                          fileInput('file2', 'Select file:',
                                    accept = c('.csv')
                          ),
+                         p("Now click ", strong("Upload cognitive dataset"), " to correctly upload file 
+                           or press ", strong("Remove cognitive dataset"), " to delete the file."),
                          column(3, 
                                 actionButton(inputId = "upload_cognitive_dataset", 
                                              label = "Upload cognitive dataset")
@@ -457,18 +467,37 @@ body <- dashboardBody(
 # u3 display --------------------------------------------------------
     tabItem(tabName = "3_display", 
             fluidRow(
+              br(),
+              h1("Display of the imported datasets"),
+              br(),
               box(title = "Quiz dataset:", status = "primary", width = 12,
                   collapsible = TRUE,
+                  br(),
+                  p("The quizzes files that you imported are shown in ", 
+                    strong('long format'), ". That means that each row represent one answer 
+                    per item per quiz per student:"),
+                  br(),
                   DT::dataTableOutput('quiz_dataset')
                   )
               ), 
             fluidRow(
+              br(),
               box(title = "Select column of the item:", 
+                  br(),
+                  p("If you import a cognitive file, this box will contain the names of the 
+                    columns of the file. Please select the name of the column that corresponds to 
+                    the quiz and the item number (in the format Q1_q2 for Quiz 1, question 2):"),
+                  br(),
                   status = "primary", width = 6,
                   collapsible = TRUE,
                   uiOutput('choose_cognitive_item')
               ),
               box(title = "Select column of the rating:", 
+                  br(),
+                  p("If you import a cognitive file, this box will contain the names of the 
+                    columns of the file. Please select the name of the column that corresponds to 
+                    the cognitive rating:"),
+                  br(),
                   status = "primary", width = 6,
                   collapsible = TRUE,
                   uiOutput('choose_cognitive_rating')
@@ -476,6 +505,9 @@ body <- dashboardBody(
             ),
             fluidRow(
               box(title = "Cognitive levels dataset:", status = "primary", width = 12,
+                  br(),
+                  p("The cognitive columns that you selected are the following: "),
+                  br(),
                   collapsible = TRUE,
                   DT::dataTableOutput('cognitive_dataset')
               )
@@ -493,7 +525,7 @@ body <- dashboardBody(
               ),
               box(title = "Select condition number:", status = "info", width = 6,
                   collapsible = TRUE,
-                  numericInput("cond_4_1", "Observations:", 10000, min = 1, max = 10000000000000)
+                  numericInput("cond_4_1", "Observations:", 10000000000000, min = 1, max = 10000000000000)
               )
             ), 
             fluidRow(
@@ -523,7 +555,7 @@ body <- dashboardBody(
               ),
               box(title = "Select condition number:", status = "info", width = 6,
                   collapsible = TRUE,
-                  numericInput("cond_4_2", "Observations:", 10000, min = 1, max = 10000000000000)
+                  numericInput("cond_4_2", "Observations:", 10000000000000, min = 1, max = 10000000000000)
               )
             ),
             fluidRow(
@@ -553,7 +585,7 @@ body <- dashboardBody(
               ),
               box(title = "Select condition number:", status = "info", width = 6,
                   collapsible = TRUE,
-                  numericInput("cond_4_3", "Observations:", 10000, min = 1, max = 10000000000000)
+                  numericInput("cond_4_3", "Observations:", 10000000000000, min = 1, max = 10000000000000)
               )
             ),
             fluidRow(
@@ -627,14 +659,16 @@ body <- dashboardBody(
     tabItem(tabName = "6_1_individual",
             fluidRow(
               br(),
-              titlePanel(strong("Individual!")),
+              h1("Analysis per group"),
               box(title = "Select quizzes to analize:", status = "info", width = 10,
                   collapsible = TRUE,
                   uiOutput("choose_files_6_1")
               )
             ),
             fluidRow(
-              box(title = "Guessers", status = "primary", width = 12,
+              box(title = "Guessers plot", status = "primary", width = 12,
+                  br(),
+                  p("In this plot represent..."),
                   collapsible = TRUE,
                   plotOutput("plot_guessers")
               )
@@ -680,8 +714,10 @@ body <- dashboardBody(
     ),
     tabItem(tabName = "6_3_grupal",
             fluidRow(
-              titlePanel(strong("Grupal")),
-              box(title = "Select quizzes to analize:", status = "info", width = 6,
+              h1("Analysis per student."),
+              box(title = "Quizzes to analize:", status = "info", width = 6,
+                  br(),
+                  p("Please select one or more quizzes to show the information."),
                   collapsible = TRUE,
                   uiOutput("choose_files_6_3")
               ),
@@ -763,13 +799,13 @@ server <- function(input, output) {
 # s3 display ------------------------------------------------------------------
   output$choose_cognitive_item <- renderUI({
     validate(need((df_cognitive() %>% data.frame() %>% names)[1], "Introduce a valid file."))
-    radioButtons("choose_cognitive_item", "Choose level column", 
+    radioButtons("choose_cognitive_item", "Choose the quiz-item column", 
                  choices  = c(df_cognitive() %>% data.frame() %>% names),
                  selected = c(df_cognitive() %>% data.frame() %>% names)[1])
   })
   output$choose_cognitive_rating <- renderUI({
     validate(need((df_cognitive() %>% data.frame() %>% names)[1], "Introduce a valid file."))
-    radioButtons("choose_cognitive_rating", "Choose rating column", 
+    radioButtons("choose_cognitive_rating", "Choose cognitive level column", 
                  choices  = c(df_cognitive() %>% data.frame() %>% names),
                  selected = c(df_cognitive() %>% data.frame() %>% names)[1])
   })
