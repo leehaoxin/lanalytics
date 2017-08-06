@@ -1,3 +1,4 @@
+library(lubridate)
 # Create syntetic dataset -------------------------------------------------
 digits = 0:9
 createRandString<- function(x) {
@@ -20,6 +21,8 @@ data.frame(`Email address` = sapply(1:100, createRandString)) %>%
          `item10 response`= as.numeric(rbernoulli(100, .35)),
          `item11 response`= as.numeric(rbernoulli(100, .30))
          )
+
+
 
 
 
