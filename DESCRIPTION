@@ -24,7 +24,8 @@ Imports:
   stringr,
   tidyverse,
   eRm,
-  ltm
+  ltm,
+  ggrepel
 Suggests: testthat,
   shiny,
   shinydashboard

@@ -1,13 +1,11 @@
 ## app.R ##
 library(shiny)
 library(shinydashboard)
-library(lanalytics)
+#library(lanalytics)
 library(tidyverse)
 library(stringr)
-library(ggvis)
 library(ltm)
 library(ggrepel)
-library(directlabels)
 library(eRm)
 
 ## lanalytics ##
@@ -266,7 +264,7 @@ plot_etl <- function(quiz_object, challengeLevel, item = "MCM.2014.item", rating
     dplyr::select(question_id, `mean time`, `mean score`)
   
   homo_challenge_level <- challengeLevel %>% 
-    dplyr::select(get(item), get(rating)) %>% 
+    dplyr::select(item, rating) %>% 
     setNames(c("question_id", "rating"))
   
   rating_df <- data.frame(rating = factor(c(1,2,3)), 
@@ -823,8 +821,8 @@ server <- function(input, output) {
     req(input$choose_cognitive_item)
     validate(need(nrow(df_cognitive())>0, message = "Please select a cognitive file"))
     DT::datatable(df_cognitive() %>% 
-                    dplyr::select(get(input$choose_cognitive_item),
-                                  get(input$choose_cognitive_rating)),
+                    dplyr::select(input$choose_cognitive_item,
+                                  input$choose_cognitive_rating),
                   extensions = 'Responsive',
                   options = list(
                     deferRender = TRUE,
