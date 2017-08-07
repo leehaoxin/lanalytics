@@ -59,8 +59,6 @@ plot_2pars <- function(quiz_object, type = c("ICC", "IIC")){
 
 
 
-res <- RM(raschdat1, sum0 = FALSE)
-res$npar
 
 
 
