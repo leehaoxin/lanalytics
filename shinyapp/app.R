@@ -4,7 +4,7 @@ library(shinydashboard)
 #library(lanalytics)
 library(tidyverse)
 library(stringr)
-library(ltm)
+#library(ltm)
 library(ggrepel)
 library(eRm)
 
@@ -29,8 +29,8 @@ read_lc <- function(file){
     quiz_long_sheet <- quiz_sheet[names(quiz_sheet) %in% selected_cols] %>% 
       tidyr::gather(question, value, 
                     -c(`email address`)) %>% 
-      dplyr::mutate(question = str_extract(tolower(question), "question.[0-9]*"),
-                    question = str_replace(question, "question ", "")) %>% 
+      dplyr::mutate(question = str_extract(tolower(question), "item[0-9]*"),
+                    question = str_replace(question, "item", "")) %>% 
       filter(!is.na(value))
     
     names(quiz_long_sheet)[which(names(quiz_long_sheet) == "value")] <- df_subset
@@ -39,8 +39,7 @@ read_lc <- function(file){
   
   quiz_long <- purrr::reduce(quiz_long, left_join) %>% 
     dplyr::mutate(quiz = file,
-                  `responded at` = parse_datetime(x = `responded at`, 
-                                                  format = "%d/%m/%Y %H:%M"))
+                  `responded at` = parse_datetime(x = `responded at`))
   class(quiz_long) <- c("quizz", class(quiz_long))
   quiz_long %>% 
     mutate(score = as.integer(score))
@@ -53,6 +52,7 @@ add_times <- function(course){
                   `time per question` = `responded at` - lag(`responded at`),
                   question = as.numeric(question))
 }
+
 # f3 display ------------------------------------------------------
 # f4 IRT-discrim --------------------------------------------------
 rasch_model <- function(quiz_object){
@@ -230,7 +230,8 @@ plot_easiness_time <- function(quiz_object){
 plot_guessers <- function(quiz_object){
   thresholds_df <- quiz_object %>% 
     dplyr::group_by(quiz) %>% 
-    dplyr::filter(question %in% c(1,2, max(question), (max(question)-1))) %>% 
+    mutate(question = as.numeric(question)) %>% 
+    dplyr::filter(question %in% c(1, max(question), (max(question)-1))) %>% 
     dplyr::group_by(`email address`, quiz) %>% 
     dplyr::summarise(threshold = min(`time per question`, na.rm = T),
                      threshold = ifelse(threshold == Inf, NA, threshold),
@@ -313,11 +314,11 @@ sidebar <- dashboardSidebar(sidebarMenu(
            menuSubItem("Group analysis", tabName = "6_1_individual", icon = icon("dashboard")),
            menuSubItem("Quiz analysis", tabName = "6_2_quiz", icon = icon("dashboard"))
   ),
-  menuItem("IRT: tlm package", tabName = "4_irt", icon = icon("book"),
-           menuSubItem("Rasch model", tabName = "4_1_irt", icon = icon("dashboard")),
-           menuSubItem("Latent Trait Model", tabName = "4_2_irt", icon = icon("dashboard")),
-           menuSubItem("Birnbaum's three pars", tabName = "4_3_irt", icon = icon("dashboard"))
-           ),
+  #menuItem("IRT: tlm package", tabName = "4_irt", icon = icon("book"),
+  #         menuSubItem("Rasch model", tabName = "4_1_irt", icon = icon("dashboard")),
+  #         menuSubItem("Latent Trait Model", tabName = "4_2_irt", icon = icon("dashboard")),
+  #         menuSubItem("Birnbaum's three pars", tabName = "4_3_irt", icon = icon("dashboard"))
+  #         ),
   menuItem("IRT: eRm package", tabName = "5_irt", icon = icon("book"),
            menuSubItem("Item Characteristic Curves", tabName = "5_1_irt", icon = icon("desktop")),
            menuSubItem("Person-Item Map", tabName = "5_2_irt", icon = icon("desktop")),
@@ -512,97 +513,97 @@ body <- dashboardBody(
             )
            ),
 # u4 IRT-discrim --------------------------------------------------------
-    tabItem(tabName = "4_irt"),
-    tabItem(tabName = "4_1_irt",
-            fluidRow(
-              br(),
-              titlePanel(strong("1 PL")),
-              box(title = "Select quizzes to analize:", status = "info", width = 6,
-                  collapsible = TRUE,
-                  uiOutput("choose_files_4_1")
-              ),
-              box(title = "Select condition number:", status = "info", width = 6,
-                  collapsible = TRUE,
-                  numericInput("cond_4_1", "Observations:", 10000000000000, min = 1, max = 10000000000000)
-              )
-            ), 
-            fluidRow(
-              box(title = "1 PL", status = "primary", width = 6,
-                  collapsible = TRUE,
-                  plotOutput("rasch_model")
-              ),
-              box(title = "1 PL", status = "primary", width = 6,
-                  collapsible = TRUE,
-                  plotOutput("rasch_model2")
-              )
-            ),
-            fluidRow(
-              box(title = "Coefficients:", status = "primary", width = 12,
-                  collapsible = TRUE,
-                  tableOutput('rasch_model_coef')
-              )
-            )
-            ),
-    tabItem(tabName = "4_2_irt",
-            fluidRow(
-              br(),
-              titlePanel(strong("2 PL")),
-              box(title = "Select quizzes to analize:", status = "info", width = 6,
-                  collapsible = TRUE,
-                  uiOutput("choose_files_4_2")
-              ),
-              box(title = "Select condition number:", status = "info", width = 6,
-                  collapsible = TRUE,
-                  numericInput("cond_4_2", "Observations:", 10000000000000, min = 1, max = 10000000000000)
-              )
-            ),
-            fluidRow(
-              box(title = "2 PL", status = "primary", width = 6,
-                  collapsible = TRUE,
-                  plotOutput("pars2_model")
-              ),
-              box(title = "2 PL", status = "primary", width = 6,
-                  collapsible = TRUE,
-                  plotOutput("pars2_model2")
-              )
-            ),
-            fluidRow(
-              box(title = "Coefficients:", status = "primary", width = 12,
-                  collapsible = TRUE,
-                  tableOutput('pars2_model_coef')
-              )
-            )
-            ),
-    tabItem(tabName = "4_3_irt", 
-            fluidRow(
-              br(),
-              titlePanel(strong("3 PL")),
-              box(title = "Select quizzes to analize:", status = "info", width = 6,
-                  collapsible = TRUE,
-                  uiOutput("choose_files_4_3")
-              ),
-              box(title = "Select condition number:", status = "info", width = 6,
-                  collapsible = TRUE,
-                  numericInput("cond_4_3", "Observations:", 10000000000000, min = 1, max = 10000000000000)
-              )
-            ),
-            fluidRow(
-              box(title = "3 PL", status = "primary", width = 6,
-                  collapsible = TRUE,
-                  plotOutput("pars3_model")
-              ),
-              box(title = "3 PL", status = "primary", width = 6,
-                  collapsible = TRUE,
-                  plotOutput("pars3_model2")
-              )
-            ),
-            fluidRow(
-              box(title = "Coefficients:", status = "primary", width = 12,
-                  collapsible = TRUE,
-                  tableOutput('pars3_model_coef')
-              )
-            )
-            ),
+    #tabItem(tabName = "4_irt"),
+    # tabItem(tabName = "4_1_irt",
+    #         fluidRow(
+    #           br(),
+    #           titlePanel(strong("1 PL")),
+    #           box(title = "Select quizzes to analize:", status = "info", width = 6,
+    #               collapsible = TRUE,
+    #               uiOutput("choose_files_4_1")
+    #           ),
+    #           box(title = "Select condition number:", status = "info", width = 6,
+    #               collapsible = TRUE,
+    #               numericInput("cond_4_1", "Observations:", 10000000000000, min = 1, max = 10000000000000)
+    #           )
+    #         ), 
+    #         fluidRow(
+    #           box(title = "1 PL", status = "primary", width = 6,
+    #               collapsible = TRUE,
+    #               plotOutput("rasch_model")
+    #           ),
+    #           box(title = "1 PL", status = "primary", width = 6,
+    #               collapsible = TRUE,
+    #               plotOutput("rasch_model2")
+    #           )
+    #         ),
+    #         fluidRow(
+    #           box(title = "Coefficients:", status = "primary", width = 12,
+    #               collapsible = TRUE,
+    #               tableOutput('rasch_model_coef')
+    #           )
+    #         )
+    #         ),
+    # tabItem(tabName = "4_2_irt",
+    #         fluidRow(
+    #           br(),
+    #           titlePanel(strong("2 PL")),
+    #           box(title = "Select quizzes to analize:", status = "info", width = 6,
+    #               collapsible = TRUE,
+    #               uiOutput("choose_files_4_2")
+    #           ),
+    #           box(title = "Select condition number:", status = "info", width = 6,
+    #               collapsible = TRUE,
+    #               numericInput("cond_4_2", "Observations:", 10000000000000, min = 1, max = 10000000000000)
+    #           )
+    #         ),
+    #         fluidRow(
+    #           box(title = "2 PL", status = "primary", width = 6,
+    #               collapsible = TRUE,
+    #               plotOutput("pars2_model")
+    #           ),
+    #           box(title = "2 PL", status = "primary", width = 6,
+    #               collapsible = TRUE,
+    #               plotOutput("pars2_model2")
+    #           )
+    #         ),
+    #         fluidRow(
+    #           box(title = "Coefficients:", status = "primary", width = 12,
+    #               collapsible = TRUE,
+    #               tableOutput('pars2_model_coef')
+    #           )
+    #         )
+    #         ),
+    # tabItem(tabName = "4_3_irt", 
+    #         fluidRow(
+    #           br(),
+    #           titlePanel(strong("3 PL")),
+    #           box(title = "Select quizzes to analize:", status = "info", width = 6,
+    #               collapsible = TRUE,
+    #               uiOutput("choose_files_4_3")
+    #           ),
+    #           box(title = "Select condition number:", status = "info", width = 6,
+    #               collapsible = TRUE,
+    #               numericInput("cond_4_3", "Observations:", 10000000000000, min = 1, max = 10000000000000)
+    #           )
+    #         ),
+    #         fluidRow(
+    #           box(title = "3 PL", status = "primary", width = 6,
+    #               collapsible = TRUE,
+    #               plotOutput("pars3_model")
+    #           ),
+    #           box(title = "3 PL", status = "primary", width = 6,
+    #               collapsible = TRUE,
+    #               plotOutput("pars3_model2")
+    #           )
+    #         ),
+    #         fluidRow(
+    #           box(title = "Coefficients:", status = "primary", width = 12,
+    #               collapsible = TRUE,
+    #               tableOutput('pars3_model_coef')
+    #           )
+    #         )
+    #         ),
 # u5 IRT-NO-discrim --------------------------------------------------------
     tabItem(tabName = "5_irt"),
     tabItem(tabName = "5_1_irt",
@@ -837,7 +838,8 @@ server <- function(input, output) {
     if(exists("df_quiz")){
       model <- rasch_model(df_quiz() %>% filter(quiz %in% input$choose_files_4_1))
       validate(need(kappa(model$hessian)<input$cond_4_1, message = paste("The condition number is larger: ", kappa(model$hessian))))
-      model}
+      model
+      }
   })
   output$rasch_model <- renderPlot({
     
@@ -863,6 +865,7 @@ server <- function(input, output) {
     if(exists("df_quiz")){
       model <- pars2_model(df_quiz() %>% filter(quiz %in% input$choose_files_4_2))
       validate(need(kappa(model$hessian)<input$cond_4_2, message = paste("The condition number is larger: ", kappa(model$hessian))))
+      model
     }
   })
   output$pars2_model <- renderPlot({
@@ -888,6 +891,7 @@ server <- function(input, output) {
     if(exists("df_quiz")){
       model <- pars3_model(df_quiz() %>% filter(quiz %in% input$choose_files_4_3))
       validate(need(kappa(model$hessian)<input$cond_4_3, message = paste("The condition number is larger: ", kappa(model$hessian))))
+      model
     }
   })
   output$pars3_model <- renderPlot({
