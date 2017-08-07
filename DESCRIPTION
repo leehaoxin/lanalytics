@@ -22,7 +22,9 @@ Imports:
   roxygen2,
   rstudioapi,
   stringr,
-  tidyverse
+  tidyverse,
+  eRm,
+  ltm
 Suggests: testthat,
   shiny,
   shinydashboard
