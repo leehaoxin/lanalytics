@@ -123,11 +123,11 @@ plot_boxplots <- function(quiz_object){
     labs(x = "Quiz name", 
          y = "Total score (max score = 100)")
 }
-df_left <- tibble(`Tercil per time temp` = c(1,2,3), 
-           `Tercil per time` = c("First Tercil (Fastest)", 
-                                 "Second Tercil", 
-                                 "Third Tercil (Slowest)"))
 plot_order <- function(quiz_object){
+  df_left <- tibble(`Tercil per time temp` = c(1,2,3), 
+                    `Tercil per time` = c("First Tercil (Fastest)", 
+                                          "Second Tercil", 
+                                          "Third Tercil (Slowest)"))
   quiz_object %>% 
     dplyr::group_by(question, quiz) %>% 
     dplyr::mutate(`time per question` = as.numeric(`time per question`),

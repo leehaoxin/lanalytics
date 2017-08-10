@@ -7,12 +7,11 @@
 #' @return A plot of the easiness-time of the selected quiz
 #'
 #' @examples
-#' file_to_read <- "../../datasets/Dataset1/Quiz3_session12098.csv"
+#' file_to_read <- "../../datasets/sample_dataset/Q01.csv"
 #' quiz_object <- read_lc(file_to_read)
 #' quiz_object <- add_times(quiz_object)
 #' plot_easiness_time(quiz_object)
 #' @export
-#' 
 plot_easiness_time <- function(quiz_object){
   quiz_object %>%
     dplyr::mutate(score = as.numeric(score)) %>% 
@@ -29,5 +28,5 @@ plot_easiness_time <- function(quiz_object){
     ggrepel::geom_label_repel() +
     labs(y = "Average score per item (max score = 100)", 
          x = "Average time taken to answer each item (in seconds)") +
-    ylim(0,100)
+    facet_wrap(~quiz, ncol = 1)
 }

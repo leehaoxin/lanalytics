@@ -1,3 +1,19 @@
+#' @title Modify the quiz_object to add the order of answering
+#' and the spent time per question
+#' 
+#' @description This function receives as input a quiz object 
+#' created with the read_lc() function
+#' 
+#' @param file a quiz object from read_lc
+#'
+#' @return it returns a quiz object containing the following columns:  
+#' "email address", "question", "responded at", "score" and "quiz"
+#'
+#' @examples
+#' file_to_read <- "../../datasets/sample_dataset/Q01.csv"
+#' quiz_object <- read_lc(file_to_read)
+#' quiz_object <- add_times(file_to_read)
+#' @export
 add_times <- function(course){
   course <- course %>% 
     dplyr::group_by(quiz, `email address`) %>%

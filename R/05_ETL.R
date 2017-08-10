@@ -1,4 +1,4 @@
-#' @title Easiness-time-cognitive level plot.
+#' @title Easiness-time-level plot.
 #'
 #' @description This function computes a graph displaying the guessers plot for each quiz.
 #' 
@@ -8,14 +8,14 @@
 #' @return The ETL plot
 #'
 #' @examples
-#' file_to_read <- "../../datasets/Dataset1/Quiz3_session12098.csv"
-#' file_cognitivelevel <- "../../datasets/Quiz2013-14_cognitive level_HB.csv" 
+#' file_to_read <- "../../datasets/sample_dataset/Q01.csv"
+#' file_cognitivelevel <- "../../datasets/sample_dataset/cognitive_file.csv" 
 #' quiz_object <- read_lc(file_to_read)
 #' cognitive_level <- data.frame(read_csv(file_cognitivelevel))
 #' quiz_object <- add_times(quiz_object)
 #' plot_etl(quiz_object, cognitive_level)
 #' @export
-plot_etl <- function(quiz_object, challengeLevel){
+plot_etl <- function(quiz_object, challengeLevel, item = "MCM.2014.item", rating = "Rating.HB"){
   homo_quiz_object <- quiz_object %>% 
     dplyr::mutate(score = as.numeric(score)) %>% 
     dplyr::group_by(quiz, question) %>% 
@@ -27,9 +27,8 @@ plot_etl <- function(quiz_object, challengeLevel){
     dplyr::select(question_id, `mean time`, `mean score`)
   
   homo_challenge_level <- challengeLevel %>% 
-    dplyr::rename(question_id = MCM.2014.item,
-                  rating = Rating.HB) %>% 
-    dplyr::select(question_id, rating)
+    dplyr::select(item, rating) %>% 
+    setNames(c("question_id", "rating"))
   
   rating_df <- data.frame(rating = factor(c(1,2,3)), 
                           rating2 = factor(c("Low cognitive level", 
@@ -50,6 +49,6 @@ plot_etl <- function(quiz_object, challengeLevel){
     ggrepel::geom_label_repel() +
     labs(y = "Average score per item (max score = 100)",
          x = "Average time taken to answer each item (in seconds)",
-         color = "Cognitive level") 
+         color = "Cognitive level") +
+    facet_wrap(~quiz, ncol = 1)
 }
-

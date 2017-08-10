@@ -1,19 +1,17 @@
-#' @title Rasch model plot with ggplot2
+#' @title Person - Item map
 #' 
-#' @description This function computes a graph of the ICC of the Rasch model
+#' @description This function computes a graph of the Person-Item map of the Rasch model
 #'
 #' @param quiz_object Receives as input the dataframe un long format of all quizzes (Generated with read_lc)
 #'
-#' @return A plot of the rasch model
+#' @return A plot of the person-item parameters
 #'
 #' @examples
-#' file_to_read <- "../../datasets/Dataset1/Quiz3_session12098.csv"
+#' file_to_read <- "../../datasets/sample_dataset/Q01.csv"
 #' quiz_object <- read_lc(file_to_read)
-#' plot_rasch2(quiz_object)
+#' plot_personItem(quiz_object)
 #' @export
-
-
-plot_rasch2 <- function(quiz_object){
+plot_personItem <- function(quiz_object){
   data_tibble <- quiz_object %>% 
     ungroup() %>% 
     dplyr::select(`email address`, question, score) %>% 
@@ -26,6 +24,5 @@ plot_rasch2 <- function(quiz_object){
     purrr::discard(~sum(.)>97) %>% as.matrix()
   
   model <- RM(data_tibble)
-  plotjointICC(model, xlim = c(-8, 5))
+  plotPImap(model)
 }  
-

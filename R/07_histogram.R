@@ -7,11 +7,10 @@
 #' @return A plot of the histogram
 #'
 #' @examples
-#' file_to_read <- "../../datasets/Dataset1/Quiz3_session12098.csv"
+#' file_to_read <- "../../datasets/sample_dataset/Q01.csv"
 #' quiz_object <- read_lc(file_to_read)
 #' plot_hist(quiz_object)
 #' @export
-
 plot_hist <- function(quiz_object){
   summarized_data <- quiz_object %>%  
     dplyr::group_by(`email address`, `quiz`) %>% 
@@ -22,10 +21,6 @@ plot_hist <- function(quiz_object){
     geom_histogram(binwidth = 10, alpha = .7, 
                    color = "dodgerblue4", fill = "dodgerblue4") +
     labs(x = "Total score (max score = 100)", 
-         y = "Count")
-}  
-
-
-
-
-
+         y = "Count") +
+    facet_wrap(~quiz, ncol = 2)
+}

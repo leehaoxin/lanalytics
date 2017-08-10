@@ -1,4 +1,4 @@
-#' @title Read file exported from Learning Catalytics
+#' @title Read file exported from Learning Catalytics or with the specified format.
 #' 
 #' @description This function receives as input a learning catalytics *csv* 
 #' file and parse it to create quiz object.
@@ -9,9 +9,8 @@
 #' "email address", "question", "responded at", "score" and "quiz"
 #'
 #' @examples
-#' file_to_read <- "../../datasets/Dataset1/Quiz3_session12098.csv"
+#' file_to_read <- "../../datasets/sample_dataset/Q01.csv"
 #' quiz_object <- read_lc(file_to_read)
-#' quiz_object <- add_times(quiz_object)
 #' @export
 read_lc <- function(file){
   quiz_sheet <- readr::read_csv(file) %>% 
@@ -32,8 +31,8 @@ read_lc <- function(file){
     quiz_long_sheet <- quiz_sheet[names(quiz_sheet) %in% selected_cols] %>% 
       tidyr::gather(question, value, 
                     -c(`email address`)) %>% 
-      dplyr::mutate(question = str_extract(tolower(question), "question.[0-9]*"),
-                    question = str_replace(question, "question ", "")) %>% 
+      dplyr::mutate(question = str_extract(tolower(question), "item[0-9]*"),
+                    question = str_replace(question, "item", "")) %>% 
       filter(!is.na(value))
     
     names(quiz_long_sheet)[which(names(quiz_long_sheet) == "value")] <- df_subset
@@ -42,8 +41,7 @@ read_lc <- function(file){
   
   quiz_long <- purrr::reduce(quiz_long, left_join) %>% 
     dplyr::mutate(quiz = file,
-                  `responded at` = parse_datetime(x = `responded at`, 
-                                                  format = "%d/%m/%Y %H:%M"))
+                  `responded at` = parse_datetime(x = `responded at`))
   class(quiz_long) <- c("quizz", class(quiz_long))
   quiz_long %>% 
     mutate(score = as.integer(score))
