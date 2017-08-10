@@ -1,10 +1,8 @@
 ## app.R ##
 library(shiny)
 library(shinydashboard)
-#library(lanalytics)
 library(tidyverse)
 library(stringr)
-#library(ltm)
 library(ggrepel)
 library(eRm)
 
@@ -52,60 +50,6 @@ add_times <- function(course){
                   `time per question` = `responded at` - lag(`responded at`),
                   question = as.numeric(question))
 }
-
-# f3 display ------------------------------------------------------
-# f4 IRT-discrim --------------------------------------------------
-rasch_model <- function(quiz_object){
-  x_vals = seq(-3.8, 3.8, length = 100)
-  d_matrix <- cbind(1, x_vals)
-  
-  data_tibble <- quiz_object %>% 
-    ungroup() %>% 
-    dplyr::select(`email address`, question, score) %>% 
-    tidyr::spread(question, score, fill = 0) %>% 
-    dplyr::select(-`email address`) %>% 
-    stats::setNames(paste("item", names(.))) %>% 
-    purrr::map_if(is.character, as.numeric) %>% 
-    tibble::as_tibble() %>% 
-    purrr::discard(~sum(.)==0)
-  
-  model <- rasch(data_tibble)
-  model
-}
-pars2_model <- function(quiz_object){
-  x_vals = seq(-3.8, 3.8, length = 100)
-  d_matrix <- cbind(1, x_vals)
-  
-  data_tibble <- quiz_object %>% 
-    ungroup() %>% 
-    dplyr::select(`email address`, question, score) %>% 
-    tidyr::spread(question, score, fill = 0) %>% 
-    dplyr::select(-`email address`) %>% 
-    stats::setNames(paste("item", names(.))) %>% 
-    purrr::map_if(is.character, as.numeric) %>% 
-    tibble::as_tibble() %>% 
-    purrr::discard(~sum(.)==0)
-  
-  model <- ltm(data_tibble ~ z1)
-  model
-}  
-pars3_model <- function(quiz_object){
-  x_vals = seq(-3.8, 3.8, length = 100)
-  d_matrix <- cbind(1, x_vals)
-  
-  data_tibble <- quiz_object %>% 
-    ungroup() %>% 
-    dplyr::select(`email address`, question, score) %>% 
-    tidyr::spread(question, score, fill = 0) %>% 
-    dplyr::select(-`email address`) %>% 
-    stats::setNames(paste("item", names(.))) %>% 
-    purrr::map_if(is.character, as.numeric) %>% 
-    tibble::as_tibble() %>% 
-    purrr::discard(~sum(.)==0)
-  
-   model <- tpm(data_tibble)
-   model
-}  
 # f5 IRT-NO-discrim -----------------------------------------------
 plot_jointICC <- function(quiz_object){
   data_tibble <- quiz_object %>% 
@@ -179,16 +123,17 @@ plot_boxplots <- function(quiz_object){
     labs(x = "Quiz name", 
          y = "Total score (max score = 100)")
 }
+df_left <- tibble(`Tercil per time temp` = c(1,2,3), 
+           `Tercil per time` = c("First Tercil (Fastest)", 
+                                 "Second Tercil", 
+                                 "Third Tercil (Slowest)"))
 plot_order <- function(quiz_object){
   quiz_object %>% 
     dplyr::group_by(question, quiz) %>% 
-    dplyr::mutate(`Tercil per time` = cut(as.numeric(`time per question`), 
-                                          breaks = quantile(as.numeric(.$`time per question`), 
-                                                            probs = c(0, .33, .66, 1), 
-                                                            na.rm = T), 
-                                          include.lowest = T, 
-                                          labels = c("First Tercil (Fastest)", "Second Tercil", "Third Tercil (Slowest)")),
-                  temp = sum(!is.na(`Tercil per time`)), 
+    dplyr::mutate(`time per question` = as.numeric(`time per question`),
+                  `Tercil per time temp` = ntile(`time per question`, 3)) %>% 
+    left_join(df_left) %>% 
+    dplyr::mutate(temp = sum(!is.na(`Tercil per time`)),
                   `Tercil per time` = if_else(temp > 10, as.character(`Tercil per time`), "NA")) %>% 
     dplyr::filter(!is.na(`Tercil per time`), `Tercil per time`!= "NA") %>% 
     dplyr::group_by(question, `Tercil per time`, quiz) %>% 
@@ -204,7 +149,6 @@ plot_order <- function(quiz_object){
     geom_point() +
     labs(x = "Question in the quiz",
          y = "Average score per tercil (max score = 100)") +
-    ylim(0, 100) +
     geom_label(alpha = .7) +
     facet_wrap(~quiz, ncol = 1)
 } 
@@ -224,14 +168,13 @@ plot_easiness_time <- function(quiz_object){
     ggrepel::geom_label_repel() +
     labs(y = "Average score per item (max score = 100)", 
          x = "Average time taken to answer each item (in seconds)") +
-    ylim(0,100) +
     facet_wrap(~quiz, ncol = 1)
 }
 plot_guessers <- function(quiz_object){
   thresholds_df <- quiz_object %>% 
     dplyr::group_by(quiz) %>% 
     mutate(question = as.numeric(question)) %>% 
-    dplyr::filter(question %in% c(1, max(question), (max(question)-1))) %>% 
+    dplyr::filter(question %in% c(10, 5, 6)) %>% 
     dplyr::group_by(`email address`, quiz) %>% 
     dplyr::summarise(threshold = min(`time per question`, na.rm = T),
                      threshold = ifelse(threshold == Inf, NA, threshold),
@@ -290,13 +233,22 @@ plot_etl <- function(quiz_object, challengeLevel, item = "MCM.2014.item", rating
          color = "Cognitive level") +
     facet_wrap(~quiz, ncol = 1)
 }
-plot_group <- function(quiz_object, email_filtered){
+plot_group <- function(quiz_object, email_filtered, df_exam = NULL){
+  if(is.null(df_exam)){
+    df_exam = tibble(`email address` = quiz_object$`email address` %>% unique, 
+                     `final exam` = rep(NA, 100))
+  }
   quiz_object %>% 
-    group_by(`email address`, quiz) %>% 
+    left_join(df_exam) %>% 
+    group_by(`email address`, quiz, `final exam`) %>% 
     dplyr::summarise(`mean score` = round(100*mean(as.numeric(score), na.rm = T), 0)) %>% 
-    filter(`email address` %in% email_filtered) %>% 
-    ggplot(aes(x = quiz, y = `mean score`, group = `email address`)) +
-    geom_line() + geom_point() +
+    filter(`email address` %in% email_filtered) %>%
+    ggplot(aes(x = quiz, 
+               y = `mean score`, 
+               group = `email address`)) +
+    geom_line() + 
+    geom_point() +
+    geom_hline(aes(yintercept = `final exam`), color = "red") + 
     facet_wrap(~`email address`, ncol = 2)
 }
 
@@ -314,11 +266,6 @@ sidebar <- dashboardSidebar(sidebarMenu(
            menuSubItem("Group analysis", tabName = "6_1_individual", icon = icon("dashboard")),
            menuSubItem("Quiz analysis", tabName = "6_2_quiz", icon = icon("dashboard"))
   ),
-  #menuItem("IRT: tlm package", tabName = "4_irt", icon = icon("book"),
-  #         menuSubItem("Rasch model", tabName = "4_1_irt", icon = icon("dashboard")),
-  #         menuSubItem("Latent Trait Model", tabName = "4_2_irt", icon = icon("dashboard")),
-  #         menuSubItem("Birnbaum's three pars", tabName = "4_3_irt", icon = icon("dashboard"))
-  #         ),
   menuItem("IRT: eRm package", tabName = "5_irt", icon = icon("book"),
            menuSubItem("Item Characteristic Curves", tabName = "5_1_irt", icon = icon("desktop")),
            menuSubItem("Person-Item Map", tabName = "5_2_irt", icon = icon("desktop")),
@@ -341,27 +288,28 @@ body <- dashboardBody(
                 sidebarPanel(
                   h2("Introduction"),
                   p("This dashboard is an interface of the ", 
-                    strong("eRm"), ", ", strong("ltm"), " and the ", 
+                    strong("eRm"), " and the ", 
                     strong("lanalytics"), " packages, which provide useful functions to 
-                    analyze online quizzes. The first two are available in the CRAN, 
-                    while the last is available in GitHub."),
+                    analyze online quizzes. The first is available in the CRAN, 
+                    and the second is available in a GitHub repository."),
                   br(),
-                  p("The ", strong("ltm"), " and the ", strong("eRm"),
-                    " packages are two important packages in the psychometric section of the 
-                    CRAN and these can be installed with the followind commands: "),
-                  p(code("install_packages('ltm')"), code("install_packages('eRm')")),
-                  p("while the lanalytics package contain some useful statistical analysis 
-                   to be used for online quizzes. This package can be installed with the following command: ",
+                  p("The ", strong("eRm"),
+                    " package is an important package in the psychometric section of the 
+                    CRAN and can be installed with the following command: "),
+                  br(),
+                  p(code("install_packages('eRm')")),
+                  p("On the other hand, the lanalytics package contain some useful statistical analysis 
+                   that can be used for online quizzes. This package can be installed with the following command: ",
                   code("install_github('savrgg/lanalytics')")),
                   br(),
-                  p("For an introduction and examples of the lanalytics package, please visit the ", 
+                  p("For an introduction and examples, please visit the ", 
                     a("lanalytics homepage.", href = "https://savrgg.github.io/lanalytics/"))
                 ),
                 mainPanel(
                   h1("Instructions"),
-                  p("The Learning Analytics dashboard consist five tabs, the first two are
+                  p("The Learning Analytics dashboard consist of four tabs, the first two are
                      used to import data and display the datasets. The consequtive tabs are used 
-                    for analysis and graphs given by the eRm package, the ltm package and the lanalytics package.
+                    for analysis and graphs given by the eRm and the lanalytics packages.
                     To get started follow this instructions:"), 
                   br(),
                   p("1) Import your quizzes datafiles in the ", strong("Import quizzes"), 
@@ -369,29 +317,19 @@ body <- dashboardBody(
                   p("2) (Optionally) in the ", strong("Import quizzes"), 
                     " tab import a file containing the cognitive level of each question of 
                     each quiz and press the upload button."),
-                  p("3) Go to the ", strong("Display quizzes"), 
-                    " tab and check that the data file is imported correctly."),
-                  p("4) (Optionally) If you upload a cognitive level file, select in the ",
+                  p("3) (Optionally) in the ", strong("Import quizzes"), 
+                    " tab import a file containing the final exam grade for each student 
+                    and press the upload button."),
+                  p("4) Go to the ", strong("Display quizzes"), 
+                    " tab and check that the data files are imported correctly."),
+                  p("5) (Optionally) If you uploaded a cognitive level file, select in the ",
                     strong("Display quizzes"), " tab which colum correspond to the item and
                     which to the cognitive level."),
-                  p("5) Go to the ", strong("High discrimination quiz"), 
+                  p("6) Go to the ", strong("Data Analysis"), 
                     " tab and for each subtab select the quiz to analyze."),
-                  p("6) Go to the ", strong("Low discrimination quiz"), 
+                  p("7) Go to the ", strong("IRT: eRm package"), 
                     " tab and for each subtab select the quiz to analyze."),
-                  p("7) Go to the ", strong("Data analysis"), 
-                    " tab and for each subtab select the quiz to analyze."),
-                  br(),
-                  h2("Features"),
-                  p("In this dashboard the implemented models are the corresponding to the ltm package: Rasch model, 
-                    ltm and tpm. All of them are calculated using marginal maximum likelihood."),
-                  #p("ModelAlso the eRm functions are used in the Low discrimination quiz: RM 
-                  #  conditional marginal likelihood"),
-                  p("If the discrimination is very low in the quizzes
-                    (items with almost all the answers equals to 1 or 0), then the used matrix in the
-                    optimization procedure of the methods can be
-                    numerically singular, having as a result unreliable solutions."),
-                  p("For this kind of quizzes, the Data analysis tab and the ETL plot can be used to
-                    have more insights about the applied quizzes.")
+                  br()
                   )
                 )
               )
@@ -402,11 +340,11 @@ body <- dashboardBody(
               tabBox(
                 title = "Import quiz file", width = 6, 
                 id = "2_tabset_1", height = "400px",
-                tabPanel("Learning Catalytics",
+                tabPanel("csv file",
                          br(),
-                         p("Select a *.csv file exported from the Learning Catalytics software. This file must contain
-                          two columns per item, the first indicating the ", em("score"), " and the second indicating the ", 
-                           em("answering time") ,". In addition, the file should contain an ID column called ", em("email address")),
+                         p("Select a *.csv file that contains two columns per item. The first indicating its ", em("score"), 
+                           " and the second indicating its ", em("answering time") ,". In addition, the file should contain an 
+                           ID column called ", em("email address"), ". This file can be exported from the Learning Catalytics software."),
                          br(),
                   fileInput('file1', 'Select file:',
                             accept = c('.csv'),
@@ -422,14 +360,12 @@ body <- dashboardBody(
                          actionButton(inputId = "remove_quiz_dataset", 
                                       label = "Remove quiz datasets")
                          )
-                ),
-                tabPanel("Google Forms", "Tab content 2"),
-                tabPanel("R file", "Tab content 2")
+                )
               ),
               tabBox(
-                title = "(Optional) Import cognitive levels file", width = 6,
+                title = "(Optional) Import other files", width = 6,
                 id = "2_tabset_2", height = "400px",
-                tabPanel("From *.csv file", 
+                tabPanel("Cognitive file", 
                          br(),
                          p("Select a *.csv file that contains the cognitive level of each item. This file must contain
                            two columns, one indicating the quiz and the item number in the format Q1_q3 
@@ -448,18 +384,38 @@ body <- dashboardBody(
                          column(3, offset = 3,
                                 actionButton(inputId = "remove_cognitive_dataset", 
                                              label = "Remove congnitive datasets")
-                         )       
+                         )
+                         ),
+                tabPanel("Final Exam", 
+                         br(),
+                         p("Select a *.csv file that contains the final grade for each student. This file must 
+                           contain two columns, one indicating the student and the other the grade"),
+                         br(),
+                         fileInput('file3', 'Select file:',
+                                   accept = c('.csv')
+                         ),
+                         p("Now click ", strong("Upload final exam data"), " to correctly upload file 
+                           or press ", strong("Remove final exam data"), " to delete the file."),
+                         column(3, 
+                                actionButton(inputId = "upload_finalexam_dataset", 
+                                             label = "Upload final exam data")
+                         ),
+                         column(3, offset = 3,
+                                actionButton(inputId = "remove_finalexam_dataset", 
+                                             label = "Remove final exam data")
+                         )
+                         )
                 )
-              )
             ),
             fluidRow(
-              box(title = "Uploaded files:", status = "primary", width = 6,
+              box(title = "Uploaded quiz files:", status = "primary", width = 6,
                   collapsible = TRUE,
                   tableOutput('names_quiz')
               ),
-              box(title = "Uploaded files:", status = "primary", width = 6,
+              box(title = "Other files uploaded:", status = "primary", width = 6,
                   collapsible = TRUE,
-                  tableOutput('names_cognitive')
+                  tableOutput('names_cognitive'),
+                  tableOutput('names_finalexam')
               )
             )
     ),
@@ -510,100 +466,17 @@ body <- dashboardBody(
                   collapsible = TRUE,
                   DT::dataTableOutput('cognitive_dataset')
               )
+            ),
+          fluidRow(
+              box(title = "Final exam dataset:", status = "primary", width = 12,
+                  br(),
+                  p("The final exam file uploaded is the following: "),
+                  br(),
+                  collapsible = TRUE,
+                  DT::dataTableOutput('finalexam_dataset')
+              )
             )
            ),
-# u4 IRT-discrim --------------------------------------------------------
-    #tabItem(tabName = "4_irt"),
-    # tabItem(tabName = "4_1_irt",
-    #         fluidRow(
-    #           br(),
-    #           titlePanel(strong("1 PL")),
-    #           box(title = "Select quizzes to analize:", status = "info", width = 6,
-    #               collapsible = TRUE,
-    #               uiOutput("choose_files_4_1")
-    #           ),
-    #           box(title = "Select condition number:", status = "info", width = 6,
-    #               collapsible = TRUE,
-    #               numericInput("cond_4_1", "Observations:", 10000000000000, min = 1, max = 10000000000000)
-    #           )
-    #         ), 
-    #         fluidRow(
-    #           box(title = "1 PL", status = "primary", width = 6,
-    #               collapsible = TRUE,
-    #               plotOutput("rasch_model")
-    #           ),
-    #           box(title = "1 PL", status = "primary", width = 6,
-    #               collapsible = TRUE,
-    #               plotOutput("rasch_model2")
-    #           )
-    #         ),
-    #         fluidRow(
-    #           box(title = "Coefficients:", status = "primary", width = 12,
-    #               collapsible = TRUE,
-    #               tableOutput('rasch_model_coef')
-    #           )
-    #         )
-    #         ),
-    # tabItem(tabName = "4_2_irt",
-    #         fluidRow(
-    #           br(),
-    #           titlePanel(strong("2 PL")),
-    #           box(title = "Select quizzes to analize:", status = "info", width = 6,
-    #               collapsible = TRUE,
-    #               uiOutput("choose_files_4_2")
-    #           ),
-    #           box(title = "Select condition number:", status = "info", width = 6,
-    #               collapsible = TRUE,
-    #               numericInput("cond_4_2", "Observations:", 10000000000000, min = 1, max = 10000000000000)
-    #           )
-    #         ),
-    #         fluidRow(
-    #           box(title = "2 PL", status = "primary", width = 6,
-    #               collapsible = TRUE,
-    #               plotOutput("pars2_model")
-    #           ),
-    #           box(title = "2 PL", status = "primary", width = 6,
-    #               collapsible = TRUE,
-    #               plotOutput("pars2_model2")
-    #           )
-    #         ),
-    #         fluidRow(
-    #           box(title = "Coefficients:", status = "primary", width = 12,
-    #               collapsible = TRUE,
-    #               tableOutput('pars2_model_coef')
-    #           )
-    #         )
-    #         ),
-    # tabItem(tabName = "4_3_irt", 
-    #         fluidRow(
-    #           br(),
-    #           titlePanel(strong("3 PL")),
-    #           box(title = "Select quizzes to analize:", status = "info", width = 6,
-    #               collapsible = TRUE,
-    #               uiOutput("choose_files_4_3")
-    #           ),
-    #           box(title = "Select condition number:", status = "info", width = 6,
-    #               collapsible = TRUE,
-    #               numericInput("cond_4_3", "Observations:", 10000000000000, min = 1, max = 10000000000000)
-    #           )
-    #         ),
-    #         fluidRow(
-    #           box(title = "3 PL", status = "primary", width = 6,
-    #               collapsible = TRUE,
-    #               plotOutput("pars3_model")
-    #           ),
-    #           box(title = "3 PL", status = "primary", width = 6,
-    #               collapsible = TRUE,
-    #               plotOutput("pars3_model2")
-    #           )
-    #         ),
-    #         fluidRow(
-    #           box(title = "Coefficients:", status = "primary", width = 12,
-    #               collapsible = TRUE,
-    #               tableOutput('pars3_model_coef')
-    #           )
-    #         )
-    #         ),
 # u5 IRT-NO-discrim --------------------------------------------------------
     tabItem(tabName = "5_irt"),
     tabItem(tabName = "5_1_irt",
@@ -616,6 +489,8 @@ body <- dashboardBody(
               )
             ),
             fluidRow(
+              br(),
+              p("This plot is the Item Characteristic Curve (ICC), that "),
               box(title = "Rasch model", status = "primary", width = 12,
                   collapsible = TRUE,
                   plotOutput("plot_jointICC")
@@ -659,7 +534,10 @@ body <- dashboardBody(
             fluidRow(
               br(),
               h1("Analysis per group"),
-              box(title = "Select quizzes to analize:", status = "info", width = 10,
+              h4("In this tab you can see statistical summaries of the performance of your
+                group."),
+              br(),
+              box(title = "Select quizzes to analize:", status = "info", width = 12,
                   collapsible = TRUE,
                   uiOutput("choose_files_6_1")
               )
@@ -667,13 +545,20 @@ body <- dashboardBody(
             fluidRow(
               box(title = "Guessers plot", status = "primary", width = 12,
                   br(),
-                  p("In this plot represent..."),
+                  p("Sometimes when a student answers a question very fast (or under a threshold), the probability that he get wrong or just 
+                    guessed the answer is high. In this plot the questions that are answered in less than 20 seconds (or below an individual threshold) 
+                    are shown. 1 means that he answer the question correctly and -1 means that he answer the question incorrectly. Questions that take more 
+                    time than the threshold are not shown"),
                   collapsible = TRUE,
                   plotOutput("plot_guessers")
               )
             ),
             fluidRow(
               box(title = "Order plot", status = "primary", width = 12,
+                  br(),
+                  p("This plot is useful to find the relation between the time per question and the obtained correct answers. It is important to
+                    get an idea of how many time each question takes to get a better idea of the design of the quizzes and exams. Some topics take more
+                    time and a little bit of more time can have a consequence of a better grade."),
                   collapsible = TRUE,
                   plotOutput("plot_order")
               )
@@ -681,6 +566,9 @@ body <- dashboardBody(
     ),
     tabItem(tabName = "6_2_quiz",
             fluidRow(
+              br(),
+              h1("Analysis per quiz"),
+              h4("In this tab you can see statistical summaries of the performance per quiz"),
               br(),
               titlePanel(strong("Quiz")),
               box(title = "Select quizzes to analize:", status = "info", width = 10,
@@ -690,22 +578,38 @@ body <- dashboardBody(
             ),
             fluidRow(
               box(title = "Histogram", status = "primary", width = 12,
+                  br(),
+                  p("This is an histogram of the final grades in the selected quiz. Ideally, most of the students should be in the middle of the 
+                    plot."),
                   collapsible = TRUE,
                   plotOutput("plot_hist")
               )
             ),
             fluidRow(
               box(title = "Boxplot", status = "primary", width = 12,
+                  br(),
+                  p("This is a Boxplot of the grades of each quiz. This is a non-parametric graph that shows the distribution of the grades.
+                    It is useful to easily see the dispersion, skweness and outliers. The box contains 50% of the data (the contained between the first 
+                    and the third quartil). Also, the bold line represent the median of the data. The whiskers are useful to see the variability above 
+                    and below these quartiles."),
                   collapsible = TRUE,
                   plotOutput("plot_boxplots")
               )
             ),
             fluidRow(
-              box(title = "Easiness-time", status = "primary", width = 6,
+              box(title = "Easiness-time (ET-plot)", status = "primary", width = 6,
+                  br(),
+                  p("The Easiness-time plot shows the relation between the spent time in each question versus the average grade. 
+                    Sometimes easy questions can be answered correctly in just some seconds, while difficult questions should take more time.
+                    In this plot, we can visualize this relationship."),
                   collapsible = TRUE,
                   plotOutput("plot_et")
               ),
               box(title = "ETL", status = "primary", width = 6,
+                  br(),
+                  p("The Easiness-Time-Level plot is like the ET-plot, but taking in consideration the cognitive level of the questions.
+                      Usually the question with higher cognitive levels take more time and are more difficult, while the low cognitive level
+                      questions are easier and may be answered in less time. In this plot we can observe if this idea holds."),
                   collapsible = TRUE,
                   plotOutput("plot_etl")
               )
@@ -714,6 +618,7 @@ body <- dashboardBody(
     tabItem(tabName = "6_3_grupal",
             fluidRow(
               h1("Analysis per student."),
+              h4("In this tab you can see statistical summaries of the performance per student"),
               box(title = "Quizzes to analize:", status = "info", width = 6,
                   br(),
                   p("Please select one or more quizzes to show the information."),
@@ -727,6 +632,9 @@ body <- dashboardBody(
             ),
             fluidRow(
               box(title = "Group history", status = "primary", width = 12,
+                  br(),
+                  p("In this plot you can select a student and see its performance in all the quizzes. 
+                    Also, if the grade of the final exam is provided, a red line will be show in the plot."),
                   collapsible = TRUE,
                   plotOutput("plot_group_tot")
                   )
@@ -760,8 +668,14 @@ server <- function(input, output) {
     infile_cognitive <- input$file2
     infile_cognitive
   })
+  infile_finalexam <- eventReactive(input$upload_finalexam_dataset, {
+    validate(need(input$file3, message = "Please add the final exam"))
+    infile_finalexam <- input$file3
+    infile_finalexam
+  })
   quiz_values <- reactiveValues(df_data = NULL)
   cognitive_values <- reactiveValues(df_data = NULL)
+  finalexam_values <- reactiveValues(df_data = NULL)
   observeEvent(input$remove_quiz_dataset, {
     quiz_values$df_data <- NULL
     })
@@ -785,16 +699,31 @@ server <- function(input, output) {
     cognitive_values$df_data <- read.csv(infile_cognitive()$datapath) %>% 
       mutate(file = infile_cognitive()$name[1])
   })
+  observeEvent(input$remove_finalexam_dataset, {
+    finalexam_values$df_data <- NULL
+  })
+  observeEvent(input$upload_finalexam_dataset, {
+    finalexam_values$df_data <- read_csv(infile_finalexam()$datapath) %>% 
+      mutate(file = infile_finalexam()$name[1])
+  })
+  
   df_quiz <- reactive(quiz_values$df_data)
   df_cognitive <- reactive(cognitive_values$df_data)
+  df_finalexam <- reactive(finalexam_values$df_data)
+  
   output$names_quiz <- renderTable({
     if((df_quiz()$quiz %>% length())>0){
       df_quiz()$quiz %>% unique %>% data.frame() %>% setNames("Uploaded files")}
   })
   output$names_cognitive <- renderTable({
     if((df_cognitive()$file %>% unique %>% length())>0){
-      df_cognitive()$file %>% unique %>% data.frame() %>% setNames("Uploaded files")}
+      df_cognitive()$file %>% unique %>% data.frame() %>% setNames("Uploaded cognitive file")}
   })
+  output$names_finalexam <- renderTable({
+    if((df_finalexam()$file %>% unique %>% length())>0){
+      df_finalexam()$file %>% unique %>% data.frame() %>% setNames("Uploaded final exam file")}
+  })
+  
 # s3 display ------------------------------------------------------------------
   output$choose_cognitive_item <- renderUI({
     validate(need((df_cognitive() %>% data.frame() %>% names)[1], "Introduce a valid file."))
@@ -819,7 +748,6 @@ server <- function(input, output) {
   })
   output$cognitive_dataset <- DT::renderDataTable({
     req(input$choose_cognitive_item)
-    req(input$choose_cognitive_item)
     validate(need(nrow(df_cognitive())>0, message = "Please select a cognitive file"))
     DT::datatable(df_cognitive() %>% 
                     dplyr::select(input$choose_cognitive_item,
@@ -830,87 +758,18 @@ server <- function(input, output) {
                     scrollY = 200,
                     scroller = TRUE
                   ))
-  })  
-# s4 IRT-disc ------------------------------------------------------------------
-  model_rasch_val <- reactive({
-    set.seed(123456)
-    validate(need(input$choose_files_4_1, message = "Please select a quizz"))
-    if(exists("df_quiz")){
-      model <- rasch_model(df_quiz() %>% filter(quiz %in% input$choose_files_4_1))
-      validate(need(kappa(model$hessian)<input$cond_4_1, message = paste("The condition number is larger: ", kappa(model$hessian))))
-      model
-      }
   })
-  output$rasch_model <- renderPlot({
-    
-      input$newplot
-      plot(model_rasch_val(), type = c("ICC"))
+  output$finalexam_dataset <- DT::renderDataTable({
+    validate(need(nrow(df_finalexam())>0, message = "Please select a final exam file"))
+    DT::datatable(df_finalexam(),
+                  extensions = 'Responsive',
+                  options = list(
+                    deferRender = TRUE,
+                    scrollY = 200,
+                    scroller = TRUE
+                  ))
   })
-  output$rasch_model2 <- renderPlot({
-      input$newplot
-      plot(model_rasch_val(), type = c("IIC"))
-  })
-  output$rasch_model_coef <- renderTable({
-      coef(summary(model_rasch_val())) %>% 
-        data.frame() %>% 
-        mutate(beta = row.names(.)) %>% 
-        as.tibble() %>% 
-        dplyr::rename(item = beta, `Easiness parameter` = value) %>% 
-        dplyr::select(item, `Easiness parameter`, std.err, z.vals) %>% 
-        na.omit()
-  })
-  model_pars2_val <- reactive({
-    set.seed(123456)
-    validate(need(input$choose_files_4_2, message = "Please select a quizz"))
-    if(exists("df_quiz")){
-      model <- pars2_model(df_quiz() %>% filter(quiz %in% input$choose_files_4_2))
-      validate(need(kappa(model$hessian)<input$cond_4_2, message = paste("The condition number is larger: ", kappa(model$hessian))))
-      model
-    }
-  })
-  output$pars2_model <- renderPlot({
-      input$newplot
-      plot(model_pars2_val(), type = c("ICC"))  
-  })
-  output$pars2_model2 <- renderPlot({
-      input$newplot
-      plot(model_pars2_val(), type = c("IIC"))
-  })
-  output$pars2_model_coef <- renderTable({
-      coef(summary(model_pars2_val())) %>% 
-        data.frame() %>% 
-        mutate(beta = row.names(.)) %>% 
-        as.tibble() %>% 
-        dplyr::rename(item= beta, `Parameter value` = value) %>% 
-        dplyr::select(item, `Parameter value`, std.err, z.vals) %>% 
-        na.omit()
-  })
-  model_pars3_val <- reactive({
-    set.seed(123456)
-    validate(need(input$choose_files_4_3, message = "Please select a quizz"))
-    if(exists("df_quiz")){
-      model <- pars3_model(df_quiz() %>% filter(quiz %in% input$choose_files_4_3))
-      validate(need(kappa(model$hessian)<input$cond_4_3, message = paste("The condition number is larger: ", kappa(model$hessian))))
-      model
-    }
-  })
-  output$pars3_model <- renderPlot({
-      input$newplot
-      plot(model_pars3_val(), type = c("ICC"))
-  })
-  output$pars3_model2 <- renderPlot({
-      input$newplot
-      plot(model_pars3_val(), type = c("IIC"))
-  })
-  output$pars3_model_coef <- renderTable({
-      coef(summary(model_pars3_val())) %>% 
-        data.frame() %>% 
-        mutate(beta = row.names(.)) %>% 
-        as.tibble() %>% 
-        dplyr::rename(item= beta, `Parameter value` = value) %>% 
-        dplyr::select(item, `Parameter value`, std.err, z.vals) %>% 
-        na.omit()
-  })
+  
 # s5 IRT-NO-disc ------------------------------------------------------------------
   output$plot_jointICC <- renderPlot({
     validate(need(input$choose_files_5_1, message = "Please select a quizz"))
@@ -984,28 +843,16 @@ server <- function(input, output) {
     validate(need(input$choose_files_6_3, message = "Please select a quizz"))
     if(exists("df_quiz")){
       input$newplot
-      plot_group(df_quiz() %>% filter(quiz %in% input$choose_files_6_3), input$email_filtered)
+      if(exists("df_finalexam")){
+        plot_group(df_quiz() %>% filter(quiz %in% input$choose_files_6_3), input$email_filtered, 
+                   df_exam = df_finalexam())  
+      }else{
+        plot_group(df_quiz() %>% filter(quiz %in% input$choose_files_6_3), input$email_filtered)
+      }
     }
   })
+  
 # s-final ------------------------------------------------------------------
-  output$choose_files_4_1 <- renderUI({
-    validate(need((df_quiz()$quiz %>% unique)[1], "Introduce a quiz datafile"))
-    radioButtons("choose_files_4_1", "Choose files", 
-                         choices  = c(df_quiz()$quiz %>% unique),
-                         selected = c(df_quiz()$quiz %>% unique)[1])
-  })
-  output$choose_files_4_2 <- renderUI({
-    validate(need((df_quiz()$quiz %>% unique)[1], "Introduce a quiz datafile"))
-    radioButtons("choose_files_4_2", "Choose files", 
-                       choices  = c(df_quiz()$quiz %>% unique),
-                       selected = c(df_quiz()$quiz %>% unique)[1])
-  })
-  output$choose_files_4_3 <- renderUI({
-    validate(need((df_quiz()$quiz %>% unique)[1], "Introduce a quiz datafile"))
-    radioButtons("choose_files_4_3", "Choose files", 
-                       choices  = c(df_quiz()$quiz %>% unique),
-                       selected = c(df_quiz()$quiz %>% unique)[1])
-  })
   output$choose_files_5_1 <- renderUI({
     validate(need((df_quiz()$quiz %>% unique)[1], "Introduce a quiz datafile"))
     radioButtons("choose_files_5_1", "Choose files", 
