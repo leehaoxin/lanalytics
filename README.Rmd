@@ -64,21 +64,17 @@ Also, different quiz objects can be joined together to create a __course object_
 To use the dashboard, the shiny and shinydashboard should be loaded:
 
 ```{r, eval = FALSE}
-library(ggvis)
 library(shiny)
 library(shinydashboard)
 ```
 
-To take full advantage of the functions in the package, the Shiny Dashboard can be deploy in three ways:
+To take full advantage of the functions in the package, the Shiny Dashboard can be deploy in two ways:
 
 ```{r, eval = FALSE}
-# First way: Run from the shinyApps webpage:
-https://salvadorgarcia.shinyapps.io/shinyapp/
-
-# Second way: Run Shiny Dashboard from Github
+# First way: Run Shiny Dashboard from Github
 shiny::runGitHub(repo = "savrgg/lanalytics", subdir = "shinyapp/app.R")
 
-# Third way: Clone the repository and run locally
+# Second way: Clone the repository and run locally
 shiny::runApp("shinyapp/app.R")
 ```
 

@@ -16,7 +16,6 @@ Imports:
   Hmisc,
   lubridate,
   knitr,
-  openssl,
   random, 
   RColorBrewer,
   roxygen2,
@@ -24,9 +23,9 @@ Imports:
   stringr,
   tidyverse,
   eRm,
-  ltm,
   ggrepel
-Suggests: testthat,
+Suggests: 
+  testthat,
   shiny,
   shinydashboard
 RoxygenNote: 6.0.1

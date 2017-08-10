@@ -56,7 +56,6 @@ Getting started with the shiny dashboard
 To use the dashboard, the shiny and shinydashboard should be loaded:
 
 ``` r
-library(ggvis)
 library(shiny)
 library(shinydashboard)
 ```
