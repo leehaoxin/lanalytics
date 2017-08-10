@@ -1,6 +1,7 @@
 .Rproj.user
 .Rhistory
 .RData
+.Rbuildignore
 .Ruserdata
 inst/doc
 .httr-oauth
@@ -8,4 +9,10 @@ inst/doc
 man/.Rapp.history
 .DS_Store
 data/
-datasets/
+datasets/Dataset1/
+datasets/Dataset2/
+datasets/Comparison_of_cognitive_level_2013-2014.xlsx
+datasets/Quiz data-20170712T030018Z-001.zip
+datasets/Quiz2013-14_cognitive level_HB.csv
+datasets/Quiz2013-14_cognitive level_HB.xlsx
+

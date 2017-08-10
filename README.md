@@ -18,10 +18,9 @@ Installation
 # The lanalytics package is based in the tidyverse, so it is necesary to install this package:
 install.packages("tidyverse")
 
-# Also, if the Shiny Dashboard wants to be used, the shiny and ggviz packages should be installed:
+# Also, if the Shiny Dashboard wants to be used, the shiny package should be installed:
 install.packages("shiny")
 install.packages("shinydashboard")
-install.packages("ggviz")
 
 # Finally, the lanalytics package can be installed from Github (using devtools library):
 install.packages("devtools")
@@ -60,16 +59,13 @@ library(shiny)
 library(shinydashboard)
 ```
 
-To take full advantage of the functions in the package, the Shiny Dashboard can be deploy in three ways:
+To take full advantage of the functions in the package, the Shiny Dashboard can be deploy in two ways:
 
 ``` r
-# First way: Run from the shinyApps webpage:
-https://salvadorgarcia.shinyapps.io/shinyapp/
-
-# Second way: Run Shiny Dashboard from Github
+# First way: Run Shiny Dashboard from Github
 shiny::runGitHub(repo = "savrgg/lanalytics", subdir = "shinyapp/app.R")
 
-# Third way: Clone the repository and run locally
+# Second way: Clone the repository and run locally
 shiny::runApp("shinyapp/app.R")
 ```
 

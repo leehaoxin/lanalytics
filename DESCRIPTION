@@ -6,7 +6,7 @@ Authors@R: c(person("Melanie", "Stefan", email = "melanie_test@gmail.com", role 
              person("Dragan", "Gasevic", email = "dragan_test@gmail.com", role = c("aut")),
              person("Salvador", "Garcia", email = "savrgg@gmail.com", role = c("aut", "cre")))
 Maintainer: Salvador Garcia <savrgg@gmail.com>
-Description: Description: The description of the package will go here...
+Description: The lanalytics package provides tools to ease the analysis and visualization of online quizzes at three different levels: per quiz, per person and per course.
 License: This package is under the license GPL-2
 Encoding: UTF-8
 LazyData: true

@@ -12,7 +12,7 @@
 #' @examples
 #' file_to_read <- "../../datasets/sample_dataset/Q01.csv"
 #' quiz_object <- read_lc(file_to_read)
-#' quiz_object <- add_times(file_to_read)
+#' quiz_object <- add_times(quiz_object)
 #' @export
 add_times <- function(course){
   course <- course %>% 

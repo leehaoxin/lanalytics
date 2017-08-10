@@ -11,6 +11,7 @@
 #' @examples
 #' file_to_read <- "../../datasets/sample_dataset/Q01.csv"
 #' quiz_object <- read_lc(file_to_read)
+#' quiz_object %>% head
 #' @export
 read_lc <- function(file){
   quiz_sheet <- readr::read_csv(file) %>% 

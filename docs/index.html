@@ -74,10 +74,9 @@
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># The lanalytics package is based in the tidyverse, so it is necesary to install this package:</span>
 <span class="kw">install.packages</span>(<span class="st">"tidyverse"</span>)
 
-<span class="co"># Also, if the Shiny Dashboard wants to be used, the shiny and ggviz packages should be installed:</span>
+<span class="co"># Also, if the Shiny Dashboard wants to be used, the shiny package should be installed:</span>
 <span class="kw">install.packages</span>(<span class="st">"shiny"</span>)
 <span class="kw">install.packages</span>(<span class="st">"shinydashboard"</span>)
-<span class="kw">install.packages</span>(<span class="st">"ggviz"</span>)
 
 <span class="co"># Finally, the lanalytics package can be installed from Github (using devtools library):</span>
 <span class="kw">install.packages</span>(<span class="st">"devtools"</span>)
@@ -98,17 +97,13 @@ devtools<span class="op">::</span><span class="kw"><a href="http://www.rdocument
 <h2 class="hasAnchor">
 <a href="#getting-started-with-the-shiny-dashboard" class="anchor"></a>Getting started with the shiny dashboard</h2>
 <p>To use the dashboard, the shiny and shinydashboard should be loaded:</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(ggvis)
-<span class="kw">library</span>(shiny)
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(shiny)
 <span class="kw">library</span>(shinydashboard)</code></pre></div>
-<p>To take full advantage of the functions in the package, the Shiny Dashboard can be deploy in three ways:</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># First way: Run from the shinyApps webpage:</span>
-https<span class="op">:</span><span class="er">//</span>salvadorgarcia.shinyapps.io<span class="op">/</span>shinyapp<span class="op">/</span>
-
-<span class="co"># Second way: Run Shiny Dashboard from Github</span>
+<p>To take full advantage of the functions in the package, the Shiny Dashboard can be deploy in two ways:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># First way: Run Shiny Dashboard from Github</span>
 shiny<span class="op">::</span><span class="kw"><a href="http://www.rdocumentation.org/packages/shiny/topics/runUrl">runGitHub</a></span>(<span class="dt">repo =</span> <span class="st">"savrgg/lanalytics"</span>, <span class="dt">subdir =</span> <span class="st">"shinyapp/app.R"</span>)
 
-<span class="co"># Third way: Clone the repository and run locally</span>
+<span class="co"># Second way: Clone the repository and run locally</span>
 shiny<span class="op">::</span><span class="kw"><a href="http://www.rdocumentation.org/packages/shiny/topics/runApp">runApp</a></span>(<span class="st">"shinyapp/app.R"</span>)</code></pre></div>
 <!-- #  -->
 <!-- # At per quiz level,  -->

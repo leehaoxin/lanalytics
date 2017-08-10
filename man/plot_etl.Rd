@@ -4,8 +4,8 @@
 \alias{plot_etl}
 \title{Easiness-time-level plot.}
 \usage{
-plot_etl(quiz_object, challengeLevel, item = "MCM.2014.item",
-  rating = "Rating.HB")
+plot_etl(quiz_object, challengeLevel, item = "item",
+  rating = "cognitive_level")
 }
 \arguments{
 \item{challengeLevel}{file of challengue level}

@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Easiness-time-cognitive level plot. — plot_etl • lanalytics</title>
+<title>Easiness-time-level plot. — plot_etl • lanalytics</title>
 
 <!-- jquery -->
 <script src="https://code.jquery.com/jquery-3.1.0.min.js" integrity="sha384-nrOSfDHtoPMzJHjVTdCopGqIqeYETSXhZDFyniQ8ZHcVy08QesyHcnOUpMpqnmWq" crossorigin="anonymous"></script>
@@ -75,14 +75,15 @@
       <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Easiness-time-cognitive level plot.</h1>
+    <h1>Easiness-time-level plot.</h1>
     </div>
 
     
     <p>This function computes a graph displaying the guessers plot for each quiz.</p>
     
 
-    <pre class="usage"><span class='fu'>plot_etl</span>(<span class='no'>quiz_object</span>, <span class='no'>challengeLevel</span>)</pre>
+    <pre class="usage"><span class='fu'>plot_etl</span>(<span class='no'>quiz_object</span>, <span class='no'>challengeLevel</span>, <span class='kw'>item</span> <span class='kw'>=</span> <span class='st'>"item"</span>,
+  <span class='kw'>rating</span> <span class='kw'>=</span> <span class='st'>"cognitive_level"</span>)</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a> Arguments</h2>
     <table class="ref-arguments">
@@ -103,42 +104,29 @@
     
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='no'>file_to_read</span> <span class='kw'>&lt;-</span> <span class='st'>"../../datasets/Dataset1/Quiz3_session12098.csv"</span>
-<span class='no'>file_cognitivelevel</span> <span class='kw'>&lt;-</span> <span class='st'>"../../datasets/Quiz2013-14_cognitive level_HB.csv"</span>
+    <pre class="examples"><div class='input'><span class='no'>file_to_read</span> <span class='kw'>&lt;-</span> <span class='st'>"../../datasets/sample_dataset/Q01.csv"</span>
+<span class='no'>file_cognitivelevel</span> <span class='kw'>&lt;-</span> <span class='st'>"../../datasets/sample_dataset/cognitive_file.csv"</span>
 <span class='no'>quiz_object</span> <span class='kw'>&lt;-</span> <span class='fu'>read_lc</span>(<span class='no'>file_to_read</span>)</div><div class='output co'>#&gt; <span class='message'>Parsed with column specification:</span>
 #&gt; <span class='message'>cols(</span>
-#&gt; <span class='message'>  .default = col_integer(),</span>
-#&gt; <span class='message'>  `Email address` = col_character(),</span>
-#&gt; <span class='message'>  `student ID` = col_character(),</span>
-#&gt; <span class='message'>  `Last name` = col_character(),</span>
-#&gt; <span class='message'>  `First name` = col_character(),</span>
-#&gt; <span class='message'>  `Question 2 (round 1) response` = col_character(),</span>
-#&gt; <span class='message'>  `Question 3 (round 1) response` = col_character(),</span>
-#&gt; <span class='message'>  `Question 11 (round 1) response` = col_character(),</span>
-#&gt; <span class='message'>  `Question 2 (round 1) score` = col_character(),</span>
-#&gt; <span class='message'>  `Question 1 (round 1) responded at` = col_character(),</span>
-#&gt; <span class='message'>  `Question 2 (round 1) responded at` = col_character(),</span>
-#&gt; <span class='message'>  `Question 3 (round 1) responded at` = col_character(),</span>
-#&gt; <span class='message'>  `Question 4 (round 1) responded at` = col_character(),</span>
-#&gt; <span class='message'>  `Question 5 (round 1) responded at` = col_character(),</span>
-#&gt; <span class='message'>  `Question 6 (round 1) responded at` = col_character(),</span>
-#&gt; <span class='message'>  `Question 7 (round 1) responded at` = col_character(),</span>
-#&gt; <span class='message'>  `Question 8 (round 1) responded at` = col_character(),</span>
-#&gt; <span class='message'>  `Question 9 (round 1) responded at` = col_character(),</span>
-#&gt; <span class='message'>  `Question 10 (round 1) responded at` = col_character(),</span>
-#&gt; <span class='message'>  `Question 11 (round 1) responded at` = col_character(),</span>
-#&gt; <span class='message'>  `Question 12 (round 1) responded at` = col_character()</span>
-#&gt; <span class='message'>  # ... with 2 more columns</span>
-#&gt; <span class='message'>)</span></div><div class='output co'>#&gt; <span class='message'>See spec(...) for full column specifications.</span></div><div class='output co'>#&gt; <span class='message'>Joining, by = c("email address", "question")</span></div><div class='input'><span class='no'>cognitive_level</span> <span class='kw'>&lt;-</span> <span class='fu'>data.frame</span>(<span class='fu'>read_csv</span>(<span class='no'>file_cognitivelevel</span>))</div><div class='output co'>#&gt; <span class='warning'>Warning: Missing column names filled in: 'X6' [6]</span></div><div class='output co'>#&gt; <span class='warning'>Warning: Duplicated column names deduplicated: 'Type' =&gt; 'Type_1' [4]</span></div><div class='output co'>#&gt; <span class='message'>Parsed with column specification:</span>
+#&gt; <span class='message'>  .default = col_datetime(),</span>
+#&gt; <span class='message'>  `email address` = col_character(),</span>
+#&gt; <span class='message'>  `item01 score` = col_integer(),</span>
+#&gt; <span class='message'>  `item02 score` = col_integer(),</span>
+#&gt; <span class='message'>  `item03 score` = col_integer(),</span>
+#&gt; <span class='message'>  `item04 score` = col_integer(),</span>
+#&gt; <span class='message'>  `item05 score` = col_integer(),</span>
+#&gt; <span class='message'>  `item06 score` = col_integer(),</span>
+#&gt; <span class='message'>  `item07 score` = col_integer(),</span>
+#&gt; <span class='message'>  `item08 score` = col_integer(),</span>
+#&gt; <span class='message'>  `item09 score` = col_integer(),</span>
+#&gt; <span class='message'>  `item10 score` = col_integer(),</span>
+#&gt; <span class='message'>  `item11 score` = col_integer()</span>
+#&gt; <span class='message'>)</span></div><div class='output co'>#&gt; <span class='message'>See spec(...) for full column specifications.</span></div><div class='output co'>#&gt; <span class='message'>Joining, by = c("email address", "question")</span></div><div class='input'><span class='no'>cognitive_level</span> <span class='kw'>&lt;-</span> <span class='fu'>data.frame</span>(<span class='fu'>read_csv</span>(<span class='no'>file_cognitivelevel</span>))</div><div class='output co'>#&gt; <span class='message'>Parsed with column specification:</span>
 #&gt; <span class='message'>cols(</span>
-#&gt; <span class='message'>  `Question ID 2013` = col_character(),</span>
-#&gt; <span class='message'>  Type = col_character(),</span>
-#&gt; <span class='message'>  `MCM 2014 item` = col_character(),</span>
-#&gt; <span class='message'>  Type_1 = col_character(),</span>
-#&gt; <span class='message'>  `Rating HB` = col_integer(),</span>
-#&gt; <span class='message'>  X6 = col_character()</span>
-#&gt; <span class='message'>)</span></div><div class='input'><span class='no'>quiz_object</span> <span class='kw'>&lt;-</span> <span class='fu'>add_times</span>(<span class='no'>quiz_object</span>)
-<span class='fu'>plot_etl</span>(<span class='no'>quiz_object</span>, <span class='no'>cognitive_level</span>)</div><div class='output co'>#&gt; <span class='message'>Adding missing grouping variables: `quiz`</span></div><div class='output co'>#&gt; <span class='message'>Joining, by = "question_id"</span></div><div class='img'><img src='plot_etl-5.png' alt='' width='700' height='432.632880098887' /></div></pre>
+#&gt; <span class='message'>  item = col_character(),</span>
+#&gt; <span class='message'>  cognitive_level = col_integer()</span>
+#&gt; <span class='message'>)</span></div><div class='input'><span class='no'>quiz_object</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='add_times.html'>add_times</a></span>(<span class='no'>quiz_object</span>)
+<span class='fu'>plot_etl</span>(<span class='no'>quiz_object</span>, <span class='no'>cognitive_level</span>)</div><div class='output co'>#&gt; <span class='message'>Adding missing grouping variables: `quiz`</span></div><div class='output co'>#&gt; <span class='message'>Joining, by = "question_id"</span></div><div class='output co'>#&gt; <span class='message'>Joining, by = "rating"</span></div><div class='img'><img src='plot_etl-5.png' alt='' width='700' height='432.632880098887' /></div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>

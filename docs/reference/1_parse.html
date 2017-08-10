@@ -112,15 +112,18 @@
 #&gt; <span class='message'>  `Question 11 (round 1) responded at` = col_character(),</span>
 #&gt; <span class='message'>  `Question 12 (round 1) responded at` = col_character()</span>
 #&gt; <span class='message'>  # ... with 2 more columns</span>
-#&gt; <span class='message'>)</span></div><div class='output co'>#&gt; <span class='message'>See spec(...) for full column specifications.</span></div><div class='output co'>#&gt; <span class='message'>Joining, by = c("email address", "question")</span></div><div class='output co'>#&gt; # A tibble: 6 x 5
-#&gt;      `email address` question      `responded at` score
-#&gt;                &lt;chr&gt;    &lt;chr&gt;              &lt;dttm&gt; &lt;chr&gt;
-#&gt; 1       Adam@mail.tp        1 2009-09-02 19:26:00     1
-#&gt; 2 AdoraBelle@mail.tp        1 2009-09-03 14:52:00     1
-#&gt; 3     Adrian@mail.tp        1 2009-09-03 13:41:00     1
-#&gt; 4      Agnes@mail.tp        1 2009-09-03 11:17:00     1
-#&gt; 5         Al@mail.tp        1 2009-09-03 16:53:00     1
-#&gt; 6     Albert@mail.tp        1 2009-09-03 20:58:00     1
+#&gt; <span class='message'>)</span></div><div class='output co'>#&gt; <span class='message'>See spec(...) for full column specifications.</span></div><div class='output co'>#&gt; <span class='message'>Joining, by = c("email address", "question")</span></div><div class='output co'>#&gt; <span class='warning'>Warning: 17984 parsing failures.</span>
+#&gt; <span class='warning'>row # A tibble: 5 x 4 col     row   col   expected           actual expected   &lt;int&gt; &lt;int&gt;      &lt;chr&gt;            &lt;chr&gt; actual 1     1    NA date like  02/09/2009 19:26 row 2     2    NA date like  02/09/2009 19:26 col 3     3    NA date like  02/09/2009 19:26 expected 4     4    NA date like  02/09/2009 19:26 actual 5     5    NA date like  02/09/2009 19:26</span>
+#&gt; <span class='warning'>... ................. ... ......................................... ........ ......................................... ...... ......................................... ... ......................................... ... ......................................... ........ ......................................... ...... .........................................</span>
+#&gt; <span class='warning'>See problems(...) for more details.</span></div><div class='output co'>#&gt; # A tibble: 6 x 5
+#&gt;   `email address` question `responded at` score
+#&gt;             &lt;chr&gt;    &lt;chr&gt;         &lt;dttm&gt; &lt;int&gt;
+#&gt; 1    Adam@mail.tp     &lt;NA&gt;             NA     1
+#&gt; 2    Adam@mail.tp     &lt;NA&gt;             NA     0
+#&gt; 3    Adam@mail.tp     &lt;NA&gt;             NA     1
+#&gt; 4    Adam@mail.tp     &lt;NA&gt;             NA     1
+#&gt; 5    Adam@mail.tp     &lt;NA&gt;             NA     1
+#&gt; 6    Adam@mail.tp     &lt;NA&gt;             NA     1
 #&gt; # ... with 1 more variables: quiz &lt;chr&gt;</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">

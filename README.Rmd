@@ -26,10 +26,9 @@ The lanalytics package provides tools to ease the analysis and visualization of 
 # The lanalytics package is based in the tidyverse, so it is necesary to install this package:
 install.packages("tidyverse")
 
-# Also, if the Shiny Dashboard wants to be used, the shiny and ggviz packages should be installed:
+# Also, if the Shiny Dashboard wants to be used, the shiny package should be installed:
 install.packages("shiny")
 install.packages("shinydashboard")
-install.packages("ggviz")
 
 # Finally, the lanalytics package can be installed from Github (using devtools library):
 install.packages("devtools")

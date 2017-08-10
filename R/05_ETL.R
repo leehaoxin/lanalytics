@@ -15,7 +15,7 @@
 #' quiz_object <- add_times(quiz_object)
 #' plot_etl(quiz_object, cognitive_level)
 #' @export
-plot_etl <- function(quiz_object, challengeLevel, item = "MCM.2014.item", rating = "Rating.HB"){
+plot_etl <- function(quiz_object, challengeLevel, item = "item", rating = "cognitive_level"){
   homo_quiz_object <- quiz_object %>% 
     dplyr::mutate(score = as.numeric(score)) %>% 
     dplyr::group_by(quiz, question) %>% 
