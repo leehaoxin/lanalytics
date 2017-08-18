@@ -27,6 +27,6 @@ plot_easiness_time <- function(quiz_object){
     ggplot2::geom_smooth(method = "lm") +
     ggrepel::geom_label_repel() +
     labs(y = "Average score per item (max score = 100)", 
-         x = "Average time taken to answer each item (in seconds)") +
+         x = "Median of taken time to answer each item (in seconds)") +
     facet_wrap(~quiz, ncol = 1)
 }

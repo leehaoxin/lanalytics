@@ -23,7 +23,7 @@ plot_etl <- function(quiz_object, challengeLevel, item = "item", rating = "cogni
                      `mean time` = median(`time per question`, na.rm = T)) %>%
     dplyr::filter(`mean score` > 0, 
                   `mean time` < 600) %>% 
-    dplyr::mutate(question_id = paste0("Q4_", "q", question)) %>% 
+    dplyr::mutate(question_id = paste0("Q1_", "q", question)) %>% 
     dplyr::select(question_id, `mean time`, `mean score`)
   
   homo_challenge_level <- challengeLevel %>% 
@@ -48,7 +48,7 @@ plot_etl <- function(quiz_object, challengeLevel, item = "item", rating = "cogni
     ggplot2::geom_point() +
     ggrepel::geom_label_repel() +
     labs(y = "Average score per item (max score = 100)",
-         x = "Average time taken to answer each item (in seconds)",
+         x = "Median of taken time to answer each item (in seconds)",
          color = "Cognitive level") +
     facet_wrap(~quiz, ncol = 1)
 }

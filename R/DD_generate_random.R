@@ -5,7 +5,7 @@
 #      et <- as.POSIXct(as.Date(et))
 #      dt <- as.numeric(difftime(et,st,unit="sec"))
 #      ev <- sort(runif(N, 0, dt))
-#      rt <- st + ev 
+#      rt <- st + ev
 #      rt
 # }
 # 
@@ -32,13 +32,13 @@
 #         sample(digits, 4, replace = TRUE),
 #         sample(LETTERS, 1, replace = TRUE))
 #   return(paste0(paste0(v, collapse = ""), "@gmail.com"))
-# }  
+# }
 # 
 # rand_names <- sapply(1:100, createRandString)
 # 
 # 
 # lapply(1:12, function(x){
-#   xx <- tibble(`email address` = rand_names) %>% 
+#   xx <- tibble(`email address` = rand_names) %>%
 #     mutate(`item01 score`= c(as.numeric(rbernoulli(33, .63)),
 #                              as.numeric(rbernoulli(33, .73)),
 #                              as.numeric(rbernoulli(34, .83))),
@@ -74,25 +74,25 @@
 #                              as.numeric(rbernoulli(34, .70))),
 #            `item01 responded at`= xx <- dates[[x]] +
 #              as.numeric(rnorm(100, mean = 20, sd = 4)),
-#            `item02 responded at` = `item01 responded at` + 
+#            `item02 responded at` = `item01 responded at` +
 #              as.numeric(rnorm(100, mean = 10, sd = 4)),
-#            `item03 responded at` = `item02 responded at` + 
+#            `item03 responded at` = `item02 responded at` +
 #              as.numeric(rnorm(100, mean = 15, sd = 4)),
-#            `item04 responded at` = `item03 responded at` + 
+#            `item04 responded at` = `item03 responded at` +
 #              as.numeric(rnorm(100, mean = 20, sd = 4)),
-#            `item05 responded at` = `item04 responded at` + 
+#            `item05 responded at` = `item04 responded at` +
 #              as.numeric(rnorm(100, mean = 20, sd = 4)),
-#            `item06 responded at` = `item05 responded at` + 
+#            `item06 responded at` = `item05 responded at` +
 #              as.numeric(rnorm(100, mean = 45, sd = 4)),
-#            `item07 responded at` = `item06 responded at` + 
+#            `item07 responded at` = `item06 responded at` +
 #              as.numeric(rnorm(100, mean = 50, sd = 4)),
-#            `item08 responded at` = `item07 responded at` + 
+#            `item08 responded at` = `item07 responded at` +
 #              as.numeric(rnorm(100, mean = 50, sd = 4)),
-#            `item09 responded at` = `item08 responded at` + 
+#            `item09 responded at` = `item08 responded at` +
 #              as.numeric(rnorm(100, mean = 50, sd = 4)),
-#            `item10 responded at` = `item09 responded at` + 
+#            `item10 responded at` = `item09 responded at` +
 #              as.numeric(rnorm(100, mean = 50, sd = 4)),
-#            `item11 responded at` = `item10 responded at` + 
+#            `item11 responded at` = `item10 responded at` +
 #              as.numeric(rnorm(100, mean = 50, sd = 4))
 #     )
 #   write_csv(xx, paste0("datasets/sample_dataset/", files[[x]],".csv"))
@@ -104,7 +104,7 @@
 # # 1: 10, 5, 6
 # # 2: 2, 3, 4, 8
 # # 3: 7, 9, 11, 1
-# xx <- data.frame(item = paste0(rep(paste0("Q", 1:11, "_"), each = 11), rep(paste0("q", 1:11), 11)), 
+# xx <- data.frame(item = paste0(rep(paste0("Q", 1:11, "_"), each = 11), rep(paste0("q", 1:11), 11)),
 #            cognitive_level = c(3,2,2,2,1,1,3,2,3,1,3))
 # 
 # write_csv(xx, paste0("datasets/sample_dataset/cognitive_file.csv"))
@@ -118,10 +118,10 @@
 #   }
 #   )
 # 
-# xx <- bind_rows(xx) %>% 
-#   dplyr::select(contains("score"), `email address`) %>% 
-#   gather(variable, value, -`email address`) %>% 
-#   group_by(`email address`) %>% 
+# xx <- bind_rows(xx) %>%
+#   dplyr::select(contains("score"), `email address`) %>%
+#   gather(variable, value, -`email address`) %>%
+#   group_by(`email address`) %>%
 #   dplyr::summarise(`final exam` = mean(value)*100+3)
 # 
 # write_csv(xx, paste0("datasets/sample_dataset/finalexam_file.csv"))

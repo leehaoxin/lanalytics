@@ -482,7 +482,8 @@ body <- dashboardBody(
     tabItem(tabName = "5_1_irt",
             fluidRow(
               br(),
-              titlePanel(strong("1 PL")),
+              titlePanel(strong("Rasch model - Item Characteristic Curve")),
+              p(),
               box(title = "Select quizzes to analize:", status = "info", width = 12,
                   collapsible = TRUE,
                   uiOutput("choose_files_5_1")
@@ -490,7 +491,12 @@ body <- dashboardBody(
             ),
             fluidRow(
               br(),
-              p("This plot is the Item Characteristic Curve (ICC), that "),
+              p("In the Rasch model, two sets of parameters are calculated, 
+                the first set contains one parameter per student and can be explained as the student ability, 
+                the second set contains one parameter per item and can be explained as the item difficulty.
+                In the ICC plot, a general ability `latent trait` is inferred and is plotted versus the probability of getting correct one item. This is useful for the instructors because
+                they can assess the item difficulty in terms of the student's abilities. Each curve in the following
+                plot represent one item"),
               box(title = "Rasch model", status = "primary", width = 12,
                   collapsible = TRUE,
                   plotOutput("plot_jointICC")
@@ -500,7 +506,12 @@ body <- dashboardBody(
     tabItem(tabName = "5_2_irt",
             fluidRow(
               br(),
-              titlePanel(strong("1 PL")),
+              titlePanel(strong("Rasch model - Person Item map")),
+              p("In this plot the histogram of the values of the estimated person parameters is 
+                displayed in the top of the plot. Also, the values of the item parameters are displayed
+                in the bottom part of the plot. This plot is useful because the instructor can assess
+                which items were too easy compared to the student's abilities and then they can try to
+                use this information to manage the difficulty of the next quizzes."),
               box(title = "Select quizzes to analize:", status = "info", width = 10,
                   collapsible = TRUE,
                   uiOutput("choose_files_5_2")
@@ -516,7 +527,10 @@ body <- dashboardBody(
     tabItem(tabName = "5_3_irt",
             fluidRow(
               br(),
-              titlePanel(strong("1 PL")),
+              titlePanel(strong("Rasch model - Person parameter map")),
+              p("In this plot the relationship for the person parameter with the raw score 
+                  (the total number of correct answers per student) is displayed. This way, we can
+                see that a monotone relationship is desired. (a bigger ability should be related to a larger raw score)"),
               box(title = "Select quizzes to analize:", status = "info", width = 10,
                   collapsible = TRUE,
                   uiOutput("choose_files_5_3")
