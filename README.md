@@ -1,6 +1,6 @@
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
-**For explanation of the functions: https://savrgg.github.io/lanalytics/**
+**This project is currently under development**
 ===============================================
 
 lanalytics
@@ -9,7 +9,7 @@ lanalytics
 Overview
 --------
 
-The lanalytics package provides tools to ease the analysis and visualization of online quizzes at three different levels: per quiz, per person and per course. Currently, the package can process the quizzes from csv files with the specified format and Rdata files. If the quizzes data is from any other software, it is necessary to wrangle the dataset in the specified input format. In addition to the package, a [shiny dashboard](https://rstudio.github.io/shinydashboard/) was to visualize the plots with [ggviz](http://ggvis.rstudio.com/). (in future developtment)
+The lanalytics package provides tools to ease the analysis and visualization of online quizzes at three different levels: per quiz, per person and per course. Currently, the package can process the quizzes from csv files of two different sources **Google Forms** and **Learning Catalytics**. If the quizzes data is from any other software, is necessary to wrangle the dataset in the specified input format. In addition to the package, a [shiny dashboard](https://rstudio.github.io/shinydashboard/) was to visualize the plots with [ggviz](http://ggvis.rstudio.com/). (in progress)
 
 Installation
 ------------
@@ -18,30 +18,55 @@ Installation
 # The lanalytics package is based in the tidyverse, so it is necesary to install this package:
 install.packages("tidyverse")
 
-# Also, if the Shiny Dashboard wants to be used, the following packages should be installed:
+# Also, if the Shiny Dashboard wants to be used, the shiny package should be installed:
 install.packages("shiny")
 install.packages("shinydashboard")
-install.packages("eRm")
-install.packages("ggrepel")
+
+# Finally, the lanalytics package can be installed from Github (using devtools library):
 install.packages("devtools")
-install.packages("data.table")
+devtools::install_github(repo = "savrgg/lanalytics")
+```
 
-# and loaded 
+Getting started with the package
+--------------------------------
 
+First of all, the tidyverse and lanalytics libraries should be loaded:
+
+``` r
+library(tidyverse)
+library(lanalytics)
+```
+
+For each file, the lanalytics package creates a **quiz object** with several properties and a special format (not yet):
+
+``` r
+# modify modify
+```
+
+Also, different quiz objects can be joined together to create a **course object** (not yet):
+
+``` r
+# modify modify
+```
+
+Getting started with the shiny dashboard
+----------------------------------------
+
+To use the dashboard, the shiny and shinydashboard should be loaded:
+
+``` r
 library(shiny)
 library(shinydashboard)
-library(eRm)
-library(ggrepel)
-library(devtools)
-library(data.table)
+```
 
-# Finally, the lanalytics dashboard can be run from Github (using devtools library):
+To take full advantage of the functions in the package, the Shiny Dashboard can be deploy in two ways:
 
+``` r
+# First way: Run Shiny Dashboard from Github
 shiny::runGitHub(repo = "savrgg/lanalytics", subdir = "shinyapp/app.R")
 
-You can use these created sample files:
-
-https://github.com/savrgg/lanalytics/tree/master/datasets/sample_dataset
+# Second way: Clone the repository and run locally
+shiny::runApp("shinyapp/app.R")
 ```
 
 <!-- #  -->
