@@ -55,9 +55,9 @@
     
 <div class="contents">
 <!-- README.md is generated from README.Rmd. Please edit that file -->
-<div id="this-project-is-currently-under-development" class="section level1">
+<div id="the-documentation-for-the-project-is-in-httpssavrgg-github-iolanalytics" class="section level1">
 <div class="page-header"><h1 class="hasAnchor">
-<a href="#this-project-is-currently-under-development" class="anchor"></a><strong>This project is currently under development</strong>
+<a href="#the-documentation-for-the-project-is-in-httpssavrgg-github-iolanalytics" class="anchor"></a>The documentation for the project is in: <a href="https://savrgg.github.io/lanalytics/" class="uri">https://savrgg.github.io/lanalytics/</a>
 </h1></div>
 </div>
 <div id="lanalytics" class="section level1">
@@ -66,7 +66,7 @@
 <div id="overview" class="section level2">
 <h2 class="hasAnchor">
 <a href="#overview" class="anchor"></a>Overview</h2>
-<p>The lanalytics package provides tools to ease the analysis and visualization of online quizzes at three different levels: per quiz, per person and per course. Currently, the package can process the quizzes from csv files of two different sources <strong>Google Forms</strong> and <strong>Learning Catalytics</strong>. If the quizzes data is from any other software, is necessary to wrangle the dataset in the specified input format. In addition to the package, a <a href="https://rstudio.github.io/shinydashboard/">shiny dashboard</a> was to visualize the plots with <a href="http://ggvis.rstudio.com/">ggviz</a>. (in progress)</p>
+
 </div>
 <div id="installation" class="section level2">
 <h2 class="hasAnchor">
@@ -74,37 +74,36 @@
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># The lanalytics package is based in the tidyverse, so it is necesary to install this package:</span>
 <span class="kw">install.packages</span>(<span class="st">"tidyverse"</span>)
 
-<span class="co"># Also, if the Shiny Dashboard wants to be used, the shiny package should be installed:</span>
+<span class="co"># Also, if the Shiny Dashboard wants to be used, the following packages should be installed:</span>
 <span class="kw">install.packages</span>(<span class="st">"shiny"</span>)
 <span class="kw">install.packages</span>(<span class="st">"shinydashboard"</span>)
-
-<span class="co"># Finally, the lanalytics package can be installed from Github (using devtools library):</span>
+<span class="kw">install.packages</span>(<span class="st">"eRm"</span>)
+<span class="kw">install.packages</span>(<span class="st">"ggrepel"</span>)
 <span class="kw">install.packages</span>(<span class="st">"devtools"</span>)
-devtools<span class="op">::</span><span class="kw"><a href="http://www.rdocumentation.org/packages/devtools/topics/install_github">install_github</a></span>(<span class="dt">repo =</span> <span class="st">"savrgg/lanalytics"</span>)</code></pre></div>
+<span class="kw">install.packages</span>(<span class="st">"stringr"</span>)
+<span class="kw">install.packages</span>(<span class="st">"devtools"</span>)
+<span class="kw">install.packages</span>(<span class="st">"data.table"</span>)
+
+and loaded
+
+<span class="kw">library</span>(shiny)
+<span class="kw">library</span>(shinydashboard)
+<span class="kw">library</span>(eRm)
+<span class="kw">library</span>(ggrepel)
+<span class="kw">library</span>(devtools)
+<span class="kw">library</span>(stringr)
+<span class="kw">library</span>(devtools)
+<span class="kw">library</span>(data.table)</code></pre></div>
 </div>
 <div id="getting-started-with-the-package" class="section level2">
 <h2 class="hasAnchor">
 <a href="#getting-started-with-the-package" class="anchor"></a>Getting started with the package</h2>
-<p>First of all, the tidyverse and lanalytics libraries should be loaded:</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(tidyverse)
-<span class="kw">library</span>(lanalytics)</code></pre></div>
-<p>For each file, the lanalytics package creates a <strong>quiz object</strong> with several properties and a special format (not yet):</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># modify modify</span></code></pre></div>
-<p>Also, different quiz objects can be joined together to create a <strong>course object</strong> (not yet):</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># modify modify</span></code></pre></div>
-</div>
-<div id="getting-started-with-the-shiny-dashboard" class="section level2">
-<h2 class="hasAnchor">
-<a href="#getting-started-with-the-shiny-dashboard" class="anchor"></a>Getting started with the shiny dashboard</h2>
-<p>To use the dashboard, the shiny and shinydashboard should be loaded:</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(shiny)
-<span class="kw">library</span>(shinydashboard)</code></pre></div>
-<p>To take full advantage of the functions in the package, the Shiny Dashboard can be deploy in two ways:</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># First way: Run Shiny Dashboard from Github</span>
-shiny<span class="op">::</span><span class="kw"><a href="http://www.rdocumentation.org/packages/shiny/topics/runUrl">runGitHub</a></span>(<span class="dt">repo =</span> <span class="st">"savrgg/lanalytics"</span>, <span class="dt">subdir =</span> <span class="st">"shinyapp/app.R"</span>)
+<p>To use the dashboard, the following command should be executed:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">shiny<span class="op">::</span><span class="kw"><a href="http://www.rdocumentation.org/packages/shiny/topics/runUrl">runGitHub</a></span>(<span class="dt">repo =</span> <span class="st">"savrgg/lanalytics"</span>, <span class="dt">subdir =</span> <span class="st">"shinyapp/app.R"</span>)
 
-<span class="co"># Second way: Clone the repository and run locally</span>
-shiny<span class="op">::</span><span class="kw"><a href="http://www.rdocumentation.org/packages/shiny/topics/runApp">runApp</a></span>(<span class="st">"shinyapp/app.R"</span>)</code></pre></div>
+also, the sample datasets can be used to test the package<span class="op">:</span>
+
+https<span class="op">:</span><span class="er">//</span>github.com<span class="op">/</span>savrgg<span class="op">/</span>lanalytics<span class="op">/</span>tree<span class="op">/</span>master<span class="op">/</span>datasets<span class="op">/</span>sample_dataset</code></pre></div>
 <!-- #  -->
 <!-- # At per quiz level,  -->
 <!-- #  -->
@@ -205,6 +204,11 @@ shiny<span class="op">::</span><span class="kw"><a href="http://www.rdocumentati
 <li>Melanie Stefan <br><small class="roles"> Author </small> </li>
 <li>Dragan Gasevic <br><small class="roles"> Author </small> </li>
 <li>Salvador Garcia <br><small class="roles"> Author, maintainer </small> </li>
+</ul>
+<h2>Dev status</h2>
+<ul class="list-unstyled">
+<li><a href="https://rstudio.github.io/shinydashboard/">shiny dashboard</a></li>
+<li><a href="http://ggvis.rstudio.com/">ggviz</a></li>
 </ul>
 </div>
 
