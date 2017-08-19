@@ -1,0 +1,92 @@
+\begin{thebibliography}{10}
+
+\bibitem{reuters}
+AP and REUTERS.
+\newblock Tesla working on ’improvements’ to its autopilot radar changes
+  after model s owner became the first selfdriving fatality.
+\newblock
+  \url{http://www.dailymail.co.uk/news/article-3693494/Tesla-working-autopilot-radar-changes-self-driving-fatality-men-watching-Harry-Potter-video.html},
+  2016.
+
+\bibitem{bishop1995neural}
+Christopher~M Bishop.
+\newblock {\em Neural networks for pattern recognition}.
+\newblock Oxford university press, 1995.
+
+\bibitem{bishop1997bayesian}
+Christopher~M Bishop.
+\newblock Bayesian neural networks.
+\newblock {\em Journal of the Brazilian Computer Society}, 4(1), 1997.
+
+\bibitem{bishop2006pattern}
+Christopher~M Bishop.
+\newblock Pattern recognition.
+\newblock {\em Machine Learning}, 128, 2006.
+
+\bibitem{buntine1991bayesian}
+Wray~L Buntine and Andreas~S Weigend.
+\newblock Bayesian back-propagation.
+\newblock {\em Complex systems}, 5(6):603--643, 1991.
+
+\bibitem{barber1998ensemble}
+Christopher~Bishop D.~Barber.
+\newblock Ensemble learning in bayesian neural networks.
+\newblock In {\em Generalization in Neural Networks and Machine Learning}, page
+  215–237. Springer Verlag, January 1998.
+
+\bibitem{draper1966applied}
+Norman~Richard Draper, Harry Smith, and Elizabeth Pownell.
+\newblock {\em Applied regression analysis}, volume~3.
+\newblock Wiley New York, 1966.
+
+\bibitem{gal2016uncertainty}
+Yarin Gal.
+\newblock {\em Uncertainty in Deep Learning}.
+\newblock PhD thesis, PhD thesis, University of Cambridge, 2016.
+
+\bibitem{gelman2014bayesian}
+Andrew Gelman, John~B Carlin, Hal~S Stern, and Donald~B Rubin.
+\newblock {\em Bayesian data analysis}, volume~2.
+\newblock Chapman \& Hall/CRC Boca Raton, FL, USA, 2014.
+
+\bibitem{graves2011practical}
+Alex Graves.
+\newblock Practical variational inference for neural networks.
+\newblock In {\em Advances in Neural Information Processing Systems}, pages
+  2348--2356, 2011.
+
+\bibitem{hinton1993keeping}
+Geoffrey~E Hinton and Drew Van~Camp.
+\newblock Keeping the neural networks simple by minimizing the description
+  length of the weights.
+\newblock In {\em Proceedings of the sixth annual conference on Computational
+  learning theory}, pages 5--13. ACM, 1993.
+
+\bibitem{lecun2010mnist}
+Yann LeCun, Corinna Cortes, and Christopher~JC Burges.
+\newblock Mnist handwritten digit database.
+\newblock {\em AT\&T Labs [Online]. Available: http://yann. lecun.
+  com/exdb/mnist}, 2010.
+
+\bibitem{mcculloch1943logical}
+Warren~S McCulloch and Walter Pitts.
+\newblock A logical calculus of the ideas immanent in nervous activity.
+\newblock {\em The bulletin of mathematical biophysics}, 5(4):115--133, 1943.
+
+\bibitem{neal2012bayesian}
+Radford~M Neal.
+\newblock {\em Bayesian learning for neural networks}, volume 118.
+\newblock Springer Science \& Business Media, 2012.
+
+\bibitem{nocedal2006numerical}
+Jorge Nocedal and Stephen Wright.
+\newblock {\em Numerical optimization}.
+\newblock Springer Science \& Business Media, 2006.
+
+\bibitem{salimans2015markov}
+Tim Salimans, Diederik~P Kingma, Max Welling, et~al.
+\newblock Markov chain monte carlo and variational inference: Bridging the gap.
+\newblock In {\em International Conference on Machine Learning}, pages
+  1218--1226, 2015.
+
+\end{thebibliography}

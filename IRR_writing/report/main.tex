@@ -1,0 +1,241 @@
+\documentclass{article}
+
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{amsmath}
+\usepackage{algorithm}
+\usepackage{url}
+\usepackage{fancyhdr}
+\usepackage{natbib}
+\usepackage{graphicx}
+\usepackage{csquotes}
+\usepackage{lastpage}
+\usepackage{hyperref}
+\usepackage{cleveref}
+\def\UrlBreaks{\do\/\do-}
+
+\pagestyle{fancy}
+\setlength{\parindent}{0em}
+\setlength{\parskip}{.5em}
+\renewcommand{\baselinestretch}{1.3}
+
+\fancyhf{}
+\chead{Salvador García - s1655274}
+\cfoot{Page \thepage \hspace{1pt} of \pageref{LastPage}}
+
+\title{Bayesian approach for Neural Networks.}
+\author{García, Salvador\\
+  \texttt{s1655274}}
+\date{January 2016}
+
+
+\begin{document}
+
+\maketitle
+\tableofcontents
+\bibliographystyle{plain}
+
+\newpage
+\begin{abstract}
+The concept of \textit{uncertainty} in statistics is an important topic that is covered widely in books and papers. However, in the machine learning literature, this uncertainty only is considered implicitly when the final model is selected, but it is neither reported nor measured. To give a solution to this problem, a Bayesian approach for Neural Networks will be given. The basic idea is to use a Gaussian prior distribution over each weight in the model, then the posterior distribution of the weights and the predictive distribution will be computed.
+
+As it is known, the Bayesian computations are not easy and specific methods are required for each problem. In this review, three general methodologies for estimate the Bayesian integrals will be considered: \textit{Variational Inference (VI)}, \textit{Laplace Approximation (LA)} and \textit{Markov Chain Monte Carlo (MCMC)}. After that, a novel approach will be introduced, this is based on the ideas of the VI methods, but some approximations will be made with MCMC. Then, two of these algorithms will be explained briefly \cite{gal2016uncertainty} \cite{salimans2015markov}. To test the models, examples with the public MNIST dataset and in deep reinforcement learning will be made; while, for the second one, the a Gaussian bivariate posterior distribution will be \cite{lecun2010mnist} will be used.
+\end{abstract}
+
+\newpage
+
+\section{Introduction}
+
+This review will be centered around the topic of Bayesian Neural Networks (BNNs) and in a recent approach to give a solution to its inherent computation problems, especially those that are a consequence of the Bayesian framework. As the first part of this introduction, a summary of empirical models in natural and social sciences will be given. Similarly, these models will be classified by with two approaches in the machine learning literature: statistical models and neural networks models. In the second part, the importance of uncertainty in the model selection stage will be explained, primordially with two different examples in the AI field. Also, an analysis of uncertainty under statistical and neural networks models will be given, indicating deficiencies on each of the methods. In the last part of this introduction, a solution to the uncertainty calculation in the context of neural networks will be proposed \cite{gal2016uncertainty} \cite{salimans2015markov} \cite{bishop2006pattern}.
+
+All the natural and social sciences rely on empirical stimulus acquired through different situations or phenomena. As a consequence, questions began to arise to understand and explain the relations and interactions in our world. As one way to give rational answers to the questions, a range of models is proposed in each field of study. These are different in functionalities, some of them just look for a good forecast; others, on the other hand, seek for explanation and causal relations. It is important to have a robust theory framework supporting each family of models and, also, to understand the intrinsic properties and advantages of each one of them deeply. This importance relies on the fact that many sciences like biology, chemistry, medicine, economics and politics use every day this theory to explain the phenomena corresponding to each field of study.
+
+The families of models are diverse, depending primarily on the area of study where they were created. For example, the ones that are born in the field of statistics are mainly based on measure theory, specifically in probability theory. Then, most of the family have a simple structure and can be easily interpretable, but relies heavily on assumptions of the data \cite{draper1966applied}. The fulfillment of the assumptions comes with a big reward: the calculus of uncertainty is straightforward. For example, in the case of the ordinary linear regression, it is assumed that the errors of the model are normally distributed, in addition to the correct model specification, the independence of the errors and the homoscedasticity of the errors. Then, the theoretical distribution of the response (associated with the uncertainty) can be described immediately \cite{draper1966applied}. If the assumptions are not accomplished, then the distribution of the response does not follow the theoretical one. Other examples of this statistical approach are the complete family of Generalized Linear Models (Logistic regression, Poisson regression and log-linear regression to mention some).
+
+On the other hand, models born in the field of computer science have, in general, better predictions, but with a complex structure that cannot be interpreted so quickly \cite{bishop1995neural} \footnote{With a mathematical and optimization basis \cite{mcculloch1943logical}}. A big problem treated in this review is that in these models the uncertainty is not modeled directly. A solution for the neural networks models is to place Gaussian prior distribution over each weight in the hidden layers. These networks, depending on the number of parameters on the distribution, receive different names. Neural networks with a finite number of parameters are called Bayesian Neural Networks \cite{bishop1997bayesian}. On the other hand, the ones that have infinite parameters and Gaussian prior distributions can be approximated through Gaussian processes [\cite{neal2012bayesian}] \footnote{In practice, just is modeled a network with a large number of parameters}. 
+
+Now, given the families of alternative families of models, how to select the best model that considers the uncertainty? Typically, a model is preferred because of its accuracy \footnote{this accuracy can be measured with different metrics, represented by a loss function or a reward function, like the quadratic loss or the 0-1 loss}. For example, it is common that a classification model is preferred over another if it classifies more items correctly. However, the precision of the model is not considered. This precision is what is called \textit{Uncertainty} and two example will be given to remark the important of calculating it. It is critical to mention that, if an approach of train-test-validation sets is used, then the uncertainty of the prediction is considered to select the best model, but it does not directly calculate how \textit{certain} is the given solution. Methods to calculate precise estimates are the main topic in this review.
+
+The importance of uncertainty in the models is presented with different examples in the papers and books considered. For example, \cite{gal2016uncertainty} explains how the unawareness of the uncertainty can yield to endanger human life, specifically with the \textit{Automated cancer detection based on MRI} \cite{gal2016uncertainty}. As a brief explanation, it states that if the selected model just give a probability to the person expert in the topic (without a measure of uncertainty), it can bias his judgment of the case, because he will trust equally all the probabilities given by the model; although, some of them were made almost at random. On the other hand, if the probability and the variance are given, then the expert can say if the prediction is reliable and can use it for the diagnosis. The second example is given by the same author, but now in the context of \textit{autonomous cars}. This is related to the failure of an autonomous car in 2016, where the car failed to differentiate between a white side of a bus and the sky \cite{reuters}. If the system in the vehicles detects an ambiguous decision in a certain scenario, then it would be useful to ask the user of the car to take explicit control of the problem \cite{gal2016uncertainty}.
+
+In this review, the feasibility of different approaches to calculating the uncertainty in the context of Bayesian neural networks will be examined. Additionally, the advantages and disadvantages of each one of them will be discussed. As an introduction to the problem, three Bayesian difficulties associated with the calculation of integrals will be given. After that a brief explanation of the common solutions for this integration problem will be given: Laplace Approximation (LA) \cite{buntine1991bayesian}, Variational Inference (VI) \cite{bishop2006pattern} and Markov Chain Monte Carlo Methods (MCMC) \cite{bishop2006pattern}. Then a fourth approach introduced in recent papers \cite{salimans2015markov} \cite{gal2016uncertainty} will be proposed; which, are based on VI models, but use stochastic steps (based on MCMC approach). \footnote{This is the main reason to include the explanation of the LA, VI and MCMC techniques.} This new family of solutions claims to bring together the accuracy of the MCMC models and the speed of the VI methods \cite{salimans2015markov}, but there is still much work to do.
+
+The structure of this review is divided into four parts. The first part studies the Bayesian neural networks models and the computational problem associated with the topic. The second explains the three classic approaches to give a solution to the problem: LA, VI, and MCMC. These procedures have been expanded to create a large amount of papers and books related to them, so just a brief review will be given. The third will include the center part of this review, the variational inference with stochastic steps. The fourth states the results of the new models based on the studied papers. At last critic ideas and ideas for further research will be given.
+
+\section{Bayesian neural networks}
+
+As claimed in \cite{gal2016uncertainty}, the Bayesian neural networks are based on Bayesian modeling; this ha the advantage to learn even if there is few data, trusting in the priors. Besides, these Bayesian neural networks models can also have an implicit regularization, like all the Bayesian models. Also, as suggested in \cite{buntine1991bayesian}, is a very versatile method, mainly because of the specification of the prior distributions. In fact, some of them have been studied; for example, taking a gamma prior distribution \cite{barber1998ensemble}. These two topics are significant areas inside the Bayesian framework, but will not be covered in this review.
+
+To understand the problem of the Bayesian framework, a brief review of the theory associated with this methodology will be given. 
+
+\subsection{The problem}
+First, the widely known Bayes theorem is defined:
+
+\begin{equation}\label{eq:1}
+P(\theta | X ) = \frac{P(X, \theta)}{P(X)} = \frac{P(X|\theta) P(\theta)}{P(X)}
+\end{equation}
+
+With $\theta$ the parameters of the model, $X$ the data, $P(\theta)$ the prior probability of $\theta$, $P(\theta | X)$ the posterior probability of $\theta$, and $P(X | \theta)$ as the likelihood of $X$ given $\theta$. 
+
+When taking a Bayesian approach to any problem, the computations can become quite difficult and often intractable with analytical methods \cite{bishop2006pattern}. As an example, three difficulties will be shown, the first is associated with the calculus of the posterior distribution of $\theta$, the second with the computation of the predictive distribution of $X$, and at last the calculation of an integral that arises when making the model selection. This is also the case in the computation of the Bayesian Neural Networks.
+
+\subsubsection{Calculation of the posterior distribution of \texorpdfstring{$\theta$}{Lg}}
+
+As seen in \cref{eq:1}, the denominator contains the expression $P(X)$. Using a basic probability property, it is equal to:
+
+\begin{equation}\label{eq:2}
+P(X) = \int_{\Theta} P(X, \theta) d \theta
+\end{equation}
+
+\subsubsection{Calculation of the predictive distribution of \texorpdfstring{$X^*$}{Lg}}
+
+The predictive distribution of $X^*$ (a new observation) includes in its formula the posterior distribution of $\theta$ and is as follows \cite{bishop2006pattern}:
+
+\begin{equation}\label{eq:3}
+P(X^*|X) = \int_{\Theta} P(X^* | \theta, X) P(\theta | X) d\theta
+\end{equation}
+
+\subsubsection{Model selection}
+
+The last example of the integration difficulties arises in the model selection stage:
+
+\begin{equation}\label{eq:4}
+P(M | X) = \frac{P(X|M) P(M)}{P(X)}
+\end{equation}
+
+With $M$ the selected model. The denominator of the \cref{eq:4} is like the equation \cref{eq:1}, thus it can be written as follows:
+
+\begin{equation}\label{eq:5}
+P(X) = \int_{\theta} P(X|\theta, M) P(\theta|M)d \theta
+\end{equation}
+
+The \cref{eq:2}, \cref{eq:3} and \cref{eq:5} are known as marginalization and, sometimes, are difficult to calculate. Hence, it is important to find a method to estimate them.
+
+
+\section{Traditional methods}
+
+As mentioned before, three main approaches arose to give a solution to these integrals; the first is a straightforward method known as the Laplace Approximation (LA). This approximates the original distribution with a Gaussian distribution \cite{buntine1991bayesian}. The second approach is a family of methods under the name of Variational Inference (VI) \cite{bishop2006pattern} which tries to approximate the function with an optimization framework. The third approach is the Markov Chain Monte Carlo methods (MCMC) \cite{bishop2006pattern} which are subsampling methods that try to approximate the original integral with stochastic simulations.
+
+Although these approaches are the traditional ones, the area is in constant development. For example, some books that were published ten years ago \cite{bishop2006pattern} does not mention the interaction between these ideas, and considerate each one of them as entirely different, one deterministic and the other stochastic. As a contrast, papers from last two years have begun to give a solution involving the Variational inference with stochastics steps (MCMC) \cite{salimans2015markov} \cite{gal2016uncertainty}. This is the final approach that will be presented in this review.
+
+In this section the notation used by \cite{bishop2006pattern} will be used. In general, for the following techniques, it is supposed that the original distribution $p(\theta | X)$ (the posterior distribution) is equal to:
+
+\begin{equation}\label{eq:6}
+p(\theta | X ) = \frac{1}{Z} f(\theta | X)
+\end{equation} 
+
+Where the function $f(\theta | X)$ can be evaluated \footnote{Because it can be evaluated, then it can be \textit{sampled}, so this is the intuition of the MCMC.}, however, the normalization constant $Z$ is unknown. 
+
+\subsection{Laplace approximation}
+
+Laplace approximation is naive solution for the problem. The main idea is to fit a Gaussian distribution to the original one $p(\theta | X)$ at the same time that it preserves the same mode of the original. As \cite{bishop2006pattern} proposed, find a gaussian $q(\theta | X)$ that is centred on a maximum value of the original $p(\theta | x)$. The method is very fast, and straightforward, but if the distribution is bimodal, or have multiple maximum values, then the approximation could not be good (as the normal is unimodal). The next equations express this idea (remember that the value of the posterior distribution $p(\theta | X)$ cannot be evaluated, but it is possible to evaluate $f(\theta | X)$). Remembering that Taylor expansion of a function $h(x)$ around the point $a$ is equal to \cite{bishop2006pattern}:
+
+\begin{equation}
+\sum_{n=0}^{\infty} \frac{h^{(n)}(a)}{n!}(x-a)^n
+\end{equation}
+
+To simplify the notation for this section, lets define $f(z) = f(\theta | X)$ and $q(z) = q(\theta | X)$ 
+Then, making the second order Taylor expansion of $\ln(f(z))$ around $z_{0}$ (consider that, as $z_0$ is the mode of the posterior distribution, then $f^{(1)}(z_0)$ is equal to 0) \cite{bishop2006pattern}:
+
+\begin{equation}
+\ln(f(z)) \approx ln(f(z_0)) + \frac{1}{2} (z-z_0)^T H (z-z_0)
+\end{equation}
+
+With $H$ the Hessian matrix. Then, is easy to see that applying the $\exp$ function, we can get the kernel of a Gaussian. Now, with this distribution is easy to calculate the normalization constant; therefore, the posterior probability distribution is completely defined. This is a quick and easy approach to solving this solution (For the calculation of the Hessian, direct or iterative procedures can be done, although for big datasets can be problematic).
+
+\subsection{Variational Inference (VI)}
+
+This family of methods is related to an approximation with a probability distribution $q(\theta)$ of the original one $p(\theta | X)$. The difference with the Laplace approximation is that this estimate uses the Jensen inequality and then tries to maximize the variational lower bound, or equivalently, minimize the KullBack-Leibler divergence of the two distributions. \cite{gal2016uncertainty}. The variety of methods included in this family is wide, and a chapter included in the book \cite{bishop2006pattern}.
+
+The main advantage of this family of methods is that have an explicit objective function and sometimes have analytical solutions \cite{salimans2015markov}. The method is very attractive because the original problem now is transformed into an optimization problem, where there are many ways to solve it. For example, the book \cite{nocedal2006numerical} contains a vast amount of methods to work with optimization problems. Also, there are optimization tools that have been intensely studied for problems when the quantity of data is enormous. 
+
+One of most common method of variational inference is the one that minimizes the Kullback-Leibler divergence of two functions:
+
+\begin{equation}
+KL(q(x)|p(x)) = \int_{X} q(x) log \frac{q(x)}{p(x)}
+\end{equation}
+
+Applied to this problem:
+
+\begin{align}
+\begin{split}
+KL(q(\theta)|p(\theta|X)) =& \int_{X} q(\theta) log \frac{q(\theta)}{p(\theta|X)} \\
+                          =& \int_{X} q(\theta) log \frac{q(\theta)}{p(\theta, X) p(X)} \\
+                          =& \int_{X} q(\theta) log \frac{q(\theta)}{p(\theta, X)} + log(p(X)) 
+\end{split}
+\end{align}
+
+Then, this issue is equivalent to minimize the first term on the right side of the above equation. (because the second does not depend on $q(\theta)$). Also, rearranging the terms, a maximization problem can be stated.
+
+\begin{align}
+\begin{split}
+log(P(X)) =& KL(q(\theta)|p(\theta|X)) - \int_{X} q(\theta) log \frac{q(\theta)}{p(\theta, X)} \\
+          =& KL(q(\theta)|p(\theta|X)) + \mathcal{L}(q) \\
+\end{split}
+\end{align}
+
+With the term $\mathcal{L}(q) =-\int_{X} q(\theta) log \frac{q(\theta)}{p(\theta, X)}$ often known as \textit{Variational lower bound}. This way, the problem can also be treated as a maximization one.
+
+\begin{align}
+\begin{split}
+\mathcal{L}(q) =& log(P(X)) - KL(q(\theta)|p(\theta|X)) \\
+=& -\int_{X} q(\theta) log \frac{q(\theta)}{p(\theta, X)}
+\end{split}
+\end{align}
+
+If the Jensen inequality is applied to the above equations, then it is easy to find the boundaries. Remembering, the Jensen inequality consist in one function and the expectation, in this example the function is $\log$, and the integral is used as the expectation. One way to find a solution to these optimization problems is the idea to restrict the family of the approximate distributions $q(\theta)$. A common technique is named \textit{mean-field variational Bayes} \cite{bishop2006pattern}:
+
+\begin{equation}
+q(\theta) = \prod_{1}^{M} q_i(\theta_i)
+\end{equation}
+
+This will be discussed intensely in \cite{bishop2006pattern}, but the above formulation is useful for the methods proposed in the next section.
+
+\subsection{Markov Chain Monte Carlo (MCMC)}
+
+This family of methods, along with the Variational Inference family are the most common approaches. \cite{salimans2015markov}. The difference with the VI is that MCMC is a subsampling method, so it approximates the distribution stochastically. The method starts with a random variable $z$ and applies a \textit{stochastic transition operator} that just depends on the value of the same variable, but one moment in the past (Markov property) \cite{salimans2015markov}:
+
+\begin{equation}\label{eq:7}
+z_t = q(z_t | z_{t-1}, x)
+\end{equation}
+
+Then, if correct stochastic transition operator is selected, the distribution of $z$ will converge to the original distribution $p(z|x)$. \cite{salimans2015markov}. The main advantage of MCMC is the fact that it guarantees that it converges to the original distribution, although there is not a specific number of iterations to guarantee a convergence \cite{salimans2015markov}. This topic still in investigation.
+
+\section{Stochastic Variational Inference methods}
+
+The optimization problem related to the VI methods is complicated and only is easy to find an analytical solution in some cases \cite{gal2016uncertainty}. Although an approximation is found, this can be bad due to the correlation structure between the weights \cite{gal2016uncertainty}. Solutions began to arise to solve this problem. In 1993, a diagonal covariance matrix between the weights was considered for this issue \cite{hinton1993keeping}, but some years later an approach with a full covariance matrix was achieved \cite{barber1998ensemble}. It is important to mention that now, this approach is almost impossible for neural networks that have millions of neurons because the covariance matrix calculation could be huge. 
+
+In 2011, \cite{graves2011practical} began to use another solution to the huge amount of data. With more data, calculate the likelihoods in the problems started to be very expensive. Therefore, he proposed subsampling methods to estimate it and improve the VI method. Now, the model could use a large quantity of data. \cite{gal2016uncertainty}. Two recent approaches following this idea are described.
+
+The key idea of \cite{salimans2015markov} is to make a stochastic approximation of the function $q(\theta)$ used in the variational inference framework. This way, the approximation can be calculated like:
+
+\begin{equation}
+q(\theta_T|x) = q(\theta_0|x) \prod_{t=1}^{T} q(\theta_t| \theta_{t-1}, x)
+\end{equation}
+
+All the variables $\theta_i$ with ${i = 1, ..., n-1}$ are named \textit{auxiliary random variables}. The set of all of this variables will be called $\gamma$. now, the distribution can be formulated as follows \cite{salimans2015markov}:
+
+\begin{equation}
+q(\theta_T|x) = \int q(\gamma, \theta_T | x) d\gamma
+\end{equation}
+
+Therefore, the distribution now can be interpreted as a mixture of distributions \cite{salimans2015markov}. Also he introduces an auxiliary function $r(\gamma|x, z_T)$ (the inverse model) that is used to approximate the transition operator $q(\theta_T|x)$. The way that he proposes is to let be the function $r(\gamma|x, z_T)$ flexible, then optimize it with respect to its parameters. To finish this approach, he proposes that this auxiliary function also follows a Markov property. 
+
+On the other hand, \cite{gal2016uncertainty} proposes another technique that also uses a stochastic process. The central idea is not to evaluate the complete expression of the likelihood with all the dataset, but just approximate the expression $\mathcal{L}(\theta)$. This way, instead of computing the complete $\mathcal{L}(\theta)$ in each iteration of the optimization procedure, just an approximation $\widehat{\mathcal{L}}(\theta)$ is used. This idea is usual in the optimization field, reduce the cost of computation of the function in each iteration, with the cost of more iterations. 
+
+The ideas proposed in the papers just try to find an intermediate step between the MCMC and the Variational inference methods. The idea of \cite{gal2016uncertainty} is very common in optimization field; for example, when the Newton method is used for big datasets, it is not common to use the second derivative in the descent method. Instead of that, they make each iteration faster, at the cost of more iterations. Adapting this example to the trade-off of the approximations, now they want to get some of the speed of VI, but with an accuracy given stochastic approximation provided by the MCMC.
+
+For testing the first method, the author proposed to fit a bivariate Gaussian. In the example, as the posterior is known, the explicit lower bound is calculated. Then a classic MCMC is compared with an approximation proposed and it is shown that converges faster. On the other hand, for the second one the MNIST dataset was used. Then an approximation in terms of a mixture of Bernullis is implemented. The best error achieved was of a little less than 1.7\%, that is close to the ranges reported in the MNIST web page.
+
+\section{Conclusions and further research}
+
+The purposes of the methods presented in the review are to find a technique that can scale with more data, and that can adapt to more complex models \cite{gal2016uncertainty}. With the MCMC approach, many posterior distributions can be found regardless the analytical form. This is a very recent topic. Consequently, there are just a few papers that talk about the problem and leave many questions open. Some of them, as commented at the beginning, involve the specification of different prior distribution and techniques about regularization.
+
+The second most important conclusion, as \cite{gal2016uncertainty} suggest, is that it is necessary to stop treating the Bayesian approach entirely different from the one given by the neural networks. Both can be used together and create models that work better. Not only the neural networks benefit from the Bayesian framework, but also Bayesian modeling can help from neural networks models, using the transformed data that the neural networks make. For example, there are statistical techniques like PCA or LDA that contributes to reducing dimensionality, but there are neural networks approaches can help to find better representations of the data for the problem or the task.
+
+Another approach that worth to explore, but it was not investigated, was the approach of neural networks with infinite weights. As \cite{neal2012bayesian} says, this approach can be like the one given by a Gaussian process. So, it worth further investigation on this topic. Lastly, one weakness of the papers is that there are no universal criteria to compare the models. For example, in the classical Bayesian literature, the BIC is usually used to select the model \cite{gelman2014bayesian} (Although it is stated that is just a convention).  However, here, each paper evaluates the model with different metrics.
+
+\newpage
+\bibliography{references}
+
+\end{document}

@@ -1,0 +1,218 @@
+\begin{thebibliography}{}
+
+\bibitem [\protect \citeauthoryear {%
+Michaelsen%
+, Knight%
+\BCBL {}\ \BBA {} Fink%
+}{%
+Michaelsen%
+\ \protect \BOthers {.}}{%
+{\protect \APACyear {2002}}%
+}]{%
+michaelsen2002team}
+\APACinsertmetastar {%
+michaelsen2002team}%
+\begin{APACrefauthors}%
+Michaelsen, L\BPBI K.%
+, Knight, A\BPBI B.%
+\BCBL {}\ \BBA {} Fink, L\BPBI D.%
+\end{APACrefauthors}%
+\unskip\
+\newblock
+\APACrefYear{2002}.
+\newblock
+\APACrefbtitle {Team-based learning: A transformative use of small groups}
+  {Team-based learning: A transformative use of small groups}.
+\newblock
+\APACaddressPublisher{}{Greenwood publishing group}.
+\PrintBackRefs{\CurrentBib}
+
+\bibitem [\protect \citeauthoryear {%
+Novak%
+}{%
+Novak%
+}{%
+{\protect \APACyear {2011}}%
+}]{%
+jitt}
+\APACinsertmetastar {%
+jitt}%
+\begin{APACrefauthors}%
+Novak, G\BPBI M.%
+\end{APACrefauthors}%
+\unskip\
+\newblock
+\APACrefYearMonthDay{2011}{}{}.
+\newblock
+{\BBOQ}\APACrefatitle {Just-in-time teaching} {Just-in-time teaching}.{\BBCQ}
+\newblock
+\APACjournalVolNumPages{New Directions for Teaching and
+  Learning}{2011}{128}{63--73}.
+\newblock
+\begin{APACrefURL} \url{http://dx.doi.org/10.1002/tl.469} \end{APACrefURL}
+\newblock
+\begin{APACrefDOI} \doi{10.1002/tl.469} \end{APACrefDOI}
+\PrintBackRefs{\CurrentBib}
+
+\bibitem [\protect \citeauthoryear {%
+{RStudio, Inc}%
+}{%
+{RStudio, Inc}%
+}{%
+{\protect \APACyear {2013}}%
+}]{%
+shiny}
+\APACinsertmetastar {%
+shiny}%
+\begin{APACrefauthors}%
+{RStudio, Inc}.%
+\end{APACrefauthors}%
+\unskip\
+\newblock
+\APACrefYearMonthDay{2013}{}{}.
+\newblock
+{\BBOQ}\APACrefatitle {Easy web applications in R.} {Easy web applications in
+  r.}{\BBCQ}\ [\bibcomputersoftwaremanual].
+\newblock
+\APACrefnote{URL: \url{http://www.rstudio.com/shiny/}}
+\PrintBackRefs{\CurrentBib}
+
+\bibitem [\protect \citeauthoryear {%
+Schell%
+, Lukoff%
+\BCBL {}\ \BBA {} Mazur%
+}{%
+Schell%
+\ \protect \BOthers {.}}{%
+{\protect \APACyear {2013}}%
+}]{%
+Schell2013}
+\APACinsertmetastar {%
+Schell2013}%
+\begin{APACrefauthors}%
+Schell, J.%
+, Lukoff, B.%
+\BCBL {}\ \BBA {} Mazur, E.%
+\end{APACrefauthors}%
+\unskip\
+\newblock
+\APACrefYearMonthDay{2013}{}{}.
+\newblock
+{\BBOQ}\APACrefatitle {Increasing Student Engagement and Retention using
+  Classroom Technologies: Classroom Response Systems and Mediated Discourse
+  Technologies} {Increasing student engagement and retention using classroom
+  technologies: Classroom response systems and mediated discourse
+  technologies}.{\BBCQ}
+\newblock
+\BIn{} C.~Wankel\ (\BED), (\BPGS\ 233--261).
+\newblock
+\APACaddressPublisher{}{Emerald}.
+\PrintBackRefs{\CurrentBib}
+
+\bibitem [\protect \citeauthoryear {%
+Siemens%
+\ \protect \BOthers {.}}{%
+Siemens%
+\ \protect \BOthers {.}}{%
+{\protect \APACyear {2011}}%
+}]{%
+siemens2011open}
+\APACinsertmetastar {%
+siemens2011open}%
+\begin{APACrefauthors}%
+Siemens, G.%
+, Gasevic, D.%
+, Haythornthwaite, C.%
+, Dawson, S.%
+, Shum, S\BPBI B.%
+, Ferguson, R.%
+\BDBL {}Verbert, K.%
+\end{APACrefauthors}%
+\unskip\
+\newblock
+\APACrefYear{2011}.
+\unskip\
+\newblock
+\APACrefbtitle {Open Learning Analytics: an integrated \& modularized platform}
+  {Open learning analytics: an integrated \& modularized platform}\
+  \APACtypeAddressSchool {\BUPhD}{}{}.
+\PrintBackRefs{\CurrentBib}
+
+\bibitem [\protect \citeauthoryear {%
+Stefan%
+\ \BBA {} Liu%
+}{%
+Stefan%
+\ \BBA {} Liu%
+}{%
+{\protect \APACyear {2015}}%
+}]{%
+Stefan2015b}
+\APACinsertmetastar {%
+Stefan2015b}%
+\begin{APACrefauthors}%
+Stefan, M\BPBI I.%
+\BCBT {}\ \BBA {} Liu, Y.%
+\end{APACrefauthors}%
+\unskip\
+\newblock
+\APACrefYearMonthDay{2015}{}{}.
+\newblock
+{\BBOQ}\APACrefatitle {lanalytics} {lanalytics}.{\BBCQ}
+\newblock
+\APACjournalVolNumPages{GitHub repository}{}{}{}.
+\newblock
+\APAChowpublished {GitHub repository}.
+\newblock
+\begin{APACrefURL} \url{https://github.com/MelanieIStefan/lanalytics}
+  \end{APACrefURL}
+\PrintBackRefs{\CurrentBib}
+
+\bibitem [\protect \citeauthoryear {%
+Wickham%
+}{%
+Wickham%
+}{%
+{\protect \APACyear {2009}}%
+}]{%
+ggplot2}
+\APACinsertmetastar {%
+ggplot2}%
+\begin{APACrefauthors}%
+Wickham, H.%
+\end{APACrefauthors}%
+\unskip\
+\newblock
+\APACrefYear{2009}.
+\newblock
+\APACrefbtitle {ggplot2: Elegant Graphics for Data Analysis} {ggplot2: Elegant
+  graphics for data analysis}.
+\newblock
+\APACaddressPublisher{}{Springer-Verlag New York}.
+\newblock
+\begin{APACrefURL} \url{http://ggplot2.org} \end{APACrefURL}
+\PrintBackRefs{\CurrentBib}
+
+\bibitem [\protect \citeauthoryear {%
+Wickham%
+}{%
+Wickham%
+}{%
+{\protect \APACyear {2015}}%
+}]{%
+wickham2015r}
+\APACinsertmetastar {%
+wickham2015r}%
+\begin{APACrefauthors}%
+Wickham, H.%
+\end{APACrefauthors}%
+\unskip\
+\newblock
+\APACrefYear{2015}.
+\newblock
+\APACrefbtitle {R packages} {R packages}.
+\newblock
+\APACaddressPublisher{}{" O'Reilly Media, Inc."}.
+\PrintBackRefs{\CurrentBib}
+
+\end{thebibliography}
