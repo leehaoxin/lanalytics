@@ -1,0 +1,149 @@
+\begin{thebibliography}{10}
+
+\bibitem{bishop2006pattern}
+Christopher~M Bishop.
+\newblock {\em Pattern recognition and machine learning}.
+\newblock springer, 2006.
+
+\bibitem{Bloom1956}
+B~Bloom.
+\newblock A taxonomy of cognitive objectives.
+\newblock {\em New York: McKay}, 1956.
+
+\bibitem{bock1981marginal}
+R~Darrell Bock and Murray Aitkin.
+\newblock Marginal maximum likelihood estimation of item parameters:
+  Application of an em algorithm.
+\newblock {\em Psychometrika}, 46(4):443--459, 1981.
+
+\bibitem{bond2015applying}
+Trevor Bond and Christine~M Fox.
+\newblock {\em Applying the Rasch model: Fundamental measurement in the human
+  sciences}.
+\newblock Routledge, 2015.
+
+\bibitem{chang2015shinydashboard}
+W~Chang.
+\newblock shinydashboard: Create dashboards with ‘shiny’.
+\newblock {\em R package version 0.5}, 1, 2015.
+
+\bibitem{demars2010item}
+Christine DeMars.
+\newblock {\em Item response theory}.
+\newblock Oxford University Press, 2010.
+
+\bibitem{desire}
+Desire2Learn.
+\newblock Desire2learn.
+\newblock \url{https://www.d2l.com/en-eu/}.
+\newblock [Online; accessed 1-August-2017].
+
+\bibitem{everett2013introduction}
+B~Everett.
+\newblock {\em An introduction to latent variable models}.
+\newblock Springer Science \& Business Media, 2013.
+
+\bibitem{friedman2009elements}
+Jerome Friedman, Trevor Hastie, and Robert Tibshirani.
+\newblock {\em The elements of statistical learning}, volume~1.
+\newblock Springer series in statistics New York, 2009.
+
+\bibitem{salvador}
+Salvador Garcia~Gonzalez.
+\newblock Developing a software for analyzing data from online learning
+  quizzes.
+\newblock {\em Informatics Review Proposal}, 2017.
+
+\bibitem{haberman1977maximum}
+Shelby~J Haberman.
+\newblock Maximum likelihood estimates in exponential response models.
+\newblock {\em The Annals of Statistics}, pages 815--841, 1977.
+
+\bibitem{kim2001social}
+Beaumie Kim.
+\newblock Social constructivism.
+\newblock {\em Emerging perspectives on learning, teaching, and technology},
+  1(1):16, 2001.
+
+\bibitem{mair2009extended}
+Patrick Mair, Reinhold Hatzinger, and Marco~J Maier.
+\newblock Extended rasch modeling: The r package erm.
+\newblock {\em PDF-Dateianhang zum Programmpaket eRm}, 2009.
+
+\bibitem{moodle}
+Dougiamas Martin.
+\newblock Moodle.
+\newblock \url{https://moodle.org/}.
+\newblock [Online; accessed 1-August-2017].
+
+\bibitem{learningcatalytics}
+Eric Mazur, Gary King, and Lukoff Brian.
+\newblock Learning catalytics.
+\newblock
+  \url{https://www.pearson.com/us/higher-education/products-services-teaching/learning-engagement-tools/learning-catalytics.html}.
+\newblock [Online; accessed 1-August-2017].
+
+\bibitem{mcmahon1997social}
+Mark McMahon.
+\newblock Social constructivism and the world wide web-a paradigm for learning.
+\newblock In {\em ASCILITE conference. Perth, Australia}, volume 327, 1997.
+
+\bibitem{jitt}
+Gregor~M. Novak.
+\newblock Just-in-time teaching.
+\newblock {\em New Directions for Teaching and Learning}, 2011(128):63--73,
+  2011.
+
+\bibitem{payne2009information}
+Carla~R Payne.
+\newblock {\em Information Technology and Constructivism in Higher Education:
+  Progressive Learning Frameworks: Progressive Learning Frameworks}.
+\newblock IGI Global, 2009.
+
+\bibitem{rizopoulos2006ltm}
+Dimitris Rizopoulos.
+\newblock ltm: An r package for latent variable modeling and item response
+  theory analyses.
+\newblock {\em Journal of statistical software}, 17(5):1--25, 2006.
+
+\bibitem{shiny}
+{RStudio, Inc}.
+\newblock {\em Easy web applications in R.}, 2013.
+\newblock URL: \url{http://www.rstudio.com/shiny/}.
+
+\bibitem{Stefan2015b}
+Melanie~I Stefan and Yan Liu.
+\newblock lanalytics.
+\newblock {\em GitHub repository}, 2015.
+
+\bibitem{ggplot2}
+Hadley Wickham.
+\newblock {\em ggplot2: Elegant Graphics for Data Analysis}.
+\newblock Springer-Verlag New York, 2009.
+
+\bibitem{wickham5roxygen2}
+Hadley Wickham, Peter Danenberg, and Manuel Eugster.
+\newblock roxygen2: In-source documentation for r, 2015.
+
+\bibitem{wickham2016r}
+Hadley Wickham and Garrett Grolemund.
+\newblock R for data science, 2016.
+
+\bibitem{pmr}
+Chris Williams.
+\newblock Probabilistic modelling and reasoning factor analysis and beyond.
+\newblock \url{http://www.inf.ed.ac.uk/teaching/courses/pmr/docs/fadoc.pdf}.
+\newblock [Online; accessed 10-August-2017].
+
+\bibitem{wright1969procedure}
+Benjamin Wright and Nargis Panchapakesan.
+\newblock A procedure for sample-free item analysis.
+\newblock {\em Educational and Psychological measurement}, 29(1):23--48, 1969.
+
+\bibitem{zeileis2012flexible}
+Achim Zeileis, Nikolaus Umlauf, and Friedrich Leisch.
+\newblock Flexible generation of e-learning exams in r: Moodle quizzes, olat
+  assessments, and beyond.
+\newblock Technical report, Working Papers in Economics and Statistics, 2012.
+
+\end{thebibliography}

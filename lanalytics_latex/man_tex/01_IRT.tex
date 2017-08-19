@@ -1,0 +1,109 @@
+\documentclass{article}
+\usepackage{graphicx}
+\usepackage{setspace}
+\setlength{\parindent}{0pt}
+\spacing{1.5}
+
+\begin{document}
+
+\title{eRm package (Reinhold Hatzinger)}
+\author{Salvador Garcia}
+
+\maketitle
+\tableofcontents
+
+\section{Introduction}
+The eRM package uses Conditional Marginal Likelihood as the method of estimation. 
+
+IRT tries to find a function that maps a latent variable (sometimes expressed as the ability, attitude or trait of the subject) to the probability of a reaction given this latent variable. 
+
+\section{The Rasch model (RM)}
+
+\subsection{The Rasch model}
+\begin{equation}
+  P(X_{vi} = 1 | \theta_v, \beta_i) = \frac{\exp(\theta_v - \beta_i)}{1+\exp(\theta_v - \beta_i)}
+\end{equation}
+
+\begin{itemize}
+\item{$X$ is the matrix that the rows represent the persons and the columns the item of the quiz.}
+\item{$X_{vi} \in \{0,1\}$ is the entry $(v,i)$ of the matrix $X$. This entry is a binary variable that represents the answer to the item $i$ of the person $v$. $0$ means that the person answers incorrectly and $1$ that answers correctly.}
+\item{$\theta_v \in (-\infty, \infty)$ is the ability or trait of the person $v$.}
+\item{$\beta_i \in [0, \infty)$ is the difficulty of the item $i$.}
+\end{itemize}
+
+It is useful to define two \textit{Raw Scores}. These scores are simple marginalization of $X_{vi}$ with respect to the variables $v$ and $i$:
+
+\begin{itemize}
+\item{\textbf{Raw score per person:} $r_v = \sum_i X_{vi}$}
+\item{\textbf{Raw score per item:} $s_i = \sum_v X_{vi}$}
+\end{itemize}
+
+\subsection{Assumptions of the Rasch Model}
+\begin{itemize}
+\item{\textbf{Unidimensionality}}
+\item{\textbf{Sufficiency}}
+\item{\textbf{Conditional independence}}
+\item{\textbf{Monotonicity}}
+\end{itemize}
+
+\subsection{Item Parameter Estimation}
+
+\subsubsection{Item parameter estimation}
+
+Different methods of estimation for \textbf{item parameter estimation}: 
+
+\textbf{Joint Maximum likelihood Estimation (JML)}
+(look for demonstration)
+\begin{equation}
+L_u = \frac{\exp(\sum_v \theta_v r_v) \exp(\sum_i \beta_i s_i)}{\prod_v \prod_i (1 + \exp(\theta_v - \beta_i)}
+\end{equation}
+
+In the last expression we can find that the sufficient statistics are $r_v = \sum_i X_{vi}$ for $\theta_v$ and $s_i = \sum_v X_{vi}$ for $\beta_i$.
+
+Problem: inconsistency of the parameters when $n \rightarrow \infty$
+
+\textbf{Marginal Maximum likelihood Estimation (MML)}
+
+If we integrate the person parameter, we can marginalize the expression:
+
+\begin{equation}
+L_m = \prod_r [ \exp(-\sum_i \beta_i s_i) ] continue
+\end{equation}
+
+
+\textbf{Conditional Maximum likelihood Estimation (CML)}
+
+Condition on $r_v$
+\begin{equation}
+L_c = \exp()
+\end{equation}
+
+\textbf{Advantages of CML and MML}
+
+
+\subsubsection{Person parameter estimation}
+Different methods of estimation for \textbf{person parameter estimation}:
+
+\textbf{Maximum Likelihood (ML) and Weighted Maximum Likelihood (WML)}
+\\
+\textbf{Bayes approach.}
+
+
+\section{The plots}
+
+\subsection{The PI map}
+
+\subsection{The ICC plot}
+
+\subsection{The joint ICC plot}
+
+
+
+\appendix
+
+\section{The eRm package}
+The eRm package
+
+
+\end{document}
+

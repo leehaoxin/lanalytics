@@ -100,77 +100,12 @@
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'><span class='no'>file_to_read</span> <span class='kw'>&lt;-</span> <span class='st'>"../../datasets/sample_dataset/Q01.csv"</span>
-<span class='no'>quiz_object_1</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='read_lc.html'>read_lc</a></span>(<span class='no'>file_to_read</span>)</div><div class='output co'>#&gt; <span class='message'>Parsed with column specification:</span>
-#&gt; <span class='message'>cols(</span>
-#&gt; <span class='message'>  .default = col_datetime(),</span>
-#&gt; <span class='message'>  `email address` = col_character(),</span>
-#&gt; <span class='message'>  `item01 score` = col_integer(),</span>
-#&gt; <span class='message'>  `item02 score` = col_integer(),</span>
-#&gt; <span class='message'>  `item03 score` = col_integer(),</span>
-#&gt; <span class='message'>  `item04 score` = col_integer(),</span>
-#&gt; <span class='message'>  `item05 score` = col_integer(),</span>
-#&gt; <span class='message'>  `item06 score` = col_integer(),</span>
-#&gt; <span class='message'>  `item07 score` = col_integer(),</span>
-#&gt; <span class='message'>  `item08 score` = col_integer(),</span>
-#&gt; <span class='message'>  `item09 score` = col_integer(),</span>
-#&gt; <span class='message'>  `item10 score` = col_integer(),</span>
-#&gt; <span class='message'>  `item11 score` = col_integer()</span>
-#&gt; <span class='message'>)</span></div><div class='output co'>#&gt; <span class='message'>See spec(...) for full column specifications.</span></div><div class='output co'>#&gt; <span class='message'>Joining, by = c("email address", "question")</span></div><div class='input'><span class='no'>file_to_read</span> <span class='kw'>&lt;-</span> <span class='st'>"../../datasets/sample_dataset/Q02.csv"</span>
-<span class='no'>quiz_object_2</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='read_lc.html'>read_lc</a></span>(<span class='no'>file_to_read</span>)</div><div class='output co'>#&gt; <span class='message'>Parsed with column specification:</span>
-#&gt; <span class='message'>cols(</span>
-#&gt; <span class='message'>  .default = col_datetime(),</span>
-#&gt; <span class='message'>  `email address` = col_character(),</span>
-#&gt; <span class='message'>  `item01 score` = col_integer(),</span>
-#&gt; <span class='message'>  `item02 score` = col_integer(),</span>
-#&gt; <span class='message'>  `item03 score` = col_integer(),</span>
-#&gt; <span class='message'>  `item04 score` = col_integer(),</span>
-#&gt; <span class='message'>  `item05 score` = col_integer(),</span>
-#&gt; <span class='message'>  `item06 score` = col_integer(),</span>
-#&gt; <span class='message'>  `item07 score` = col_integer(),</span>
-#&gt; <span class='message'>  `item08 score` = col_integer(),</span>
-#&gt; <span class='message'>  `item09 score` = col_integer(),</span>
-#&gt; <span class='message'>  `item10 score` = col_integer(),</span>
-#&gt; <span class='message'>  `item11 score` = col_integer()</span>
-#&gt; <span class='message'>)</span></div><div class='output co'>#&gt; <span class='message'>See spec(...) for full column specifications.</span></div><div class='output co'>#&gt; <span class='message'>Joining, by = c("email address", "question")</span></div><div class='input'><span class='no'>file_to_read</span> <span class='kw'>&lt;-</span> <span class='st'>"../../datasets/sample_dataset/Q03.csv"</span>
-<span class='no'>quiz_object_3</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='read_lc.html'>read_lc</a></span>(<span class='no'>file_to_read</span>)</div><div class='output co'>#&gt; <span class='message'>Parsed with column specification:</span>
-#&gt; <span class='message'>cols(</span>
-#&gt; <span class='message'>  .default = col_datetime(),</span>
-#&gt; <span class='message'>  `email address` = col_character(),</span>
-#&gt; <span class='message'>  `item01 score` = col_integer(),</span>
-#&gt; <span class='message'>  `item02 score` = col_integer(),</span>
-#&gt; <span class='message'>  `item03 score` = col_integer(),</span>
-#&gt; <span class='message'>  `item04 score` = col_integer(),</span>
-#&gt; <span class='message'>  `item05 score` = col_integer(),</span>
-#&gt; <span class='message'>  `item06 score` = col_integer(),</span>
-#&gt; <span class='message'>  `item07 score` = col_integer(),</span>
-#&gt; <span class='message'>  `item08 score` = col_integer(),</span>
-#&gt; <span class='message'>  `item09 score` = col_integer(),</span>
-#&gt; <span class='message'>  `item10 score` = col_integer(),</span>
-#&gt; <span class='message'>  `item11 score` = col_integer()</span>
-#&gt; <span class='message'>)</span></div><div class='output co'>#&gt; <span class='message'>See spec(...) for full column specifications.</span></div><div class='output co'>#&gt; <span class='message'>Joining, by = c("email address", "question")</span></div><div class='input'><span class='no'>file_to_read</span> <span class='kw'>&lt;-</span> <span class='st'>"../../datasets/sample_dataset/Q04.csv"</span>
-<span class='no'>quiz_object_4</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='read_lc.html'>read_lc</a></span>(<span class='no'>file_to_read</span>)</div><div class='output co'>#&gt; <span class='message'>Parsed with column specification:</span>
-#&gt; <span class='message'>cols(</span>
-#&gt; <span class='message'>  .default = col_datetime(),</span>
-#&gt; <span class='message'>  `email address` = col_character(),</span>
-#&gt; <span class='message'>  `item01 score` = col_integer(),</span>
-#&gt; <span class='message'>  `item02 score` = col_integer(),</span>
-#&gt; <span class='message'>  `item03 score` = col_integer(),</span>
-#&gt; <span class='message'>  `item04 score` = col_integer(),</span>
-#&gt; <span class='message'>  `item05 score` = col_integer(),</span>
-#&gt; <span class='message'>  `item06 score` = col_integer(),</span>
-#&gt; <span class='message'>  `item07 score` = col_integer(),</span>
-#&gt; <span class='message'>  `item08 score` = col_integer(),</span>
-#&gt; <span class='message'>  `item09 score` = col_integer(),</span>
-#&gt; <span class='message'>  `item10 score` = col_integer(),</span>
-#&gt; <span class='message'>  `item11 score` = col_integer()</span>
-#&gt; <span class='message'>)</span></div><div class='output co'>#&gt; <span class='message'>See spec(...) for full column specifications.</span></div><div class='output co'>#&gt; <span class='message'>Joining, by = c("email address", "question")</span></div><div class='input'><span class='no'>quiz_object</span> <span class='kw'>&lt;-</span> <span class='fu'>bind_rows</span>(<span class='fu'>list</span>(<span class='no'>quiz_object_1</span>, <span class='no'>quiz_object_2</span>, <span class='no'>quiz_object_3</span>, <span class='no'>quiz_object_4</span>))
-<span class='no'>final_exam</span> <span class='kw'>&lt;-</span> <span class='st'>"../../datasets/sample_dataset/finalexam_file.csv"</span>
-<span class='no'>final_exam</span> <span class='kw'>&lt;-</span> <span class='fu'>read_csv</span>(<span class='no'>final_exam</span>)</div><div class='output co'>#&gt; <span class='message'>Parsed with column specification:</span>
-#&gt; <span class='message'>cols(</span>
-#&gt; <span class='message'>  `email address` = col_character(),</span>
-#&gt; <span class='message'>  `final exam` = col_double()</span>
-#&gt; <span class='message'>)</span></div><div class='input'><span class='no'>email_filtered</span> <span class='kw'>&lt;-</span> <span class='st'>"UTKIJ1509E@gmail.com"</span>
-<span class='fu'>plot_group</span>(<span class='no'>quiz_object</span>, <span class='no'>email_filtered</span>, <span class='no'>final_exam</span>)</div><div class='output co'>#&gt; <span class='message'>Joining, by = "email address"</span></div><div class='img'><img src='plot_group-6.png' alt='' width='700' height='432.632880098887' /></div></pre>
+<span class='no'>quiz_object_1</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='read_lc.html'>read_lc</a></span>(<span class='no'>file_to_read</span>)</div><div class='output co'>#&gt; <span class='error'>Error in readr::read_csv(file) %&gt;% setNames(tolower(names(.))): could not find function "%&gt;%"</span></div><div class='input'><span class='no'>file_to_read</span> <span class='kw'>&lt;-</span> <span class='st'>"../../datasets/sample_dataset/Q02.csv"</span>
+<span class='no'>quiz_object_2</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='read_lc.html'>read_lc</a></span>(<span class='no'>file_to_read</span>)</div><div class='output co'>#&gt; <span class='error'>Error in readr::read_csv(file) %&gt;% setNames(tolower(names(.))): could not find function "%&gt;%"</span></div><div class='input'><span class='no'>file_to_read</span> <span class='kw'>&lt;-</span> <span class='st'>"../../datasets/sample_dataset/Q03.csv"</span>
+<span class='no'>quiz_object_3</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='read_lc.html'>read_lc</a></span>(<span class='no'>file_to_read</span>)</div><div class='output co'>#&gt; <span class='error'>Error in readr::read_csv(file) %&gt;% setNames(tolower(names(.))): could not find function "%&gt;%"</span></div><div class='input'><span class='no'>file_to_read</span> <span class='kw'>&lt;-</span> <span class='st'>"../../datasets/sample_dataset/Q04.csv"</span>
+<span class='no'>quiz_object_4</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='read_lc.html'>read_lc</a></span>(<span class='no'>file_to_read</span>)</div><div class='output co'>#&gt; <span class='error'>Error in readr::read_csv(file) %&gt;% setNames(tolower(names(.))): could not find function "%&gt;%"</span></div><div class='input'><span class='no'>quiz_object</span> <span class='kw'>&lt;-</span> <span class='fu'>bind_rows</span>(<span class='fu'>list</span>(<span class='no'>quiz_object_1</span>, <span class='no'>quiz_object_2</span>, <span class='no'>quiz_object_3</span>, <span class='no'>quiz_object_4</span>))</div><div class='output co'>#&gt; <span class='error'>Error in bind_rows(list(quiz_object_1, quiz_object_2, quiz_object_3, quiz_object_4)): could not find function "bind_rows"</span></div><div class='input'><span class='no'>final_exam</span> <span class='kw'>&lt;-</span> <span class='st'>"../../datasets/sample_dataset/finalexam_file.csv"</span>
+<span class='no'>final_exam</span> <span class='kw'>&lt;-</span> <span class='fu'>read_csv</span>(<span class='no'>final_exam</span>)</div><div class='output co'>#&gt; <span class='error'>Error in read_csv(final_exam): could not find function "read_csv"</span></div><div class='input'><span class='no'>email_filtered</span> <span class='kw'>&lt;-</span> <span class='st'>"UTKIJ1509E@gmail.com"</span>
+<span class='fu'>plot_group</span>(<span class='no'>quiz_object</span>, <span class='no'>email_filtered</span>, <span class='no'>final_exam</span>)</div><div class='output co'>#&gt; <span class='error'>Error in quiz_object %&gt;% left_join(df_exam) %&gt;% group_by(`email address`,     quiz, `final exam`) %&gt;% dplyr::summarise(`mean score` = round(100 *     mean(as.numeric(score), na.rm = T), 0)) %&gt;% filter(`email address` %in%     email_filtered) %&gt;% ggplot(aes(x = quiz, y = `mean score`,     group = `email address`)): could not find function "%&gt;%"</span></div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>

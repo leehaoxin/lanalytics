@@ -1,0 +1,49 @@
+\contentsline {chapter}{\numberline {1}Introduction}{1}
+\contentsline {chapter}{\numberline {2}Background}{4}
+\contentsline {section}{\numberline {2.1}Just in Time Teaching}{5}
+\contentsline {section}{\numberline {2.2}Item response theory (IRT)}{5}
+\contentsline {subsection}{\numberline {2.2.1}Latent and observable variables}{5}
+\contentsline {subsection}{\numberline {2.2.2}Latent Variable Models}{5}
+\contentsline {section}{\numberline {2.3}The Rasch model (RM)}{7}
+\contentsline {subsection}{\numberline {2.3.1}The sigmoid function}{7}
+\contentsline {subsection}{\numberline {2.3.2}Rasch model}{9}
+\contentsline {subsection}{\numberline {2.3.3}The model assumptions}{10}
+\contentsline {subsection}{\numberline {2.3.4}Item-parameter estimation}{11}
+\contentsline {subsection}{\numberline {2.3.5}The Item Characteristic Curve (ICC)}{12}
+\contentsline {subsection}{\numberline {2.3.6}The Person-Parameter plot (PPP)}{13}
+\contentsline {subsection}{\numberline {2.3.7}The Person-Item Map (PIM)}{13}
+\contentsline {chapter}{\numberline {3}The lanalytics package}{16}
+\contentsline {section}{\numberline {3.1}Design of the package}{16}
+\contentsline {subsection}{\numberline {3.1.1}Initial investigation}{16}
+\contentsline {subsection}{\numberline {3.1.2}Cognitive levels}{17}
+\contentsline {subsection}{\numberline {3.1.3}Quiz and course objects}{17}
+\contentsline {section}{\numberline {3.2}Group level analysis}{18}
+\contentsline {subsection}{\numberline {3.2.1}Guessing plot}{19}
+\contentsline {subsection}{\numberline {3.2.2}Easiness time per quiz and tercils}{20}
+\contentsline {section}{\numberline {3.3}Quiz level analysis}{21}
+\contentsline {subsection}{\numberline {3.3.1}Histogram of quizzes}{21}
+\contentsline {subsection}{\numberline {3.3.2}Boxplot of quizzes}{22}
+\contentsline {subsection}{\numberline {3.3.3}Easiness-Time plot}{23}
+\contentsline {subsection}{\numberline {3.3.4}Easiness-Time-Level plot}{23}
+\contentsline {section}{\numberline {3.4}Individual plot}{25}
+\contentsline {section}{\numberline {3.5}Documentation}{25}
+\contentsline {chapter}{\numberline {4}Shiny interface}{27}
+\contentsline {section}{\numberline {4.1}Design of the dashboard}{28}
+\contentsline {subsection}{\numberline {4.1.1}Initial investigation}{28}
+\contentsline {subsection}{\numberline {4.1.2}Technologies for a dashboard}{28}
+\contentsline {subsection}{\numberline {4.1.3}Requirements for Shiny}{29}
+\contentsline {section}{\numberline {4.2}The lanalytics dashboard}{30}
+\contentsline {subsection}{\numberline {4.2.1}Content of the dashboard}{30}
+\contentsline {chapter}{\numberline {5}Evaluation}{33}
+\contentsline {section}{\numberline {5.1}Focus group structure}{33}
+\contentsline {subsection}{\numberline {5.1.1}Participants}{33}
+\contentsline {subsection}{\numberline {5.1.2}Synthetic dataset}{34}
+\contentsline {section}{\numberline {5.2}Focus group}{35}
+\contentsline {subsection}{\numberline {5.2.1}Introduction of the software (30 minutes)}{35}
+\contentsline {subsection}{\numberline {5.2.2}User experience evaluation (30 minutes)}{36}
+\contentsline {section}{\numberline {5.3}Results}{38}
+\contentsline {subsection}{\numberline {5.3.1}Results for the introduction of the software}{38}
+\contentsline {subsection}{\numberline {5.3.2}Results for the user experience evaluation}{39}
+\contentsline {chapter}{\numberline {6}Conclusions}{42}
+\contentsline {chapter}{\numberline {A}Screenshots of the dashboard}{44}
+\contentsline {chapter}{Bibliography}{51}

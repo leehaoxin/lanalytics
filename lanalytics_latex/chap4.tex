@@ -1,0 +1,94 @@
+\chapter{Shiny interface}
+
+Right now, the \textit{lanalytics} package is freely available from Github, but for people that are not R users, an interface should be implemented. The selected option is a Shiny dashboard \cite{shiny} \cite{chang2015shinydashboard} that contains the plots of the \textit{lanalytics} and the eRm packages. Shiny was selected because it is native to R (although it is a wrapper for HTML and CSS code). Also, it is designed to have the R console as backend (allowing to use any R package). 
+
+The suggested dashboard contains five tabs related to distinct aspects of the \textit{lanalytics} package. In this chapter, a quick introduction of the design of the dashboard is provided, the theoretical justification, the technologies for the dashboard and the technical requirements. After that, the each tab will be explained in detail. The first tab only contains general instructions; the next two tabs are focused on importing and displaying the databases, while the last two tabs are focused on analysing the data in three different grouping levels. Furthermore, the last tab is used as an interface to the Rasch models of the eRm (extended Rasch model) package \cite{mair2009extended}. The usability of this Shiny Dashboard was evaluated with a focus group consisting of 3 people, but future evaluations with more people are suggested to make it usable for users in general.
+
+As a reminder, the objective of the lanalytics package is to provide a tool for management and constant analysis of student answers and test times. Also, with the help of the eRm package, inferences related to the item difficulty and the abilities of the students is provided.
+
+\section{Design of the dashboard}
+
+\subsection{Initial investigation}
+
+The idea behind this dashboard is that the instructors perform Just in Time Teaching and adapt their tests difficulties and necessities according to the specific group requirements. This idea is expressed in one of the five principles of social constructivism \footnote{In the literature, they use the idea that "Social constructivism emphasizes the importance of culture and context in understanding what occurs in society and constructing knowledge based on this understanding" \cite{kim2001social} \cite{mcmahon1997social}}: "A learning environment needs to be flexible and adaptable, so that it can quickly respond to the needs of the participants within" \cite{payne2009information} \cite{moodle}. Following this idea, and with the help of the \textit{lanalytics} and \textit{eRm}, the dashboard could be a tool that provides useful information to the instructor so that he takes his understanding of the group and the quizzes. 
+
+\subsection{Technologies for a dashboard}
+
+To create a Dashboard, there are distinct alternatives. For this dashboard, two software were studied. The first was Tableau Desktop, where the developers can easily create a dashboard without any programming background. The other analysed dashboard technology is the R Shiny software. This is based in the R-language, and you need to build the dashboard from scratch (Although there are packages that allow some predefined functions).
+
+Tableau Desktop has many benefits. One of the principal is that different filters and rules between the filters can be applied very easily. Moreover, different pre-defined plots are available with just with a drag and drop feature. Also, it has the advantage that the Tableau dashboard can be viewed by everyone (just with the software installation), but to develop or modify a dashboard you need a license \footnote{although there is a free trial for the product}. For the connection to databases, you can connect Tableau to distinct sources of data, but this is a disadvantage for this particular project because the quiz data is stored in a CSV file or different formats. One major disadvantage of Tableau is that is only for visualisation purposes, so it is not possible to automatically apply a complex model in this software to the data.
+
+On the other hand, \textit{shiny} is a web application framework that is native to R. In general, it is useful to create interactive applications, but if a dashboard is desired, an additional package should be installed. For the project, the \textit{shinydashboard} package was selected. The main advantage of this software is that is open source, and any application can be created. Besides, if some computation of a model is required, it is connected to the R console. Another main advantage of this software is that it allows the preprocessing of the files, allowing the flexibility to import quizzes from many formats \footnote{the current version only allows from R data format and CSV, although it is possible to create functions to use it with any input}.
+
+\subsection{Requirements for Shiny}
+
+Finally, to connect to the Shiny dashboard there are three alternatives: the first is to connect to the free service provided by RStudio in the website \textit{http://www.shinyapps.io/}, although this is limited by a monthly quota. The second way is to host it in Github and run it locally with the command \textit{runGitHub(repo = "savrgg/lanalytics", subdir = "shinyapp/")} and the third way is to clone the repository and run it locally. Due to the quota restrictions, it is suggested to run locally the project. To do it correctly, a prior installation of some packages need to be done: 
+
+\begin{table}[ht!]
+\centering
+\caption{Required packages to run locally the lanalytics Dashboard}
+\label{tbl:packages}
+\begin{tabular}{|l|l|}
+\hline
+\textbf{Package} & \textbf{Usage}                                                                                                 \\ \hline
+shiny            & \begin{tabular}[c]{@{}l@{}}Provides the functions to create interactive \\ applications.\end{tabular}          \\ \hline
+shinydashboard   & \begin{tabular}[c]{@{}l@{}}Build on top of shiny, provides a template \\ for Dashboards.\end{tabular}          \\ \hline
+DT               & \begin{tabular}[c]{@{}l@{}}Provides useful functions to display tables \\ and interact with them.\end{tabular} \\ \hline
+tidyverse        & A collection of useful packages to analyze data.                                                               \\ \hline
+stringr          & A package to manipulate strings.                                                                               \\ \hline
+eRm              & A package that implements extended Rasch models.                                                               \\ \hline
+ggrepel          & Functions to separate overlapping text labels.                                                                 \\ \hline
+devtools         & Package with different tools for developers.                                                                   \\ \hline
+\end{tabular}
+\end{table}
+
+\section{The lanalytics dashboard}
+
+In R, under the Psychometric Models and Methods page, there are more than 40 statistical packages related to Item Response Theory. These are hosted in the CRAN across distinct servers and can be downloaded and used within R. Considering the realised investigation, two of the more useful for this project are the \textit{(latent trait models (ltm)} and the \textit{extended Rasch models (eRm)}. The first package implements the Rasch model, the two parameter logistic and the Birnbaum's Three-Parameter models. These include one or more of the following parameters: the difficulty of the items, the discrimination of the quiz and the guessing probability that a user had guessed a question \cite{rizopoulos2006ltm}. On the other hand, the eRm package has a different estimation procedure of the parameters and introduces tests to verify if the assumptions for the models are met \cite{mair2009extended}. These packages include many other models, but require that the users know how to code in R. This can be time-consuming for the instructors. 
+
+\subsection{Content of the dashboard}
+
+In this section, the main design for the dashboard is explored. As mentioned before, this consists of 5 different tabs that incorporate functions from the lanalytics and the eRm packages. All the screenshots of this chapter are in the appendix \ref{chap:screenshots}.
+
+\vspace{4 mm}
+\noindent{\textbf{Tab 1 and Tab 2: Instructions and import data tab}}
+\vspace{2 mm}
+
+As mentioned, the first tab contains the general instructions to operate the dashboard. Also, it contains a small explanation for the installation of the lanalytics package. This tab was designed just to introduce the user to the dashboard. The second tab contains input boxes for the quizzes files, the cognitive level file, and the final exam score file (optional). Shiny has the capability to upload many files at a time, but it should be opened in a web browser. Once a file is uploaded and the corresponding upload button is pushed, a list of the uploaded files will appear below the input boxes. The \cref{img:d_1}) contains an image of the first tab and the \cref{img:d_2}) of the import quizzes tab.
+
+\vspace{4 mm}
+\noindent{\textbf{Tab 3: Display quizzes tab}}
+\vspace{2 mm}
+
+The third tab (\textit{display quizzes}) was created to show the uploaded quizzes in the dashboard. First, it shows the quiz datasets; after that, the user has to select the columns for the cognitive levels file that contains the item and the corresponding cognitive level. Finally, the cognitive level file and in case that final exam results are uploaded, these are shown in the bottom of the page. To allow interactivity in the tables, such as filters and ordering, the DT package is used. This package is an interface to the DataTables library from JavaScript. The \cref{img:d_3_1} contains a screenshot of the design of this tab.
+
+\vspace{4 mm}
+\noindent{\textbf{Tab 4: Data analysis tab}}
+\vspace{2 mm}
+
+The fourth tab contains the quiz analysis tab. This is formed with another three sub tabs, each one of them representing distinct grouping level. 
+
+\vspace{4 mm}
+\noindent{\underline{Sub tab 1: Group analysis tab}}
+\vspace{2 mm}
+
+The first sub tab is the group analysis. First, in this group analysis, the quizzes to analyse have to be selected. Because of the nature of the plots, only one quiz at a time can be displayed. After the quiz is selected, two different plots are shown. As a reminder, the plots corresponding to the group level are the guessing plot \cref{img:d_4_1}  and the easiness-time per terciles  \cref{img:d_4_2}.
+
+\vspace{4 mm}
+\noindent{\underline{Sub tab 2: Quiz analysis tab}}
+\vspace{2 mm}
+
+In the second sub tab, the analysis at the quiz level is displayed. Similarly to the previous sub tab, the users have to select a quiz, only that in this tab, they can select one or more (although is suggested to select a few because it takes some time to plot many quizzes). In this tab, the boxplot of the scores, the histogram of the scores, the ET-plot and the ETL-plot are shown [\cref{img:d_5_1}, \cref{img:d_5_2}, \cref{img:d_5_3}]. This tab was designed so that the instructors could analyse all the items from the quiz in the same place.
+
+\vspace{4 mm}
+\noindent{\underline{Sub tab 3: Individual analysis tab}}
+\vspace{2 mm}
+
+In the last sub tab, it is shown the individual analysis. Here the users have a student email and also many quizzes analyse. If the final exam file is uploaded, then a red horizontal line will be plotted to show how the final grade was related to the grades from the quizzes. This is useful because the instructor can analyse the behaviour of the very good students or very bad students to understand how are they working through the course.
+
+\vspace{4 mm}
+\noindent{\textbf{Tab 5: Rasch model}}
+\vspace{2 mm}
+
+Finally, the last tab of the dashboard contains the plots related to the Rasch model. In this tab, the explained plots in chapter 2 are displayed. The ICC plot \cref{img:d_7_1}, the person-parameter plot \cref{img:d_7_2} and the person-item map \cref{img:d_7_3}] are provided. This way, the users can compare the difficulty of the items compared with the ability of the students.
+

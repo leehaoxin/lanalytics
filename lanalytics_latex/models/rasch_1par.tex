@@ -1,0 +1,77 @@
+\documentclass[12pt]{article}
+\usepackage{geometry}
+\geometry{a4paper}
+\usepackage{graphicx}
+\usepackage{float}
+\usepackage{wrapfig}
+\usepackage{lipsum} 
+\linespread{1.2}
+\graphicspath{{models/Pictures/}} 
+
+\begin{document}
+\begin{titlepage}
+
+\newcommand{\HRule}{\rule{\linewidth}{0.5mm}} 
+\center
+\textsc{\LARGE Personal Notebooks}\\[1.5cm] 
+\textsc{\Large Lanalytics models}\\[0.5cm] 
+\textsc{\large Theory}\\[0.5cm] 
+
+\HRule \\[0.4cm]
+{ \huge \bfseries Title}\\[0.4cm] 
+\HRule \\[1.5cm]
+
+\begin{minipage}{0.4\textwidth}
+\begin{flushleft} \large
+\emph{Author:}\\
+Salvadorx \textsc{Garcia}
+\end{flushleft}
+\end{minipage}
+\begin{minipage}{0.4\textwidth}
+\begin{flushright} \large
+\end{flushright}
+\end{minipage}\\[4cm]
+
+{\large \today}\\[3cm] 
+\vfill 
+\end{titlepage}
+
+\tableofcontents 
+
+\newpage 
+
+\section{Item Response Theory (IRT)}
+
+IRT score measures the [ability, trait, proficiency] with an instrument and item response. How: taking into account the item difficulty and the item discrimination. For what: 1) Score. Can weigth different the items according to the discrimination of each item, this can be derived in distinct in Computer Adaptative Testing (CAT). 2) Test and Scale developtment. Not all questions should be really difficult that nobody can answer them and also not so easy (difficulty). Items that differentiate the high and low levels of proficiency (discrimination). Togueter, they can calculate the Standard error of measurement or reliability of the scores.
+
+
+Item difficulty. In CTT and IRT is defined in terms of the likelihood of the correct answer (not the percieved difficulty). CTT: proportion who answer item correctly. in polytomous the mean score. So more difficult item, less difficulty item. IRT: is on the same metric as the traits, is an arbitrary metric, but sometimes it is anchored such that the profficiency distribution is mean 0, sd = 1. Difficult items have higher difficulty indices (on contrast CTT).
+
+Item discrimination. Differentiate between students that know the material tested and those that do not. CTT: corrected item-total point-biserial correlation is the typical index of discrimination. IRT: Sometimes is called the slope. How steepy the probability of correct response changes as the proficiency of trait increases. Higher values, greater discrimination.
+
+Reliability: CTT: is generally defined as the ratio of true score variance to observed variance or the squared correlation between true and observed scores.where the true score is the hypothetical average of the observed scores that would be obtained if the measurement were repeated over an infinite number of similar conditions.
+
+Standard Error of Measurement: is then based on the definition that observed score variance = true score variance plus error variance 
+
+
+In IRT the Information function is used to calculate the standard error of measurement and reliability. The test information is a function of proficiency (or whatever trait or skill is measured) and the items on the test. The standard error of measurement is the inverse of the square root of information, so that the greater the information, the smaller the standard error and the greater the reliability.
+
+Paragraph 1: What is IRT and CTT? What study each field? (1.5 hours)
+Paragraph 2: Explain and give example of Dicotomous and Polytomous data (1 hour).
+Paragraph 3: Explain and give example of Dicotomous and Polytomous data (1 hour).
+
+Dicotomous (two categories):
+IRT: Item response probabilities. The 1PL, 2PL and 3PL will be discussed for dicotomous data
+
+Polytomous (more than two categories):
+Graded Response and Generalized Partial Credit
+
+\section{Classic Test Theory (CTT)}
+
+\section{Rasch model one parameter}
+
+
+\section{Content Section}
+
+\end{document}
+
