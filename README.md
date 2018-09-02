@@ -18,7 +18,7 @@ Installation
 # The lanalytics package is based in the tidyverse, so it is necesary to install this package:
 install.packages("tidyverse")
 
-# Also, if the Shiny Dashboard wants to be used, the following packages should be installed:
+# Also, if you want to use the Shiny Dashboard, the following packages should be installed:
 install.packages("shiny")
 install.packages("shinydashboard")
 install.packages("eRm")
@@ -28,7 +28,7 @@ install.packages("stringr")
 install.packages("devtools")
 install.packages("data.table")
 
-and loaded
+# and loaded
 
 library(shiny)
 library(shinydashboard)
