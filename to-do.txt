@@ -1,0 +1,106 @@
+README.RMD
+
+# The lanalytics package is based in the tidyverse, so it is necesary to install this package:
+install.packages("tidyverse")
+
+# Also, if you want to use the Shiny Dashboard, the following packages should be installed:
+install.packages("shiny")
+install.packages("shinydashboard")
+install.packages("eRm")
+install.packages("ggrepel")
+install.packages("devtools")
+install.packages("stringr")
+install.packages("devtools")     <------duplicate command, should be install.packages("DT")
+install.packages("data.table")
+
+# and loaded
+
+library(shiny)
+library(shinydashboard)
+library(eRm)
+library(ggrepel)
+library(devtools)
+library(stringr)
+library(devtools)               <------duplicate command, should be library(DT)
+library(data.table)
+
+
+### TO ADD ###
+
+To open locally (from lanalytics/ folder):
+
+> shiny::runApp("shinyapp/app.R")
+
+
+
+-----
+
+
+
+### "Import quizzes" tab ###
+
+
+1. Have an example .csv file, or a picture of an example .csv file showing the two cases. 
+
+
+# ERRORS #
+
+-Attempting to import "finalexam_file" throws error:
+
+See spec(...) for full column specifications.
+Joining, by = c("email address", "question")
+Parsed with column specification:
+cols(
+  `email address` = col_character(),
+  `final exam` = col_double()
+)
+Warning: Error in mutate_impl: Evaluation error: object 'question' not found.
+  96: <Anonymous>
+
+??? "finalexam_file" is a cognitive file because it can be uploaded into the cognitive file section ???
+
+!! Incorrect, "finalexam_file" is a "Final Exam" file. 
+
+
+2. Make the Cognitive file / Final Exam  separate boxes, or somehow make it more intuitive that there are two tabs, because it is easy to completely miss the Final Exam tab and only find it after careful review. 
+
+3. Change "Display Quizzes" tab to "Display Quiz Data" or something more intuitive, because it will be easy to think it's supposed to display the graphs but then it doesn't. 
+
+4. Change "Data analysis" tab to "Data analysis graphs" for the same reason as above. While the instructions do explain points 3) and 4), it should be expected that users will not read the instructions. 
+
+5. There does not seem to be anywhere you can see the Final Exam dataset in graph form? Correction, it is shown and explained in "Data analysis > Individual analysis". Might need to move the explanation to Final Exam upload box as well. 
+
+6. "Data analysis" :
+     "Quizzes to analize" > "Quizzes to analyze" 
+
+7. "Data analysis > Individual analysis" : 
+     "select a student and see its performance" > "select a student and see THEIR performance"
+
+     "a red line will be show in the plot." > "a red line with be SHOWN in the plot."
+
+8. "Data analysis > Group analysis" :
+     - Many spelling and grammar corrections need to be made. 
+     - Guessing score: Just put "correct" and "incorrect" on the legend instead of "-1" and "1"
+     - Explain what "tercil" is. Think it's supposed to be "tercile": (statistics) Either of the two points that divide an ordered distribution into three parts, each containing a third of the population.
+
+9. "Data analysis > Quiz analysis" :
+     - Spelling / grammar corrections.
+     - Explain the graphs in layman's terms.
+
+10. "IRT: eRm package" :
+     - Explain graphs in layman's terms.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
